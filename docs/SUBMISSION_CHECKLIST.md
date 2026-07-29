@@ -20,8 +20,8 @@
 
 ## External publication
 
-- [ ] Public GitHub URL attached to Devpost
-- [ ] Hosted URL attached to Devpost
+- [x] Public GitHub URL ready: https://github.com/usv240/mosaic-datahub
+- [x] Hosted URL ready: https://mosaic-datahub-production.up.railway.app
 - [ ] Under-three-minute public video URL attached to Devpost
 - [ ] Final screenshots captured from the hosted build
 

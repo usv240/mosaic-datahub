@@ -7,6 +7,12 @@ columns converge through lineage into small anonymity sets, validates the risk w
 aggregate-only queries, traces downstream exposure, and proposes an approval-gated
 mitigation.
 
+## URLs
+
+- Live read-only demo: https://mosaic-datahub-production.up.railway.app
+- Public Apache-2.0 repository: https://github.com/usv240/mosaic-datahub
+- Merged DataHub contribution: https://github.com/datahub-project/datahub/pull/18705
+
 ## Challenge
 
 Open / Wildcard, with Agents That Do Real Work.
