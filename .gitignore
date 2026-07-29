@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+evaluations/*.local.json
+.venv/
+
+evidence/*.local.json
+runs/

@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "fixture": "synthetic_healthcare_research_export",
+  "status": "passed",
+  "hero_case": {
+    "expected": "validated_critical",
+    "actual": "validated_critical",
+    "records": 120,
+    "distinct_combinations": 120,
+    "minimum_k": 1,
+    "percent_below_5": 100.0,
+    "raw_rows_returned": 0
+  },
+  "safe_controls": {
+    "status": "passed",
+    "critical_false_positives": 0,
+    "cases": 4
+  },
+  "deterministic_rerun_agreement": 1.0
+}

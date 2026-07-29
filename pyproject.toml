@@ -1,0 +1,34 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "datahub-mosaic"
+version = "0.1.0"
+description = "Lineage-aware privacy threat modeling for compositional re-identification risk."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [{ name = "Mosaic contributors" }]
+dependencies = ["duckdb>=1.3,<2", "fastapi>=0.115,<1", "uvicorn>=0.34,<1"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3,<9", "ruff>=0.11,<1"]
+datahub = ["acryl-datahub>=1.3,<2", "datahub-agent-context>=1.5,<2", "mcp-server-datahub>=0.5,<1"]
+
+[project.scripts]
+mosaic = "mosaic.final_cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mosaic"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]

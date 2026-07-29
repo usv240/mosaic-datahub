@@ -1,0 +1,16 @@
+{
+  "before": {
+    "columns": ["zip5", "birth_date", "gender_category"],
+    "minimum_k": 1,
+    "percent_below_5": 100.0
+  },
+  "recommended": {
+    "strategy": "suppress_birth_date",
+    "columns": ["zip5", "gender_category"],
+    "minimum_k": 20,
+    "percent_below_5": 0.0,
+    "utility_retained": 0.76,
+    "writes_applied": false
+  },
+  "disclosure": "Thresholds and utility weights are synthetic-demo policy, not legal standards."
+}

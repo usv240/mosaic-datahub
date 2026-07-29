@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "lineage_aware_convergences": 1,
+  "no_lineage_baseline_convergences": 0,
+  "delta": 1,
+  "revealing_edges": [
+    ["support_contacts.zip5", "research_export_clean.zip5"],
+    ["support_contacts.full_birth_date", "research_export_clean.birth_date"],
+    ["member_demographics_coarse.gender_category", "research_export_clean.gender_category"]
+  ]
+}

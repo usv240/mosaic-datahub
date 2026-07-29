@@ -1,0 +1,12 @@
+{
+  "target": "research_export_clean",
+  "verdict": "validated_critical",
+  "families": ["location", "date_of_birth", "demographic"],
+  "columns": ["zip5", "birth_date", "gender_category"],
+  "downstream_assets": [
+    "research_partner_delivery",
+    "cohort_explorer_export",
+    "readmission_model_training"
+  ],
+  "raw_person_rows_exposed": 0
+}

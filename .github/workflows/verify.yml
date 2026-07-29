@@ -1,0 +1,22 @@
+name: Verify Mosaic
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  offline-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync --extra dev
+      - run: uv run pytest
+      - name: Verify intentional critical verdict
+        shell: bash
+        run: |
+          set +e
+          uv run mosaic demo --json
+          code=$?
+          set -e
+          test "$code" -eq 3
