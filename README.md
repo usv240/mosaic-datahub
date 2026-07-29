@@ -2,6 +2,8 @@
 
 > No column here is PII. Together, they identify you.
 
+**[Open the read-only live demo](https://mosaic-datahub-production.up.railway.app)**
+
 Mosaic is a privacy threat-modeling agent for the risk that emerges when ordinary
 attributes converge across a data estate. It uses DataHub column lineage to find the
 convergence, validates the resulting anonymity-set risk with an approved aggregate-only
