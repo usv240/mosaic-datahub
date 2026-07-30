@@ -1,4 +1,4 @@
-# Mosaic
+﻿# Mosaic
 
 > No column here is PII. Together, they identify you.
 
@@ -63,6 +63,15 @@ A validated critical result returns exit code `3`; this is the policy outcome, n
 | Live local DataHub workflow | Schema, lineage, downstream, MCP, write-back, and re-read | Environment-specific proof when the operator runs it |
 
 See [evaluations/benchmark.json](evaluations/benchmark.json), [fixtures/datahub_recording/manifest.json](fixtures/datahub_recording/manifest.json), and [evidence/external/uci-adult-proof.json](evidence/external/uci-adult-proof.json).
+## Product tour
+
+| First-visit education | Guided investigation |
+|---|---|
+| [![Mosaic landing page in dark mode](docs/screenshots/01-landing-dark.png)](docs/screenshots/01-landing-dark.png) | [![Completed privacy investigation](docs/screenshots/03-completed-investigation.png)](docs/screenshots/03-completed-investigation.png) |
+| **Evidence catalog** | **Responsive light mode** |
+| [![Reproducible proof catalog](docs/screenshots/04-evidence-catalog.png)](docs/screenshots/04-evidence-catalog.png) | [![Mosaic landing page in light mode](docs/screenshots/06-landing-light.png)](docs/screenshots/06-landing-light.png) |
+
+The repository also includes the complete [screenshot gallery](docs/screenshots/README.md) and an [edit-ready product walkthrough](docs/demo/08-product-walkthrough.webm). The walkthrough is source footage for the required narrated public submission video; it is not presented as the final YouTube/Vimeo entry.
 
 ## Why DataHub is essential
 
@@ -84,7 +93,7 @@ Thresholds are demo policy, not a legal conclusion. Read [ETHICS.md](ETHICS.md) 
 
 ## Reusable interfaces
 
-- REST: `/api/scenarios`, `/api/scenarios/{slug}`, `/api/scan`, `/api/runs/{id}`
+- REST: `/api/scenarios`, `/api/scenarios/{slug}`, `/api/scan`, `/api/runs/{id}`, `/api/proofs`
 - CLI: `assess`, `scan`, `benchmark`, `replay-fixture`, `serve`, `live-demo`, `verify-mcp`
 - Agent skill: [`$datahub-privacy-threat-model`](skills/datahub-privacy-threat-model/SKILL.md)
 - Operator console: `/settings` with non-mutating health probe and guarded local approval

@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "captured_at": "2026-07-30T14:37:17.126927+00:00",
+  "base_url": "http://127.0.0.1:8000",
+  "purpose": "Judge screenshots and edit-ready product footage generated from the running Mosaic application.",
+  "files": [
+    {
+      "path": "01-landing-dark.png",
+      "bytes": 1067587,
+      "sha256": "18cb57dd93a78902740b479f22f5d2c38a9cb14c31d44d124c69286ea98adf06"
+    },
+    {
+      "path": "02-audience-preset.png",
+      "bytes": 1071410,
+      "sha256": "e8383529f241fea9fed566668ccd14dd34c297a47783c613540e0b7b4b4f1e3b"
+    },
+    {
+      "path": "03-completed-investigation.png",
+      "bytes": 1170985,
+      "sha256": "e7484fa318f57af70f2d72622ae5245d9c7b477f1711bf96e61bdff1d0b3881d"
+    },
+    {
+      "path": "04-evidence-catalog.png",
+      "bytes": 387536,
+      "sha256": "94e42875b0fbbe52c2e055c9b26823792ab25075aef470912e944def70a3aae9"
+    },
+    {
+      "path": "05-operator-safety.png",
+      "bytes": 159446,
+      "sha256": "3be9acd18577d6954e4be13fcb6b0cfb91da3df9eecf941999d152a8bc0ea58f"
+    },
+    {
+      "path": "06-landing-light.png",
+      "bytes": 1150021,
+      "sha256": "93bcf62031c0e7bbcf586accef2e4316e9b9f6414426560aca8050da4c2cd659"
+    },
+    {
+      "path": "07-mobile-landing.png",
+      "bytes": 854073,
+      "sha256": "37a04a6acf61e773fd656d3a28060e3ebf73ae46581722270b189cbd2aea848d"
+    },
+    {
+      "path": "08-product-walkthrough.webm",
+      "bytes": 1830260,
+      "sha256": "c1ee5d018910b369c056d1d7b02511fc901546b329c94d947bc500e7262b584c"
+    }
+  ],
+  "video_duration_limit_seconds": 180,
+  "note": "The WebM is captioned by the product UI but requires narration and public YouTube/Vimeo upload for Devpost."
+}
