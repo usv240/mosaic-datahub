@@ -45,6 +45,14 @@ def main() -> int:
             for route in ROUTES:
                 page.goto(BASE + route, wait_until="networkidle")
                 page.wait_for_timeout(250)
+                if route == "/":
+                    landing = page.evaluate(
+                        "() => ({scrollY: window.scrollY, search: location.search, hash: location.hash})"
+                    )
+                    if landing != {"scrollY": 0, "search": "", "hash": ""}:
+                        findings.append(
+                            f"{theme} /: landing did not open cleanly at top: {landing}"
+                        )
                 for issue in page.evaluate(CONTRAST_JS) + page.evaluate(SEMANTICS_JS):
                     findings.append(f"{theme} {route}: {issue}")
             page.close()

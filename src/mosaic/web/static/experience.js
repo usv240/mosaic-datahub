@@ -179,8 +179,10 @@
     byId("proposal-k").textContent = scenario.k;
     drawGraph(scenario);
     hydrateScenario(name);
-    if (history.replaceState) history.replaceState(null, "", "?case=" + name + "#workspace");
-    if (shouldScroll) byId("workspace").scrollIntoView({ behavior: "smooth", block: "start" });
+    if (shouldScroll) {
+      if (history.replaceState) history.replaceState(null, "", "?case=" + name + "#workspace");
+      byId("workspace").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   }
 
   function updateNarrator(index) {

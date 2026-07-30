@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 from fastapi.testclient import TestClient
 
 from mosaic.web.complete_app import create_app
@@ -43,7 +45,9 @@ def test_experience_assets_are_served_and_free_of_mojibake(tmp_path) -> None:
     for path in paths:
         response = client.get(path)
         assert response.status_code == 200, path
-        assert not any(token in response.text for token in ("Ã", "â", "Â", "ðŸ")), path
+        assert not any(
+            token in response.text for token in ("\u00c3", "\u00e2", "\u00c2", "\u00f0\u0178")
+        ), path
 
 
 def test_theme_and_responsive_modes_are_first_class(tmp_path) -> None:
@@ -85,3 +89,14 @@ def test_demo_fetches_real_engine_evidence_instead_of_faking_metrics(tmp_path) -
     assert 'fetch("/api/mitigations")' in script
     assert "assessment.metrics.minimum_k" in script
     assert "assessment.raw_rows_returned" not in script  # Raw rows never enter the demo model.
+
+
+def test_default_landing_does_not_rewrite_itself_to_workspace_deep_link(tmp_path) -> None:
+    script = TestClient(create_app(tmp_path)).get("/static/experience.js").text
+    guarded_url_update = (
+        "if (shouldScroll) {\n"
+        '      if (history.replaceState) history.replaceState(null, "", "?case=" + name + "#workspace");'
+    )
+    assert guarded_url_update in script
+    accessibility = Path("scripts/check_accessibility.py").read_text(encoding="utf-8")
+    assert "landing did not open cleanly at top" in accessibility
