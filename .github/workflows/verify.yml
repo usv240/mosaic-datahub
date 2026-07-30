@@ -62,6 +62,10 @@ jobs:
           curl -fsS http://127.0.0.1:8124/api/proofs | grep -F '"status":"passed"'
           curl -fsS http://127.0.0.1:8124/api/adoption | grep -F '"status":"ready_to_evaluate"'
           curl -fsS http://127.0.0.1:8124/api/technology | grep -F '"name":"DataHub"'
+          curl -fsS http://127.0.0.1:8124/api/remediation-bundles/research | grep -F '"artifact_count":6'
+          curl -fsS --output /tmp/mosaic-remediation.zip http://127.0.0.1:8124/api/remediation-bundles/research/download
+          unzip -t /tmp/mosaic-remediation.zip
+          test "$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:8124/api/remediation-bundles/control)" = 409
       - name: Browser accessibility gate
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
         shell: bash

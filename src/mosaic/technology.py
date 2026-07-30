@@ -11,14 +11,14 @@ def technology_catalog() -> dict[str, Any]:
             "name": "DataHub",
             "technology": "Open-source Context Platform",
             "role": "The context, action, and memory layer of the Mosaic agent.",
-            "challenge": "Agents That Do Real Work + Open / Wildcard",
+            "challenge": "Metadata-Aware Code Generation & Development",
         },
         "workflow": [
             "Read schemas and fine-grained lineage",
             "Detect cross-source quasi-identifier convergence",
             "Trace downstream blast radius",
             "Validate with aggregate-only group counts",
-            "Propose mitigation and publish reviewed context",
+            "Generate remediation code and publish reviewed context",
         ],
         "datahub_capabilities": [
             {
@@ -92,6 +92,10 @@ def technology_catalog() -> dict[str, Any]:
         "supporting_stack": [
             {"name": "DuckDB", "role": "Isolated in-memory aggregate validation"},
             {"name": "FastAPI", "role": "Typed read-only demo and operator APIs"},
+            {
+                "name": "dbt artifacts",
+                "role": "Merge-ready models, schemas, and singular privacy tests",
+            },
             {"name": "Playwright", "role": "End-to-end accessibility and judge-media verification"},
         ],
         "open_source_contribution": {

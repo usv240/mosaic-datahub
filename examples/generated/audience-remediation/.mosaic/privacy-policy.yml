@@ -1,0 +1,17 @@
+schema_version: 1
+policy_id: mosaic-audience-minimum-k
+status: proposed
+human_review_required: true
+source:
+  datahub_urn: "urn:li:dataset:(urn:li:dataPlatform:mosaic,partner_audience_export,PROD)"
+  scenario_sha256: "acc2f467c84fc3844db158e788487eba11d30ad7169313a4a6507d3119674e3e"
+controls:
+  minimum_k: 5
+  maximum_percent_below_k5: 0.0
+  raw_person_rows_allowed: 0
+mitigation:
+  strategy: "Generalize neighborhood to region and suppress household_size."
+  generated_model: "partner_audience_export_privacy_safe"
+approval:
+  required_roles: [privacy_reviewer, data_owner]
+  writeback_after_merge: [tag, structured_property, document, incident]

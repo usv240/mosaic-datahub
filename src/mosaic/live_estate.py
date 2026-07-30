@@ -74,5 +74,17 @@ def seed_and_discover(server: str = "http://localhost:8080") -> dict[str, Any]:
             "downstream_count": len(downstream),
             "assets": [str(x.urn) for x in downstream],
         },
+        "codegen_context": {
+            "asset": f"research_export_{suffix}",
+            "asset_urn": str(export.urn),
+            "columns": ["zip5", "birth_date", "gender_category"],
+            "families": ["location", "date_of_birth", "demographic"],
+            "lineage_paths": [
+                [str(source_a.urn), str(export.urn)],
+                [str(source_b.urn), str(export.urn)],
+            ],
+            "downstream_assets": [str(x.urn) for x in downstream],
+            "source_systems": [str(source_a.urn), str(source_b.urn)],
+        },
         "synthetic_only": True,
     }

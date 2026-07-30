@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "generator": "Mosaic DataHub remediation codegen",
+  "track": "Metadata-Aware Code Generation & Development",
+  "scenario": "research",
+  "source_asset_urn": "urn:li:dataset:(urn:li:dataPlatform:mosaic,research_export_clean,PROD)",
+  "scenario_sha256": "97b5bc8f5881898b3e8debcf4bf13284b52b4537ca8fb4df5bc7622e38bfb63a",
+  "datahub_context": {
+    "families": [
+      "location",
+      "date_of_birth",
+      "demographic"
+    ],
+    "lineage_paths": [
+      [
+        "support_contacts.zip5",
+        "research_export_clean.zip5"
+      ],
+      [
+        "support_contacts.full_birth_date",
+        "research_export_clean.birth_date"
+      ],
+      [
+        "member_demographics_coarse.gender_category",
+        "research_export_clean.gender_category"
+      ]
+    ],
+    "downstream_assets": [
+      "research_partner_delivery",
+      "cohort_explorer_export",
+      "readmission_model_training"
+    ]
+  },
+  "artifact_digests": [
+    {
+      "path": "models/research_export_clean_privacy_safe.sql",
+      "sha256": "bf1d2bf9b08b307d69ef16addc639c09a05bd76652fb99e93aaf3f0aefe853bc"
+    },
+    {
+      "path": "models/research_export_clean_privacy_safe.yml",
+      "sha256": "3c1926f49a3302702acb53116702a7b174716df02619040b51caa50029192a17"
+    },
+    {
+      "path": "tests/assert_research_export_clean_privacy_safe_minimum_k.sql",
+      "sha256": "00538fc2def7d03dc3902b484794506ba4ad7aa42381a9ca95c2f8b8d3bda5e1"
+    },
+    {
+      "path": ".mosaic/privacy-policy.yml",
+      "sha256": "0e2ea895cbf8413533e0e35e4231e85267a49b8bc1988fda4776caf3854ed8c2"
+    },
+    {
+      "path": "PR_SUMMARY.md",
+      "sha256": "587babaf5835e6312720ed1e4f1cbd638b81d99d352d8ba3bafe66c2dec6d128"
+    }
+  ]
+}

@@ -1,10 +1,19 @@
 # Submission checklist
 
+## Track fit
+
+- [x] Primary category: Metadata-Aware Code Generation & Development
+- [x] DataHub schema, lineage, downstream, and governance context directly shape generated code
+- [x] Two committed example bundles with six merge-ready artifacts each
+- [x] Interactive code review and reproducible ZIP download in the hosted product
+- [x] Safe negative control refuses unnecessary generation
+- [x] Live DataHub workflow carries discovered schema, URN, lineage, and downstream context into compiled generated artifacts
+
 ## Product and education
 
 - [x] First-visit plain-English orientation and glossary
 - [x] Four backend-driven preset cases across two domains
-- [x] Narrated interactive lineage analysis
+- [x] Narrated interactive lineage analysis and post-run Remediation PR Studio
 - [x] Light/dark responsive console
 - [x] Human-readable, printable run evidence with SHA-256 verification
 - [x] Local DataHub health/settings and guarded approval flow
@@ -27,10 +36,10 @@
 
 ## Engineering quality
 
-- [x] 283 passing tests
-- [x] 99.64% measured coverage
+- [x] 319 passing tests
+- [x] 99.70% measured coverage
 - [x] Multi-OS and Python 3.11/3.12 CI
-- [x] Strict lint, format, JSON, UTF-8, CLI-contract, package-build, and accessibility gates
+- [x] Strict lint, format, JSON, UTF-8, CLI/codegen-contract, package-build, and accessibility gates
 - [x] Locked standalone environment and Apache-2.0 license
 - [x] Branded social preview asset
 
@@ -38,7 +47,7 @@
 
 - [x] Public repository: https://github.com/usv240/mosaic-datahub
 - [x] Hosted demo: https://mosaic-datahub-production.up.railway.app
-- [x] CI-generated eight-state product screenshot gallery, including a dedicated DataHub architecture capture, committed to the public repository
+- [x] CI-generated nine-screenshot product gallery, including a dedicated DataHub architecture capture, committed to the public repository
 - [x] Edit-ready browser-recorded walkthrough committed with a SHA-256 media manifest
 - [ ] Attach under-three-minute public video to the submission form
 

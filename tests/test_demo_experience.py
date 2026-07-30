@@ -78,7 +78,7 @@ def test_demo_javascript_contains_all_guided_steps(tmp_path) -> None:
         "Mapped location, date-of-birth, and demographic families",
         "Executed allowlisted GROUP BY",
         "Compared 3 reversible mitigations",
-        "Prepared governed DataHub proposal",
+        "Generated 6 merge-ready artifacts",
     ):
         assert step in script
 

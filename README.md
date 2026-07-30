@@ -4,7 +4,9 @@
 
 **[Try the read-only live demo](https://mosaic-datahub-production.up.railway.app)**
 
-Mosaic is a lineage-aware privacy threat-modeling agent built on DataHub. It discovers ordinary attributes that become identifying only after pipelines bring them together, validates the combination with aggregate-only anonymity metrics, traces the downstream blast radius, compares mitigations, and prepares governed catalog evidence for human approval.
+**Challenge: Metadata-Aware Code Generation & Development**
+
+Mosaic is a DataHub-grounded privacy remediation code-generation agent. It discovers ordinary attributes that become identifying only after pipelines bring them together, validates the combination with aggregate-only anonymity metrics, traces the downstream blast radius, compares mitigations, generates a merge-ready remediation bundle, and prepares governed catalog evidence for human approval.
 
 A PII scanner classifies columns. Mosaic reasons over the graph.
 
@@ -29,7 +31,7 @@ Imagine three source systems:
 
 No field is a direct identifier. DataHub's fine-grained lineage reveals that all three arrive in the same research export. Mosaic then runs a narrowly allow-listed grouped count and asks: how many records share each combination? In the primary synthetic case the smallest group has one record (`k=1`) and every record is below `k=5`. No person-level row is returned.
 
-The proposed shadow mitigation suppresses birth date, increasing the smallest group to twenty while preserving the source asset. A reviewer can inspect the evidence before approving any DataHub mutation.
+The proposed shadow mitigation suppresses birth date, increasing the smallest group to twenty while preserving the source asset. Mosaic then generates a dbt model, schema contract, aggregate-only privacy test, policy file, provenance manifest, and PR summary. A reviewer can inspect every line before merge or DataHub write-back.
 
 ## Judge quick start
 
@@ -53,7 +55,16 @@ uv run mosaic assess --scenario research
 uv run mosaic scan
 uv run mosaic benchmark
 uv run mosaic replay-fixture
+uv run mosaic generate-remediation --scenario research --output generated/research
 ```
+
+With local DataHub Core running, execute the strongest end-to-end proof:
+
+```powershell
+uv run mosaic live-demo --server http://localhost:8080
+```
+
+That run seeds isolated SDK assets, reads fine-grained lineage and downstream impact from DataHub, carries the discovered schema and URNs into the six-file remediation bundle, compiles the generated SQL, and leaves write-back behind the human approval gate.
 
 A validated critical result returns exit code `3`; this is the policy outcome, not a crash.
 
@@ -66,20 +77,38 @@ A validated critical result returns exit code `3`; this is the policy outcome, n
 5. Compares the lineage-aware finding with a no-lineage baseline.
 6. Ranks estate findings by severity, anonymity, and downstream reach.
 7. Compares generalization, suppression, access control, and purpose limitation.
-8. Records digest-backed evidence and prepares DataHub governance context.
-9. Publishes only after explicit approval, then re-reads every mutation.
+8. Generates a dbt model, schema contract, aggregate-only test, policy, manifest, and PR summary.
+9. Records digest-backed evidence and prepares DataHub governance context.
+10. Publishes only after explicit approval, then re-reads every mutation.
+
+## Remediation PR Studio
+
+Mosaic turns a validated graph finding into code a data team can review and merge. Generation is deterministic, digest-backed, and grounded in the selected scenario's DataHub URN, fine-grained lineage, schema, and downstream impact.
+
+| Generated artifact | Purpose |
+|---|---|
+| `models/*_privacy_safe.sql` | dbt model implementing the selected suppression or generalization |
+| `models/*_privacy_safe.yml` | Column contract, DataHub URN, scenario digest, and before/after metrics |
+| `tests/assert_*_minimum_k.sql` | Singular dbt test that returns only an aggregate failure metric |
+| `.mosaic/privacy-policy.yml` | Review thresholds, required roles, and post-merge write-back plan |
+| `mosaic-manifest.json` | DataHub context and SHA-256 digest for every generated artifact |
+| `PR_SUMMARY.md` | Reviewer-ready rationale, lineage, blast radius, and approval checklist |
+
+Inspect the committed [research](examples/generated/research-remediation) and [audience](examples/generated/audience-remediation) outputs, call `/api/remediation-bundles/{scenario}`, or download the reproducible ZIP from `/api/remediation-bundles/{scenario}/download`. A safe negative control produces no bundle; Mosaic refuses to manufacture unnecessary code.
 
 ## Evidence ladder
 
 | Proof | Result | Honest scope |
 |---|---:|---|
 | Configured scenarios | 4 working backend cases across two domains | Deterministic product behavior |
+| Generated remediation | 2 committed bundles; 6 artifacts each; hashes reproducible | Review-ready examples, not automatically merged code |
 | Regression benchmark | 48 cases; exact agreement 100%; seeded precision/recall 100% | Deliberately bounded policy regression, not field accuracy |
 | DataHub recording replay | Hashes and semantic checks pass | Versioned normalized integration semantics, not a live server |
 | UCI Adult external proof | 32,561 rows processed in memory; k=43 to k=1 after composition; 23.786% below k=5 | Historical external mechanism check, not current prevalence |
-| Live local DataHub workflow | Schema, lineage, downstream, MCP, write-back, and re-read | Environment-specific proof when the operator runs it |
+| Live local DataHub workflow | Schema, lineage, downstream, generated six-file remediation, SQL compile, write-back, and re-read | Environment-specific proof when the operator runs it |
 
 See [evaluations/benchmark.json](evaluations/benchmark.json), [fixtures/datahub_recording/manifest.json](fixtures/datahub_recording/manifest.json), and [evidence/external/uci-adult-proof.json](evidence/external/uci-adult-proof.json).
+
 ## Product tour
 
 | First-visit education | Guided investigation |
@@ -87,6 +116,8 @@ See [evaluations/benchmark.json](evaluations/benchmark.json), [fixtures/datahub_
 | [![Mosaic landing page in dark mode](docs/screenshots/01-landing-dark.png)](docs/screenshots/01-landing-dark.png) | [![Completed privacy investigation](docs/screenshots/03-completed-investigation.png)](docs/screenshots/03-completed-investigation.png) |
 | **Evidence catalog** | **Responsive light mode** |
 | [![Reproducible proof catalog](docs/screenshots/04-evidence-catalog.png)](docs/screenshots/04-evidence-catalog.png) | [![Mosaic landing page in light mode](docs/screenshots/06-landing-light.png)](docs/screenshots/06-landing-light.png) |
+| **Remediation PR Studio** | **DataHub architecture** |
+| [![Generated remediation code review](docs/screenshots/09-remediation-pr.png)](docs/screenshots/09-remediation-pr.png) | [![DataHub technology architecture](docs/screenshots/08-datahub-architecture.png)](docs/screenshots/08-datahub-architecture.png) |
 
 The repository also includes the complete [screenshot gallery](docs/screenshots/README.md) and an [edit-ready product walkthrough](docs/demo/08-product-walkthrough.webm). The walkthrough is source footage for the required narrated public submission video; it is not presented as the final YouTube/Vimeo entry.
 
@@ -105,6 +136,9 @@ DataHub schema + fine-grained lineage
                   |
                   v
       DataHub downstream blast radius
+                  |
+                  v
+    merge-ready remediation bundle
                   |
                   v
  reviewed tag + property + Document + incident
@@ -126,7 +160,7 @@ The same map is machine-inspectable in the running product at [`/api/technology`
 
 - **Graph-native privacy reasoning:** detects risk produced by relationships that neither a field classifier nor an out-of-box metadata view can establish alone.
 - **Aggregate-only proof:** a fail-closed SQL policy measures anonymity while keeping person-level rows at zero.
-- **Reversible mitigation lab:** compares privacy improvement with retained utility before proposing a catalog action.
+- **Merge-ready remediation codegen:** converts the selected mitigation into dbt code, an aggregate privacy test, policy-as-code, provenance, and PR documentation.
 - **Tamper-evident institutional memory:** digest-backed evidence and re-read write-back make the decision inheritable by the next human or agent.
 
 The no-lineage baseline finds zero cross-source convergences. Mosaic finds the hidden convergence, validates it, and traces every downstream consumer.
@@ -134,6 +168,7 @@ The no-lineage baseline finds zero cross-source convergences. Mosaic finds the h
 ### Supporting technology
 
 - **DuckDB** provides isolated, in-memory aggregate validation.
+- **dbt artifacts** provide merge-ready models, schema contracts, and singular privacy tests.
 - **FastAPI** exposes typed read-only product and operator APIs.
 - **Playwright** verifies the judge journey, responsive states, and accessibility in light and dark modes.
 
@@ -155,8 +190,8 @@ Thresholds are demo policy, not a legal conclusion. Read [ETHICS.md](ETHICS.md) 
 
 ## Reusable interfaces
 
-- REST: `/api/scenarios`, `/api/scenarios/{slug}`, `/api/scan`, `/api/runs/{id}`, `/api/proofs`, `/api/adoption`, `/api/technology`
-- CLI: `assess`, `scan`, `benchmark`, `replay-fixture`, `serve`, `live-demo`, `verify-mcp`
+- REST: `/api/scenarios`, `/api/remediation-bundles/{slug}`, `/api/remediation-bundles/{slug}/download`, `/api/scan`, `/api/runs/{id}`, `/api/proofs`, `/api/adoption`, `/api/technology`
+- CLI: `assess`, `generate-remediation`, `scan`, `benchmark`, `replay-fixture`, `serve`, `live-demo`, `verify-mcp`
 - Agent skill: [`$datahub-privacy-threat-model`](skills/datahub-privacy-threat-model/SKILL.md)
 - Operator console: `/settings` with non-mutating health probe and guarded local approval
 

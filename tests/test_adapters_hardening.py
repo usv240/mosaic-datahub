@@ -206,6 +206,7 @@ def test_complete_e2e_check_matrix(
     assert report["status"] == expected
     assert set(report["checks"]) == {
         "datahub_convergence_and_blast_radius",
+        "metadata_aware_codegen",
         "duckdb_aggregate",
         "zero_raw_rows",
         "governed_writeback_reread",

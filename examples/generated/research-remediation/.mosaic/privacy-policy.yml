@@ -1,0 +1,17 @@
+schema_version: 1
+policy_id: mosaic-research-minimum-k
+status: proposed
+human_review_required: true
+source:
+  datahub_urn: "urn:li:dataset:(urn:li:dataPlatform:mosaic,research_export_clean,PROD)"
+  scenario_sha256: "97b5bc8f5881898b3e8debcf4bf13284b52b4537ca8fb4df5bc7622e38bfb63a"
+controls:
+  minimum_k: 5
+  maximum_percent_below_k5: 0.0
+  raw_person_rows_allowed: 0
+mitigation:
+  strategy: "Suppress precise birth_date while retaining ZIP5 and demographic category."
+  generated_model: "research_export_clean_privacy_safe"
+approval:
+  required_roles: [privacy_reviewer, data_owner]
+  writeback_after_merge: [tag, structured_property, document, incident]

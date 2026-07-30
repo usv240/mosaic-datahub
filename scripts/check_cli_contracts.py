@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+import tempfile
+from pathlib import Path
 
 
 def run(*args: str, expected: int = 0) -> dict[str, object]:
@@ -25,11 +27,23 @@ def main() -> int:
     scan = run("scan", expected=3)
     benchmark = run("benchmark")
     replay = run("replay-fixture")
+    with tempfile.TemporaryDirectory() as directory:
+        generated = run(
+            "generate-remediation",
+            "--scenario",
+            "research",
+            "--output",
+            str(Path(directory) / "remediation"),
+        )
     assert critical["assessment"]["verdict"] == "validated_critical"
     assert scan["critical_findings"] >= 1
     assert benchmark["status"] == "passed"
     assert replay["status"] == "passed"
-    print("CLI contracts passed: verdict exit codes, estate scan, benchmark, and fixture replay.")
+    assert generated["artifact_count"] == 6
+    assert generated["track"] == "Metadata-Aware Code Generation & Development"
+    print(
+        "CLI contracts passed: verdicts, estate scan, benchmark, fixture replay, and remediation codegen."
+    )
     return 0
 
 

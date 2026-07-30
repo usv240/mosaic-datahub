@@ -17,6 +17,7 @@ from mosaic.estate_scan import scan_estate
 from mosaic.governed_writeback import publish
 from mosaic.mitigation_lab import compare_mitigations
 from mosaic.proof_catalog import proof_catalog
+from mosaic.remediation_codegen import generate_remediation_bundle, remediation_zip
 from mosaic.runs import list_runs, load_run, record
 from mosaic.scenario_registry import assess_scenario, list_scenarios
 from mosaic.technology import technology_catalog
@@ -115,6 +116,32 @@ def create_app(project_root: Path | None = None) -> FastAPI:
     @app.get("/api/mitigations")
     def mitigations() -> dict[str, object]:
         return compare_mitigations()
+
+    @app.get("/api/remediation-bundles/{slug}")
+    def remediation_bundle(slug: str) -> dict[str, object]:
+        try:
+            return generate_remediation_bundle(slug)
+        except KeyError as error:
+            raise HTTPException(status_code=404, detail="Unknown Mosaic scenario") from error
+        except ValueError as error:
+            raise HTTPException(status_code=409, detail=str(error)) from error
+
+    @app.get("/api/remediation-bundles/{slug}/download")
+    def remediation_download(slug: str) -> Response:
+        try:
+            content = remediation_zip(slug)
+        except KeyError as error:
+            raise HTTPException(status_code=404, detail="Unknown Mosaic scenario") from error
+        except ValueError as error:
+            raise HTTPException(status_code=409, detail=str(error)) from error
+        return Response(
+            content=content,
+            media_type="application/zip",
+            headers={
+                "Content-Disposition": f'attachment; filename="mosaic-{slug}-remediation.zip"',
+                "Cache-Control": "no-store",
+            },
+        )
 
     @app.get("/api/scenarios")
     def scenarios() -> dict[str, object]:

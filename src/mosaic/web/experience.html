@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Run a guided Mosaic privacy threat-model demo powered by DataHub lineage.">
+  <meta name="description" content="Generate merge-ready privacy remediation code grounded in DataHub lineage.">
   <meta name="color-scheme" content="dark light">
   <meta property="og:title" content="Mosaic - privacy risk lives in the graph">
-  <meta property="og:description" content="An interactive, aggregate-only privacy threat model built on DataHub lineage.">
+  <meta property="og:description" content="DataHub-grounded privacy reasoning that generates review-ready dbt remediation bundles.">
   <meta property="og:image" content="https://mosaic-datahub-production.up.railway.app/static/og-card.svg">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
-  <title>Mosaic - interactive privacy threat model</title>
+  <title>Mosaic - DataHub-grounded privacy remediation codegen</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='9' fill='%238b5cf6'/><path d='M8 21V11l8 7 8-7v10' fill='none' stroke='white' stroke-width='3' stroke-linecap='round'/></svg>">
   <link rel="stylesheet" href="/static/experience.css">
 
@@ -45,26 +45,26 @@
       <div class="hero-copy">
         <div class="status-row">
           <span class="status-pill"><span class="status-dot"></span> Live read-only product demo</span>
-          <span class="version-pill">Mosaic 0.3</span>
+          <span class="version-pill">Mosaic 0.4</span>
         </div>
-        <p class="eyebrow">Lineage-aware privacy protection for the whole data estate</p>
-        <h1 id="hero-title">The table looks safe.<br><span>The graph says otherwise.</span></h1>
+        <p class="eyebrow">Metadata-aware code generation for privacy remediation</p>
+        <h1 id="hero-title">The graph finds the risk.<br><span>Mosaic writes the fix.</span></h1>
         <p class="hero-lede">
-          Mosaic helps privacy, data, governance, and security teams stop re-identification risk
-          before it spreads. DataHub reveals where ordinary columns converge; Mosaic proves the risk
-          using counts only, traces every affected consumer, and finds the safest useful mitigation.
+          DataHub supplies real schemas, fine-grained lineage, and downstream context. Mosaic proves
+          compositional risk using counts only, selects a reversible mitigation, then generates a
+          review-ready dbt model, privacy test, policy, provenance manifest, and PR summary.
         </p>
         <div class="hero-actions">
           <button class="primary-button" id="hero-run" type="button">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 7 8 5-8 5Z"/></svg>
-            Run the 60-second demo
+            Generate the remediation PR
           </button>
           <a class="secondary-button" href="#datahub-stack">See the DataHub architecture</a>
         </div>
         <div class="trust-row" aria-label="Demo guarantees">
+          <span><b>6</b> merge-ready artifacts</span>
           <span><b>0</b> raw rows exposed</span>
           <span><b>7</b> DataHub capabilities</span>
-          <span><b>4</b> verified write-backs</span>
         </div>
       </div>
 
@@ -86,13 +86,13 @@
           <div><small>Below k=5</small><strong>100%</strong></div>
           <div class="zero"><small>Person-level rows</small><strong>0</strong></div>
         </div>
-        <div class="preview-safe"><span>Recommended</span><strong>Suppress precise birth date</strong><em>k=20 after</em></div>
+        <div class="preview-safe"><span>Generated remediation</span><strong>dbt model + aggregate privacy test</strong><em>6 files ready</em></div>
       </div>
     </section>
 
     <section class="public-note" aria-label="Hosted demo status">
       <div class="note-icon" aria-hidden="true">i</div>
-      <p><strong>This hosted experience is intentionally read-only.</strong> It replays deterministic evidence produced by the real engine. Clone the repository to connect DataHub Core, run live discovery, and approve catalog write-back.</p>
+      <p><strong>This hosted experience is intentionally read-only.</strong> It replays deterministic evidence produced by the real engine. Clone the repository to connect DataHub Core, run live discovery, generate local artifacts, and approve catalog write-back.</p>
       <a href="https://github.com/usv240/mosaic-datahub#quickstart">Run locally</a>
     </section>
 
@@ -190,7 +190,7 @@
           <li data-step="1"><b>2</b><span>Converge<small>Map families</small></span></li>
           <li data-step="2"><b>3</b><span>Validate<small>Aggregate only</small></span></li>
           <li data-step="3"><b>4</b><span>Mitigate<small>Shadow test</small></span></li>
-          <li data-step="4"><b>5</b><span>Propose<small>Human gate</small></span></li>
+          <li data-step="4"><b>5</b><span>Generate<small>6 files + review</small></span></li>
         </ol>
 
 
@@ -227,6 +227,7 @@
             <button role="tab" aria-selected="true" aria-controls="tab-finding" id="tab-button-finding" data-tab="finding">Finding</button>
             <button role="tab" aria-selected="false" aria-controls="tab-query" id="tab-button-query" data-tab="query">Validation query</button>
             <button role="tab" aria-selected="false" aria-controls="tab-mitigation" id="tab-button-mitigation" data-tab="mitigation">Mitigation lab</button>
+            <button role="tab" aria-selected="false" aria-controls="tab-codegen" id="tab-button-codegen" data-tab="codegen">Remediation PR</button>
             <button role="tab" aria-selected="false" aria-controls="tab-writeback" id="tab-button-writeback" data-tab="writeback">DataHub proposal</button>
           </div>
           <div class="tab-content" id="tab-finding" role="tabpanel" aria-labelledby="tab-button-finding">
@@ -249,6 +250,14 @@ GROUP BY zip5, birth_date, gender_category</code></pre>
               <div class="table-row" role="row"><strong>Generalize location and age</strong><span>4</span><span>68%</span><em>Insufficient</em></div>
               <div class="table-row" role="row"><strong>Coarsen and suppress gender</strong><span>4</span><span>55%</span><em>Insufficient</em></div>
             </div>
+          </div>
+          <div class="tab-content codegen-panel" id="tab-codegen" role="tabpanel" aria-labelledby="tab-button-codegen" hidden>
+            <div class="codegen-head"><div><p class="panel-kicker">Metadata-aware code generation</p><h3>From DataHub context to a review-ready PR.</h3><p>Mosaic generates deterministic artifacts from the selected scenario. Nothing is committed, merged, or executed without review.</p></div><div class="codegen-actions"><span class="policy-pass" id="codegen-status">6 checks passed</span><a class="primary-button compact" id="codegen-download" href="/api/remediation-bundles/research/download">Download ZIP</a></div></div>
+            <div class="codegen-workbench">
+              <div class="generated-files"><small>Generated change set</small><div id="generated-file-list"><button class="generated-file is-active" type="button" data-artifact-index="0"><span>SQL</span><b>privacy_safe.sql</b></button></div><div class="generation-receipt"><span>DataHub grounded</span><p id="codegen-receipt">Lineage, schema, scenario digest, and downstream impact retained.</p><code id="codegen-sha">Loading bundle digest...</code></div></div>
+              <div class="generated-preview"><div><span id="generated-path">models/privacy_safe.sql</span><small>Generated proposal - human review required</small></div><pre><code id="generated-code">Loading generated artifact...</code></pre></div>
+            </div>
+            <div class="codegen-proof" aria-label="Generation validation"><span>DataHub URN embedded</span><span>dbt schema emitted</span><span>Aggregate test emitted</span><span>Zero row projection</span><span>Review gate retained</span></div>
           </div>
           <div class="tab-content" id="tab-writeback" role="tabpanel" aria-labelledby="tab-button-writeback" hidden>
             <div class="writeback-grid">
@@ -281,7 +290,7 @@ GROUP BY zip5, birth_date, gender_category</code></pre>
         <li><span>02</span><small>Reason</small><strong>Cross-source convergence</strong></li>
         <li><span>03</span><small>Trace</small><strong>Downstream blast radius</strong></li>
         <li><span>04</span><small>Prove</small><strong>Aggregate anonymity</strong></li>
-        <li><span>05</span><small>Act</small><strong>Reviewed DataHub context</strong></li>
+        <li><span>05</span><small>Generate</small><strong>Code + reviewed context</strong></li>
       </ol>
       <div class="capability-grid">
         <article><div><span>01</span><em>Graph</em></div><h3>Fine-grained lineage</h3><p>Reconstructs which columns originate separately and converge in a shared export.</p><a href="https://github.com/usv240/mosaic-datahub/blob/master/src/mosaic/live_estate.py">Code receipt</a></article>
@@ -297,12 +306,12 @@ GROUP BY zip5, birth_date, gender_category</code></pre>
         <div class="differentiator-grid">
           <article><span>01</span><h4>Graph-native privacy reasoning</h4><p>Finds risk created by relationships&mdash;not a tag, field, or table in isolation.</p></article>
           <article><span>02</span><h4>Aggregate-only proof</h4><p>A fail-closed SQL policy measures anonymity while person-level rows stay at zero.</p></article>
-          <article><span>03</span><h4>Reversible mitigation lab</h4><p>Balances privacy improvement and retained analytical utility before action.</p></article>
+          <article><span>03</span><h4>Merge-ready remediation codegen</h4><p>Emits dbt code, aggregate tests, policy, provenance, and PR documentation.</p></article>
           <article><span>04</span><h4>Tamper-evident memory</h4><p>Digest-backed evidence and re-read write-back make the decision inheritable.</p></article>
         </div>
       </div>
       <div class="technology-footer">
-        <div><small>Supporting execution stack</small><p><b>DuckDB</b> aggregate validation &middot; <b>FastAPI</b> typed interfaces &middot; <b>Playwright</b> end-to-end verification</p></div>
+        <div><small>Supporting execution stack</small><p><b>DuckDB</b> aggregate validation &middot; <b>dbt</b> generated artifacts &middot; <b>FastAPI</b> typed interfaces &middot; <b>Playwright</b> end-to-end verification</p></div>
         <a href="https://github.com/datahub-project/datahub/pull/18705"><span>Merged into DataHub</span><strong>Open-source contribution #18705</strong><b>&rarr;</b></a>
       </div>
     </section>

@@ -2,7 +2,7 @@
 
 ## One-line summary
 
-Mosaic is a DataHub-grounded privacy threat-modeling agent that finds when ordinary attributes converge through lineage into dangerously small anonymity sets, validates the risk with aggregate-only queries, traces downstream exposure, and proposes approval-gated remediation.
+Mosaic is a DataHub-grounded privacy remediation code-generation agent. It finds ordinary attributes that converge into dangerously small anonymity sets, validates the risk with aggregate-only queries, and generates a review-ready dbt remediation PR without exposing person-level rows.
 
 ## Links
 
@@ -13,7 +13,7 @@ Mosaic is a DataHub-grounded privacy threat-modeling agent that finds when ordin
 
 ## Challenge fit
 
-Open / Wildcard, with an agent that does real work across discovery, validation, prioritization, mitigation, evidence retention, and governed DataHub write-back.
+**Metadata-Aware Code Generation & Development.** Mosaic reads real schema, fine-grained lineage, downstream impact, and governance context from DataHub before generating a dbt model, schema contract, aggregate-only test, policy-as-code, provenance manifest, and PR summary that a data team can inspect and merge.
 
 ## The problem
 
@@ -23,7 +23,7 @@ A PII scanner asks whether one column is sensitive. Mosaic asks whether several 
 
 The hosted product teaches the problem in plain language, then offers four working backend scenarios: a critical research export, a successfully mitigated shadow export, a safe operational control, and a second-domain audience export. Every preset loads configuration-backed results from the API rather than swapping client-only labels.
 
-The main critical fixture has 120 synthetic records, minimum k=1, 100% below k=5, three downstream assets, and zero raw rows returned. The mitigation generalizes or suppresses an attribute in shadow mode and reaches minimum k=20 without touching source data.
+The main critical fixture has 120 synthetic records, minimum k=1, 100% below k=5, three downstream assets, and zero raw rows returned. The selected mitigation reaches minimum k=20 in shadow mode. Mosaic then generates six deterministic, hash-verified PR artifacts; judges can review them in the product, download a ZIP, run the CLI, or inspect two committed examples.
 
 ## How DataHub powers the agent
 
@@ -37,22 +37,23 @@ DataHub is Mosaic's reasoning substrate and action layer. The agent uses seven c
 6. A packaged DataHub Skill makes the workflow, safety policy, judgment, and failure handling reusable.
 7. Governed write-back publishes a tag, structured property, threat-model Document, and incident only after human approval, then re-reads every mutation.
 
-Mosaic adds graph-native privacy reasoning, a fail-closed aggregate-only proof layer, a reversible mitigation lab, and tamper-evident evidence retention beyond DataHub's out-of-box metadata experience. The complete implementation map is inspectable at `/api/technology`, and the team contributed back through merged upstream PR [datahub-project/datahub#18705](https://github.com/datahub-project/datahub/pull/18705).
+Mosaic adds graph-native privacy reasoning, a fail-closed aggregate-only proof layer, a reversible mitigation lab, merge-ready remediation code generation, and tamper-evident evidence retention beyond DataHub's out-of-box metadata experience. The complete implementation map is inspectable at `/api/technology`, and the team contributed back through merged upstream PR [datahub-project/datahub#18705](https://github.com/datahub-project/datahub/pull/18705).
 
 ## Evidence, not assertion
 
-Mosaic separates four proof tiers:
+Mosaic separates five proof tiers:
 
 1. Four configuration-driven synthetic scenarios prove deterministic product behavior.
 2. A hash-verified recording proves versioned DataHub SDK, GraphQL, MCP, lineage, downstream, and write-back semantics.
 3. A 48-case seeded benchmark proves exact metric agreement and policy-boundary regression behavior, with 100% precision/recall only for its deliberately bounded generated families.
-4. An aggregate-only proof processes 32,561 official UCI Adult records in memory. Age band alone has minimum k=43; six ordinary attributes composed have minimum k=1 and 23.786% below k=5. No source row or equivalence-class value is committed.
+4. Two committed remediation bundles prove deterministic generation of six review-ready artifacts with per-file SHA-256 receipts and safe refusal for a negative control.
+5. An aggregate-only proof processes 32,561 official UCI Adult records in memory. Age band alone has minimum k=43; six ordinary attributes composed have minimum k=1 and 23.786% below k=5. No source row or equivalence-class value is committed.
 
-These are mechanism and integration claims, not legal conclusions or estimates of production prevalence. A live local DataHub run is the strongest environment-specific proof.
+These are mechanism and integration claims, not legal conclusions or estimates of production prevalence. A live local DataHub run is the strongest environment-specific proof: the discovered asset URN, schema, lineage paths, and downstream boundary directly drive a six-file bundle whose generated SQL is compiled before it is returned.
 
 ## Safety and governance
 
-Mosaic permits only allow-listed `GROUP BY COUNT(*)` validation, returns zero person-level rows, and refuses catalog mutation by default. Browser write-back is disabled unless a local operator opts in, obtains a same-origin CSRF token, and types an exact confirmation phrase. The hosted deployment remains read-only regardless of that setting. Every retained bundle carries a SHA-256 digest and a human-readable print/PDF view.
+Mosaic permits only allow-listed `GROUP BY COUNT(*)` validation, returns zero person-level rows, and refuses catalog mutation by default. Browser write-back is disabled unless a local operator opts in, obtains a same-origin CSRF token, and types an exact confirmation phrase. The hosted deployment remains read-only regardless of that setting. Every retained evidence bundle and generated code artifact carries a SHA-256 digest. Generated code is proposal-only: the hosted product cannot commit, merge, execute, or mutate DataHub.
 
 ## Engineering quality
 

@@ -14,6 +14,11 @@ The sponsor-technology view maps seven DataHub capabilities to their exact role,
 
 [![DataHub-backed agent architecture](08-datahub-architecture.png)](08-datahub-architecture.png)
 
+## Merge-ready Remediation PR
+
+The generated-code workbench exposes all six artifacts, validation receipts, DataHub provenance, safe refusal behavior, and a reproducible ZIP download.
+
+[![Metadata-aware remediation PR studio](09-remediation-pr.png)](09-remediation-pr.png)
 ## Four preset investigations
 
 The audience preset proves that the fourth backend scenario is a complete interactive client experience, not an API-only fixture.

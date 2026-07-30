@@ -3,7 +3,13 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-ROOTS = (Path("evaluations"), Path("evidence"), Path("fixtures"), Path("src/mosaic/scenario_specs"))
+ROOTS = (
+    Path("evaluations"),
+    Path("evidence"),
+    Path("fixtures"),
+    Path("src/mosaic/scenario_specs"),
+    Path("examples/generated"),
+)
 
 
 def main() -> int:

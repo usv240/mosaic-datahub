@@ -97,7 +97,7 @@
     { kicker: "Step 2 - Converge", title: "Now connect attributes that meet downstream.", body: "ZIP5, birth date, and gender come from separate systems but converge in the research export.", why: "This cross-system combination is the finding a table-by-table scan misses." },
     { kicker: "Step 3 - Validate", title: "Measure group sizes without viewing a person.", body: "One allowlisted GROUP BY COUNT(*) query returns equivalence-class counts. The smallest count is minimum k.", why: "k=1 means a unique combination. The UI and agent still receive zero raw rows." },
     { kicker: "Step 4 - Mitigate", title: "Test safer versions before changing anything.", body: "A shadow simulation compares suppression and generalization strategies against both privacy and retained utility.", why: "The recommended option lifts k to 20 while retaining the most useful detail." },
-    { kicker: "Step 5 - Propose", title: "Leave a durable finding, behind a human gate.", body: "Mosaic prepares a DataHub property, tag, evidence document, and incident. The hosted demo applies none of them.", why: "A reviewer must approve locally; Mosaic then rereads DataHub to verify persistence." }
+    { kicker: "Step 5 - Propose", title: "Generate the fix, behind a human gate.", body: "Mosaic generates a dbt model, aggregate-only test, policy, manifest, and PR summary before preparing DataHub write-back.", why: "A reviewer must approve the code and catalog proposal; Mosaic never commits, merges, or mutates on its own." }
   ];
   var selected = "research";
   var running = false;
@@ -179,6 +179,7 @@
     byId("proposal-k").textContent = scenario.k;
     drawGraph(scenario);
     hydrateScenario(name);
+    hydrateCodegen(name);
     if (shouldScroll) {
       if (history.replaceState) history.replaceState(null, "", "?case=" + name + "#workspace");
       byId("workspace").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -211,7 +212,7 @@
     byId("narrator-kicker").textContent = "What this proves";
     byId("narrator-title").textContent = scenario.verdict === "Critical" ? "The graph exposed a measurable risk and a safer path." : "Mosaic reached the right decision without exposing a person.";
     byId("narrator-body").textContent = scenario.copy;
-    byId("narrator-why").textContent = "Inspect Finding, Validation query, Mitigation lab, and DataHub proposal below. Every claim has visible evidence.";
+    byId("narrator-why").textContent = "Inspect Finding, Validation query, Mitigation lab, generated Remediation PR, and DataHub proposal below. Every claim has visible evidence.";
   }
 
   function resetNarrator() {
@@ -280,7 +281,7 @@
       "Mapped location, date-of-birth, and demographic families.",
       "Executed allowlisted GROUP BY; received counts only.",
       selected === "mitigated" ? "Confirmed suppression lifts minimum anonymity to k=20." : "Compared 3 reversible mitigations; suppression retains 76% utility.",
-      "Prepared governed DataHub proposal; awaiting reviewer approval."
+      "Generated 6 merge-ready artifacts; awaiting reviewer approval."
     ];
     messages.forEach(function (message, index) {
       runTimers.push(setTimeout(function () {
@@ -296,7 +297,16 @@
           button.disabled = false;
           button.querySelector(".run-label").textContent = "Run again";
           completeNarrator(scenario);
-          showToast("Investigation complete. Evidence is ready to inspect.");
+          if (selected !== "control") {
+            byId("tab-button-codegen").click();
+            byId("tab-codegen").scrollIntoView({
+              behavior: reduceMotion ? "auto" : "smooth",
+              block: "start"
+            });
+            showToast("Remediation PR generated. Review or download all 6 artifacts.");
+          } else {
+            showToast("Safe control complete. Mosaic correctly generated no remediation code.");
+          }
         }
       }, delay * (index + 1)));
     });
@@ -337,6 +347,68 @@
     });
   }
 
+  function showGeneratedArtifact(bundle, index) {
+    var artifact = bundle.artifacts[index];
+    if (!artifact) return;
+    byId("generated-path").textContent = artifact.path;
+    byId("generated-code").textContent = artifact.content;
+    all(".generated-file").forEach(function (button) {
+      button.classList.toggle("is-active", Number(button.dataset.artifactIndex) === index);
+    });
+  }
+
+  function renderCodegenBundle(bundle) {
+    var list = byId("generated-file-list");
+    list.innerHTML = "";
+    bundle.artifacts.forEach(function (artifact, index) {
+      var button = document.createElement("button");
+      var extension = artifact.path.split(".").pop().toUpperCase();
+      button.type = "button";
+      button.className = "generated-file" + (index === 0 ? " is-active" : "");
+      button.dataset.artifactIndex = String(index);
+      button.innerHTML = "<span>" + escapeHTML(extension) + "</span><b>" + escapeHTML(artifact.path) + "</b>";
+      button.addEventListener("click", function () { showGeneratedArtifact(bundle, index); });
+      list.appendChild(button);
+    });
+    byId("codegen-status").textContent = bundle.validation.checks.length + " checks passed";
+    byId("codegen-sha").textContent = "bundle sha256: " + bundle.bundle_sha256.slice(0, 20) + "...";
+    byId("codegen-receipt").textContent = bundle.strategy;
+    var download = byId("codegen-download");
+    download.href = "/api/remediation-bundles/" + encodeURIComponent(bundle.scenario) + "/download";
+    download.removeAttribute("aria-disabled");
+    showGeneratedArtifact(bundle, 0);
+  }
+
+  function renderNoCodegen(message) {
+    byId("generated-file-list").innerHTML = '<div class="no-generation">No files generated</div>';
+    byId("generated-path").textContent = "generation-refused.txt";
+    byId("generated-code").textContent = message;
+    byId("codegen-status").textContent = "Stopped safely";
+    byId("codegen-sha").textContent = "No bundle digest: no candidate existed.";
+    byId("codegen-receipt").textContent = "Mosaic refuses to manufacture code for a safe control.";
+    var download = byId("codegen-download");
+    download.removeAttribute("href");
+    download.setAttribute("aria-disabled", "true");
+  }
+
+  function hydrateCodegen(name) {
+    if (name === "control") {
+      renderNoCodegen("Metadata screening found no compositional privacy risk. No remediation is necessary, so Mosaic generated no code.");
+      return;
+    }
+    byId("generated-code").textContent = "Generating from DataHub context...";
+    fetch("/api/remediation-bundles/" + encodeURIComponent(name))
+      .then(function (response) {
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        return response.json();
+      })
+      .then(function (bundle) {
+        if (selected === name) renderCodegenBundle(bundle);
+      })
+      .catch(function () {
+        renderNoCodegen("The generator API is temporarily unavailable. Use the committed examples or run the CLI locally.");
+      });
+  }
   function hydrateScenario(name) {
     fetch("/api/scenarios/" + encodeURIComponent(name))
       .then(function (response) {

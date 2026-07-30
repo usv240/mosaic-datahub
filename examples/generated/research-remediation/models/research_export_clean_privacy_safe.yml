@@ -1,0 +1,19 @@
+version: 2
+
+models:
+  - name: research_export_clean_privacy_safe
+    description: >-
+      Mosaic-generated shadow remediation for Research export investigation. Review before merge.
+    config:
+      tags: [mosaic_privacy_remediation, human_review_required]
+    meta:
+      datahub_source_urn: "urn:li:dataset:(urn:li:dataPlatform:mosaic,research_export_clean,PROD)"
+      mosaic_scenario_sha256: "97b5bc8f5881898b3e8debcf4bf13284b52b4537ca8fb4df5bc7622e38bfb63a"
+      minimum_k_before: 1
+      minimum_k_after: 20
+      raw_person_rows_returned: 0
+    columns:
+      - name: zip5
+        description: Privacy-reviewed output column.
+      - name: gender_category
+        description: Privacy-reviewed output column.

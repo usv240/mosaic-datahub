@@ -5,12 +5,12 @@ from mosaic.web import create_app
 
 def test_landing_page_leads_with_plain_language_problem() -> None:
     text = TestClient(create_app()).get("/").text
-    assert "The table looks safe" in text
-    assert "The graph says otherwise" in text
+    assert "The graph finds the risk" in text
+    assert "Mosaic writes the fix" in text
     assert "DataHub" in text
     assert 'id="theme-toggle"' in text
     assert 'id="lineage-stage"' in text
-    assert "Run the 60-second demo" in text
+    assert "Generate the remediation PR" in text
 
 
 def test_evidence_api_is_complete_and_safe() -> None:

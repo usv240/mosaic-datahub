@@ -51,6 +51,11 @@ def main() -> int:
         desktop.wait_for_timeout(3_800)
         desktop.locator('[data-tab="mitigation"]').click()
         files.append(_screenshot(desktop, "03-completed-investigation.png"))
+        desktop.locator('[data-tab="codegen"]').click()
+        desktop.locator("#generated-file-list .generated-file").first.wait_for()
+        codegen_path = OUTPUT / "09-remediation-pr.png"
+        desktop.locator("#tab-codegen").screenshot(path=codegen_path)
+        files.append(codegen_path)
         _ready(desktop, "/runs")
         files.append(_screenshot(desktop, "04-evidence-catalog.png"))
         _ready(desktop, "/settings")
@@ -85,7 +90,7 @@ def main() -> int:
         walkthrough.wait_for_timeout(800)
         walkthrough.locator("#run-demo").click()
         walkthrough.wait_for_timeout(4_000)
-        for tab in ("query", "mitigation", "writeback"):
+        for tab in ("query", "mitigation", "codegen", "writeback"):
             walkthrough.locator(f'[data-tab="{tab}"]').click()
             walkthrough.wait_for_timeout(1_000)
         _ready(walkthrough, "/runs")

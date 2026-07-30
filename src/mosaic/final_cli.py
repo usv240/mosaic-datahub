@@ -25,6 +25,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         "replay-fixture", help="Replay the hash-verified DataHub metadata fixture"
     )
     replay.add_argument("--fixture", type=Path, default=Path("fixtures/datahub_recording"))
+    generate = commands.add_parser(
+        "generate-remediation",
+        help="Generate a DataHub-grounded, merge-ready privacy remediation bundle",
+    )
+    generate.add_argument("--scenario", default="research")
+    generate.add_argument("--output", type=Path)
     serve = commands.add_parser("serve", help="Start the complete privacy evidence console")
     serve.add_argument("--host", default="127.0.0.1")
     serve.add_argument("--port", type=int, default=8123)
@@ -75,6 +81,30 @@ def main(argv: Sequence[str] | None = None) -> int:
         report = replay_fixture(args.fixture)
         print(json.dumps(report, indent=2))
         return 0 if report["status"] == "passed" else 2
+    if args.command == "generate-remediation":
+        from mosaic.remediation_codegen import write_remediation_bundle
+
+        output = args.output or Path("generated") / f"{args.scenario}-remediation"
+        try:
+            bundle = write_remediation_bundle(args.scenario, output)
+        except KeyError:
+            parser.error(f"unknown scenario: {args.scenario}")
+        except ValueError as error:
+            parser.error(str(error))
+        print(
+            json.dumps(
+                {
+                    "status": bundle["status"],
+                    "track": bundle["track"],
+                    "scenario": bundle["scenario"],
+                    "artifact_count": bundle["artifact_count"],
+                    "bundle_sha256": bundle["bundle_sha256"],
+                    "output": str(output),
+                },
+                indent=2,
+            )
+        )
+        return 0
     if args.command == "serve":
         import uvicorn
 
