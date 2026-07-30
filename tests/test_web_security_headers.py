@@ -11,3 +11,8 @@ def test_browser_security_headers_apply_to_html_and_api(tmp_path) -> None:
         assert headers["x-frame-options"] == "DENY"
         assert headers["referrer-policy"] == "strict-origin-when-cross-origin"
         assert headers["permissions-policy"] == "camera=(), microphone=(), geolocation=()"
+        policy = headers["content-security-policy"]
+        assert "default-src 'self'" in policy
+        assert "object-src 'none'" in policy
+        assert "frame-ancestors 'none'" in policy
+        assert "script-src 'self'" in policy
