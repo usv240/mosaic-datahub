@@ -25,3 +25,10 @@ def test_proofs_api_is_judge_inspectable(tmp_path) -> None:
     response = client.get("/api/proofs")
     assert response.status_code == 200
     assert response.json()["status"] == "passed"
+
+
+def test_proof_catalog_assets_are_shipped_in_container() -> None:
+    dockerfile = (Path.cwd() / "Dockerfile").read_text(encoding="utf-8")
+    assert "COPY evaluations ./evaluations" in dockerfile
+    assert "COPY evidence ./evidence" in dockerfile
+    assert "COPY fixtures ./fixtures" in dockerfile

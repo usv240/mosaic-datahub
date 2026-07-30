@@ -1,4 +1,4 @@
-﻿# Submission checklist
+# Submission checklist
 
 ## Product and education
 
@@ -23,7 +23,7 @@
 
 ## Engineering quality
 
-- [x] 271 passing tests
+- [x] 272 passing tests
 - [x] 99.63% measured coverage
 - [x] Multi-OS and Python 3.11/3.12 CI
 - [x] Strict lint, format, JSON, UTF-8, CLI-contract, package-build, and accessibility gates
