@@ -11,8 +11,9 @@ def record(bundle: dict[str, object], directory: Path) -> dict[str, object]:
     """Persist an immutable evidence bundle with its content digest."""
     directory.mkdir(parents=True, exist_ok=True)
     payload = dict(bundle)
-    payload["run_id"] = f"mosaic-{datetime.now(UTC):%Y%m%dT%H%M%S}-{uuid4().hex[:6]}"
-    payload["recorded_at"] = datetime.now(UTC).isoformat()
+    recorded_at = datetime.now(UTC)
+    payload["run_id"] = f"mosaic-{recorded_at:%Y%m%dT%H%M%S%f}-{uuid4().hex[:6]}"
+    payload["recorded_at"] = recorded_at.isoformat()
     canonical = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
     payload["sha256"] = hashlib.sha256(canonical).hexdigest()
     (directory / f"{payload['run_id']}.json").write_text(
