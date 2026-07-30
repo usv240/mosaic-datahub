@@ -64,6 +64,13 @@
     }
   };
 
+  var narration = [
+    { kicker: "Step 1 - Discover", title: "First, read the map - not the data.", body: "Mosaic asks DataHub where the relevant columns originated and which assets consume them.", why: "Without lineage, each source looks harmless in isolation." },
+    { kicker: "Step 2 - Converge", title: "Now connect attributes that meet downstream.", body: "ZIP5, birth date, and gender come from separate systems but converge in the research export.", why: "This cross-system combination is the finding a table-by-table scan misses." },
+    { kicker: "Step 3 - Validate", title: "Measure group sizes without viewing a person.", body: "One allowlisted GROUP BY COUNT(*) query returns equivalence-class counts. The smallest count is minimum k.", why: "k=1 means a unique combination. The UI and agent still receive zero raw rows." },
+    { kicker: "Step 4 - Mitigate", title: "Test safer versions before changing anything.", body: "A shadow simulation compares suppression and generalization strategies against both privacy and retained utility.", why: "The recommended option lifts k to 20 while retaining the most useful detail." },
+    { kicker: "Step 5 - Propose", title: "Leave a durable finding, behind a human gate.", body: "Mosaic prepares a DataHub property, tag, evidence document, and incident. The hosted demo applies none of them.", why: "A reviewer must approve locally; Mosaic then rereads DataHub to verify persistence." }
+  ];
   var selected = "research";
   var running = false;
   var runTimers = [];
@@ -147,6 +154,43 @@
     if (shouldScroll) byId("workspace").scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
+  function updateNarrator(index) {
+    var item = narration[index];
+    if (selected === "control" && index >= 1) {
+      var control = [
+        null,
+        { kicker: "Step 2 - Screen", title: "No person-joinable combination exists.", body: "The operational run ID is high-cardinality, but its meaning and lineage do not connect it to a person.", why: "Mosaic refuses to equate many distinct values with compositional privacy risk." },
+        { kicker: "Step 3 - Stop safely", title: "No data query is needed.", body: "Because the metadata screen found no multi-family convergence, Mosaic does not issue an aggregate query.", why: "Failing closed also means avoiding unnecessary data access." },
+        { kicker: "Step 4 - Verify control", title: "The negative control stays clear.", body: "No mitigation is recommended because Mosaic has not manufactured a risk finding.", why: "Safe controls demonstrate that the product distinguishes signal from cardinality theater." },
+        { kicker: "Step 5 - Record", title: "Keep the clear decision without raising an incident.", body: "The evidence records why the candidate was rejected and proposes no catalog mutation.", why: "Future reviewers inherit the reasoning as well as the outcome." }
+      ];
+      item = control[index];
+    }
+    byId("narrator").classList.remove("is-complete");
+    byId("narrator-step").textContent = "Step " + (index + 1) + " of 5";
+    byId("narrator-kicker").textContent = item.kicker;
+    byId("narrator-title").textContent = item.title;
+    byId("narrator-body").textContent = item.body;
+    byId("narrator-why").textContent = item.why;
+  }
+
+  function completeNarrator(scenario) {
+    byId("narrator").classList.add("is-complete");
+    byId("narrator-step").textContent = "Complete";
+    byId("narrator-kicker").textContent = "What this proves";
+    byId("narrator-title").textContent = scenario.verdict === "Critical" ? "The graph exposed a measurable risk and a safer path." : "Mosaic reached the right decision without exposing a person.";
+    byId("narrator-body").textContent = scenario.copy;
+    byId("narrator-why").textContent = "Inspect Finding, Validation query, Mitigation lab, and DataHub proposal below. Every claim has visible evidence.";
+  }
+
+  function resetNarrator() {
+    byId("narrator").classList.remove("is-complete");
+    byId("narrator-step").textContent = "Before you run";
+    byId("narrator-kicker").textContent = "The whole idea";
+    byId("narrator-title").textContent = "DataHub shows the combination. Mosaic proves whether it is risky.";
+    byId("narrator-body").textContent = "Press Run investigation. We will explain each catalog read, calculation, safety guardrail, and proposed action as it happens.";
+    byId("narrator-why").textContent = "The agent receives metadata and group counts - never a person-level row.";
+  }
   function setProgress(index) {
     all(".run-progress li").forEach(function (item, itemIndex) {
       item.classList.toggle("is-active", itemIndex === index);
@@ -210,6 +254,7 @@
     messages.forEach(function (message, index) {
       runTimers.push(setTimeout(function () {
         setProgress(index);
+        updateNarrator(index);
         addLog(message);
         if (index === 2) setFinding(scenario);
         if (index === messages.length - 1) {
@@ -219,6 +264,7 @@
           running = false;
           button.disabled = false;
           button.querySelector(".run-label").textContent = "Run again";
+          completeNarrator(scenario);
           showToast("Investigation complete. Evidence is ready to inspect.");
         }
       }, delay * (index + 1)));
@@ -239,6 +285,7 @@
     byId("finding-callout").innerHTML = '<span></span><p>Select <strong>Run investigation</strong> to replay every evidence-producing step.</p>';
     byId("activity-log").innerHTML = '<li class="empty-log">No actions yet. Start the guided replay above.</li>';
     byId("elapsed").textContent = "00:00.0";
+    resetNarrator();
     byId("run-demo").disabled = false;
     byId("run-demo").querySelector(".run-label").textContent = "Run investigation";
     if (clearScenario) drawGraph(scenarios[selected]);

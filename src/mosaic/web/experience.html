@@ -99,7 +99,20 @@
       <a href="https://github.com/usv240/mosaic-datahub#quickstart">Run locally</a>
     </section>
 
-    <section class="section presets-section" id="presets" aria-labelledby="presets-title">
+
+    <section class="section orientation-section" aria-labelledby="orientation-title">
+      <div class="orientation-intro">
+        <p class="eyebrow">Start here - no privacy background needed</p>
+        <h2 id="orientation-title">Three ideas before you click Run.</h2>
+        <p>Mosaic answers one practical question: can ordinary columns become identifying after a data estate combines them?</p>
+      </div>
+      <div class="orientation-grid">
+        <article><span>1</span><div><h3>Safe alone does not mean safe together</h3><p>A ZIP code is not a name. Neither is a birth date. But the same ZIP, birth date, and gender can describe a very small group.</p></div></article>
+        <article><span>2</span><div><h3>DataHub supplies the missing map</h3><p><strong>Lineage</strong> is a map of where each column came from and where it goes. It reveals combinations spread across systems.</p></div></article>
+        <article><span>3</span><div><h3>Mosaic counts groups, never identifies people</h3><p><strong>k</strong> means group size. k=1 means one unique record; k=20 means twenty records share the same combination.</p></div></article>
+      </div>
+      <p class="orientation-rule"><strong>The safety rule:</strong> ask "how many records share this combination?" - never "who is this person?"</p>
+    </section>    <section class="section presets-section" id="presets" aria-labelledby="presets-title">
       <div class="section-heading">
         <div><p class="eyebrow">Preset investigation lab</p><h2 id="presets-title">Choose a case. See if Mosaic knows the difference.</h2></div>
         <p>One is critical, one becomes safe after mitigation, and one is a deliberate false-positive control.</p>
@@ -151,7 +164,12 @@
           <li data-step="4"><b>5</b><span>Propose<small>Human gate</small></span></li>
         </ol>
 
-        <div class="workspace-grid">
+
+        <section class="narrator" id="narrator" aria-live="polite" aria-atomic="true">
+          <span class="narrator-step" id="narrator-step">Before you run</span>
+          <div class="narrator-copy"><small id="narrator-kicker">The whole idea</small><h3 id="narrator-title">DataHub shows the combination. Mosaic proves whether it is risky.</h3><p id="narrator-body">Press Run investigation. We will explain each catalog read, calculation, safety guardrail, and proposed action as it happens.</p></div>
+          <div class="narrator-why"><small>What to watch for</small><p id="narrator-why">The agent receives metadata and group counts - never a person-level row.</p></div>
+        </section>        <div class="workspace-grid">
           <section class="graph-panel panel" aria-labelledby="graph-title">
             <div class="panel-head">
               <div><p class="panel-kicker">DataHub column lineage</p><h3 id="graph-title">Convergence and blast radius</h3></div>
@@ -227,7 +245,18 @@ GROUP BY zip5, birth_date, gender_category</code></pre>
       </div>
     </section>
 
-    <section class="safety-strip" aria-label="Safety guarantees"><div><p class="eyebrow">Built to investigate risk, not enable it</p><h2>Evidence without identities.</h2></div><ul><li><span>&check;</span> Synthetic demo data</li><li><span>&check;</span> Aggregate queries only</li><li><span>&check;</span> Raw-row counter fixed at zero</li><li><span>&check;</span> Human approval before mutation</li></ul></section>
+
+    <section class="section glossary-section" aria-labelledby="glossary-title">
+      <div class="section-heading"><div><p class="eyebrow">Plain-English reference</p><h2 id="glossary-title">Every term used in the demo.</h2></div><p>You do not need privacy-engineering or DataHub experience. Open any term for a thirty-second explanation.</p></div>
+      <div class="glossary-grid">
+        <details><summary>DataHub lineage <span>+</span></summary><p>A map showing which dataset or column produced another dataset or column. Mosaic uses it to find attributes that begin in separate systems and later meet.</p></details>
+        <details><summary>Quasi-identifier <span>+</span></summary><p>An ordinary attribute - such as ZIP code or birth date - that is not a direct identity by itself but can narrow a person down when combined with other attributes.</p></details>
+        <details><summary>Minimum k <span>+</span></summary><p>The size of the smallest group sharing an identical attribute combination. Lower is riskier. k=1 means one record has a unique combination; k=20 means it blends into a group of twenty.</p></details>
+        <details><summary>Aggregate-only query <span>+</span></summary><p>A query that returns counts for groups, not individual rows. Mosaic permits one allowlisted GROUP BY COUNT(*) shape and rejects joins, filters, row projections, and mutations.</p></details>
+        <details><summary>Blast radius <span>+</span></summary><p>Every downstream dataset, delivery, dashboard, or model that inherited the risky combination. DataHub's graph lets Mosaic trace that impact beyond the first finding.</p></details>
+        <details><summary>Governed write-back <span>+</span></summary><p>A proposed catalog update that requires human approval. When approved locally, Mosaic writes the risk state, evidence document, field tag, and incident to DataHub, then rereads them to verify persistence.</p></details>
+      </div>
+    </section>    <section class="safety-strip" aria-label="Safety guarantees"><div><p class="eyebrow">Built to investigate risk, not enable it</p><h2>Evidence without identities.</h2></div><ul><li><span>&check;</span> Synthetic demo data</li><li><span>&check;</span> Aggregate queries only</li><li><span>&check;</span> Raw-row counter fixed at zero</li><li><span>&check;</span> Human approval before mutation</li></ul></section>
   </main>
 
   <footer class="footer"><a class="brand compact-brand" href="/"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>Mosaic</span></a><p>Privacy is not a column property. It is a graph property.</p><div><a href="https://github.com/usv240/mosaic-datahub">Source</a><a href="/api/assessment">Evidence API</a><a href="/health">Status</a></div></footer>
