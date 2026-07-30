@@ -8,6 +8,12 @@ The full-page capture leads from the core risk and potential impact through stak
 
 [![Dark-mode landing page](01-landing-dark.png)](01-landing-dark.png)
 
+## DataHub architecture
+
+The sponsor-technology view maps seven DataHub capabilities to their exact role, code receipt, reproducible proof, and the four innovations Mosaic adds.
+
+[![DataHub-backed agent architecture](08-datahub-architecture.png)](08-datahub-architecture.png)
+
 ## Four preset investigations
 
 The audience preset proves that the fourth backend scenario is a complete interactive client experience, not an API-only fixture.

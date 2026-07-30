@@ -69,7 +69,9 @@ def test_one_command_container_evaluation_defaults_to_read_only() -> None:
     assert "integration boundaries, not claimed built-in connectors" in guide
     capture = Path("scripts/capture_submission_media.py").read_text(encoding="utf-8")
     assert "data-has-integration-boundary" in capture
+    assert "08-datahub-architecture.png" in capture
     workflow = Path(".github/workflows/verify.yml").read_text(encoding="utf-8")
     assert "Smoke production container" in workflow
     assert "/api/adoption" in workflow
+    assert "/api/technology" in workflow
     assert "\n      - name: Browser accessibility gate" in workflow

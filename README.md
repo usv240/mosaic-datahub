@@ -90,9 +90,54 @@ See [evaluations/benchmark.json](evaluations/benchmark.json), [fixtures/datahub_
 
 The repository also includes the complete [screenshot gallery](docs/screenshots/README.md) and an [edit-ready product walkthrough](docs/demo/08-product-walkthrough.webm). The walkthrough is source footage for the required narrated public submission video; it is not presented as the final YouTube/Vimeo entry.
 
-## Why DataHub is essential
+## How Mosaic uses DataHub
 
-The no-lineage baseline sees no cross-source convergence. DataHub supplies the column paths that create the candidate, the downstream graph that defines impact, and the durable catalog surfaces that preserve a reviewed decision. Mosaic uses official SDK, GraphQL, MCP, tags, structured properties, Documents, and incidents; the versioned replay fixture makes those semantics reviewable without infrastructure.
+**DataHub is the reasoning substrate, not a logo in the footer.** Without DataHub, Mosaic has isolated column names. With DataHub, it can reconstruct cross-source convergence, determine who inherited the risk, and leave a verified governance decision behind.
+
+```text
+DataHub schema + fine-grained lineage
+                  |
+                  v
+      Mosaic graph-native reasoning
+                  |
+                  v
+ DuckDB aggregate-only validation
+                  |
+                  v
+      DataHub downstream blast radius
+                  |
+                  v
+ reviewed tag + property + Document + incident
+```
+
+| DataHub capability | What Mosaic does with it | Inspect the implementation |
+|---|---|---|
+| Fine-grained lineage | Reconstructs ordinary columns that originate separately and converge in one asset | [`live_estate.py`](src/mosaic/live_estate.py), [`lineage.json`](fixtures/datahub_recording/responses/lineage.json) |
+| Downstream graph | Converts a finding into the exact partner, model, and analytics impact boundary | [`live_estate.py`](src/mosaic/live_estate.py), [`downstream.json`](fixtures/datahub_recording/responses/downstream.json) |
+| Python SDK | Creates isolated synthetic assets and reads catalog entities through supported interfaces | [`live_estate.py`](src/mosaic/live_estate.py), [`entity.json`](fixtures/datahub_recording/responses/entity.json) |
+| GraphQL API | Creates structured governance context and active incidents, then verifies them | [`datahub_graphql.py`](src/mosaic/datahub_graphql.py), [`writeback.json`](fixtures/datahub_recording/responses/writeback.json) |
+| MCP Server | Gives an MCP-compatible agent schema, search, lineage, and tag tools | [`mcp_probe.py`](src/mosaic/mcp_probe.py), [`mcp.json`](fixtures/datahub_recording/responses/mcp.json) |
+| DataHub Skill | Packages the reusable privacy workflow, safety policy, judgment, and failure handling | [`SKILL.md`](skills/datahub-privacy-threat-model/SKILL.md), [skill evaluations](skills/datahub-privacy-threat-model/evaluations) |
+| Governed write-back | Publishes a field tag, structured property, threat-model Document, and incident only after approval, then re-reads every mutation | [`governed_writeback.py`](src/mosaic/governed_writeback.py) |
+
+The same map is machine-inspectable in the running product at [`/api/technology`](https://mosaic-datahub-production.up.railway.app/api/technology). A hash-verified recording makes the named SDK, GraphQL, MCP, lineage, downstream, and write-back semantics reproducible without asking a judge to provision infrastructure.
+
+### What Mosaic adds beyond DataHub
+
+- **Graph-native privacy reasoning:** detects risk produced by relationships that neither a field classifier nor an out-of-box metadata view can establish alone.
+- **Aggregate-only proof:** a fail-closed SQL policy measures anonymity while keeping person-level rows at zero.
+- **Reversible mitigation lab:** compares privacy improvement with retained utility before proposing a catalog action.
+- **Tamper-evident institutional memory:** digest-backed evidence and re-read write-back make the decision inheritable by the next human or agent.
+
+The no-lineage baseline finds zero cross-source convergences. Mosaic finds the hidden convergence, validates it, and traces every downstream consumer.
+
+### Supporting technology
+
+- **DuckDB** provides isolated, in-memory aggregate validation.
+- **FastAPI** exposes typed read-only product and operator APIs.
+- **Playwright** verifies the judge journey, responsive states, and accessibility in light and dark modes.
+
+Mosaic also contributed back to its core platform: [`datahub-project/datahub#18705`](https://github.com/datahub-project/datahub/pull/18705) was merged upstream.
 
 ## Safety boundary
 
@@ -110,7 +155,7 @@ Thresholds are demo policy, not a legal conclusion. Read [ETHICS.md](ETHICS.md) 
 
 ## Reusable interfaces
 
-- REST: `/api/scenarios`, `/api/scenarios/{slug}`, `/api/scan`, `/api/runs/{id}`, `/api/proofs`, `/api/adoption`
+- REST: `/api/scenarios`, `/api/scenarios/{slug}`, `/api/scan`, `/api/runs/{id}`, `/api/proofs`, `/api/adoption`, `/api/technology`
 - CLI: `assess`, `scan`, `benchmark`, `replay-fixture`, `serve`, `live-demo`, `verify-mcp`
 - Agent skill: [`$datahub-privacy-threat-model`](skills/datahub-privacy-threat-model/SKILL.md)
 - Operator console: `/settings` with non-mutating health probe and guarded local approval

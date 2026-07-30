@@ -22,11 +22,12 @@
 - [x] Aggregate-only official UCI Adult proof; no raw rows committed
 - [x] Tag, structured property, Document, and incident re-read checks
 - [x] Packaged `$datahub-privacy-threat-model` skill
+- [x] Seven-surface DataHub architecture is visible on the landing page, proof-linked in the README, and machine-readable at `/api/technology`
 - [x] Merged DataHub contribution: https://github.com/datahub-project/datahub/pull/18705
 
 ## Engineering quality
 
-- [x] 278 passing tests
+- [x] 282 passing tests
 - [x] 99.64% measured coverage
 - [x] Multi-OS and Python 3.11/3.12 CI
 - [x] Strict lint, format, JSON, UTF-8, CLI-contract, package-build, and accessibility gates
@@ -37,7 +38,7 @@
 
 - [x] Public repository: https://github.com/usv240/mosaic-datahub
 - [x] Hosted demo: https://mosaic-datahub-production.up.railway.app
-- [x] CI-generated final product screenshot gallery committed to the public repository
+- [x] CI-generated eight-state product screenshot gallery, including a dedicated DataHub architecture capture, committed to the public repository
 - [x] Edit-ready browser-recorded walkthrough committed with a SHA-256 media manifest
 - [ ] Attach under-three-minute public video to the submission form
 

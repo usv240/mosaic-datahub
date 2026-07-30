@@ -10,7 +10,7 @@ Choose the critical research preset, then the mitigated and control presets. Poi
 
 ## 0:45-1:15 - Show why DataHub matters
 
-Follow the narrated lineage steps as ZIP5, birth date, and demographic category travel from separate systems into one research export. A table scanner sees harmless columns. DataHub reveals where the paths converge and identifies the three downstream consumers.
+Pause on the DataHub architecture section: the product names seven used surfaces—fine-grained lineage, downstream graph, Python SDK, GraphQL, MCP Server, DataHub Skill, and governed write-back—and links each claim to code or a proof receipt. Then follow ZIP5, birth date, and demographic category from separate systems into one research export. A table scanner sees harmless columns; DataHub reveals where they converge and who inherits the risk.
 
 ## 1:15-1:40 - Validate without exposing anyone
 

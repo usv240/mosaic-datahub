@@ -38,6 +38,12 @@ def main() -> int:
         desktop.evaluate("localStorage.setItem('mosaic-theme', 'dark')")
         _ready(desktop)
         files.append(_screenshot(desktop, "01-landing-dark.png"))
+        architecture = desktop.locator("#datahub-stack")
+        architecture.scroll_into_view_if_needed()
+        desktop.wait_for_timeout(500)
+        architecture_path = OUTPUT / "08-datahub-architecture.png"
+        architecture.screenshot(path=architecture_path)
+        files.append(architecture_path)
         desktop.locator('[data-scenario="audience"]').click()
         desktop.wait_for_timeout(600)
         files.append(_screenshot(desktop, "02-audience-preset.png"))

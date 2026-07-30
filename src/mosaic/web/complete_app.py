@@ -19,6 +19,7 @@ from mosaic.mitigation_lab import compare_mitigations
 from mosaic.proof_catalog import proof_catalog
 from mosaic.runs import list_runs, load_run, record
 from mosaic.scenario_registry import assess_scenario, list_scenarios
+from mosaic.technology import technology_catalog
 
 WEB_ROOT = Path(__file__).parent
 
@@ -98,6 +99,10 @@ def create_app(project_root: Path | None = None) -> FastAPI:
             raise HTTPException(status_code=400, detail="Exact confirmation phrase required.")
         server = os.getenv("MOSAIC_DATAHUB_URL", "http://localhost:8080")
         return publish(server, approved=True)
+
+    @app.get("/api/technology")
+    def technology() -> dict[str, object]:
+        return technology_catalog()
 
     @app.get("/api/adoption")
     def adoption() -> dict[str, object]:

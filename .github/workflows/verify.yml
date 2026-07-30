@@ -61,6 +61,7 @@ jobs:
           curl -fsS http://127.0.0.1:8124/health | grep -F '"status":"ok"'
           curl -fsS http://127.0.0.1:8124/api/proofs | grep -F '"status":"passed"'
           curl -fsS http://127.0.0.1:8124/api/adoption | grep -F '"status":"ready_to_evaluate"'
+          curl -fsS http://127.0.0.1:8124/api/technology | grep -F '"name":"DataHub"'
       - name: Browser accessibility gate
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
         shell: bash

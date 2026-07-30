@@ -26,7 +26,7 @@
     </a>
     <nav aria-label="Primary navigation">
       <a href="#impact">Impact</a>
-      <a href="#presets">Preset cases</a>
+      <a href="#datahub-stack">DataHub stack</a>
       <a href="#workspace">Live demo</a>
       <a href="#adopt">Adopt</a>
       <a href="/runs">Evidence</a>
@@ -59,12 +59,12 @@
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 7 8 5-8 5Z"/></svg>
             Run the 60-second demo
           </button>
-          <a class="secondary-button" href="#presets">Choose another case</a>
+          <a class="secondary-button" href="#datahub-stack">See the DataHub architecture</a>
         </div>
         <div class="trust-row" aria-label="Demo guarantees">
           <span><b>0</b> raw rows exposed</span>
-          <span><b>4</b> teams aligned</span>
-          <span><b>1</b> governed decision</span>
+          <span><b>7</b> DataHub capabilities</span>
+          <span><b>4</b> verified write-backs</span>
         </div>
       </div>
 
@@ -265,35 +265,67 @@ GROUP BY zip5, birth_date, gender_category</code></pre>
       </div>
     </section>
 
-    <section class="section proof-section" id="proof" aria-labelledby="proof-title">
-      <div class="section-heading"><div><p class="eyebrow">Why DataHub is essential</p><h2 id="proof-title">A privacy notebook sees a table. Mosaic sees the estate.</h2></div><p>The graph creates the finding, supplies the blast radius, and keeps the reviewed result for the next human or agent.</p></div>
-      <div class="proof-grid">
-        <article><span>01</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h4v4H5zM15 5h4v4h-4zM10 15h4v4h-4zM9 7h6M7 9l4 6m6-6-4 6"/></svg><h3>Column-level lineage</h3><p>Finds quasi-identifier families that originate in separate systems but converge in one export.</p></article>
-        <article><span>02</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M12 4v16M6 6l12 12M18 6 6 18"/></svg><h3>Estate-wide impact</h3><p>Traces every partner delivery, explorer export, and training set that inherited the combination.</p></article>
-        <article><span>03</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 5 3 8 7 10 4-2 7-5 7-10V6zM9 12l2 2 4-5"/></svg><h3>Durable governance</h3><p>Writes approved evidence back as catalog context so the risk is not rediscovered from scratch.</p></article>
+    <section class="section datahub-stack-section" id="datahub-stack" aria-labelledby="datahub-stack-title">
+      <div class="sponsor-lockup">
+        <span class="datahub-mark" aria-hidden="true">DH</span>
+        <div><small>Hackathon sponsor technology</small><strong>DataHub</strong><p>Open-source Context Platform</p></div>
+        <a href="/api/technology">Inspect the live backend map <b>&rarr;</b></a>
+      </div>
+      <div class="stack-heading">
+        <div><p class="eyebrow">Not a bolt-on integration</p><h2 id="datahub-stack-title">DataHub is the reasoning substrate&mdash;not a logo in the footer.</h2></div>
+        <p>Mosaic needs DataHub to know which ordinary columns came from independent systems, where they converge, who inherits them, and where an approved privacy decision should live. Remove the context graph and the primary finding disappears.</p>
+      </div>
+      <div class="stack-proofline" aria-label="DataHub integration summary"><span><b>7</b> DataHub capabilities</span><span><b>5</b> agent stages</span><span><b>4</b> re-read governance checks</span><span><b>1</b> merged upstream contribution</span></div>
+      <ol class="backend-flow" aria-label="Mosaic backend workflow">
+        <li><span>01</span><small>Read</small><strong>Schema + column lineage</strong></li>
+        <li><span>02</span><small>Reason</small><strong>Cross-source convergence</strong></li>
+        <li><span>03</span><small>Trace</small><strong>Downstream blast radius</strong></li>
+        <li><span>04</span><small>Prove</small><strong>Aggregate anonymity</strong></li>
+        <li><span>05</span><small>Act</small><strong>Reviewed DataHub context</strong></li>
+      </ol>
+      <div class="capability-grid">
+        <article><div><span>01</span><em>Graph</em></div><h3>Fine-grained lineage</h3><p>Reconstructs which columns originate separately and converge in a shared export.</p><a href="https://github.com/usv240/mosaic-datahub/blob/master/src/mosaic/live_estate.py">Code receipt</a></article>
+        <article><div><span>02</span><em>Graph</em></div><h3>Downstream graph</h3><p>Turns one validated finding into the exact partner, model, and analytics impact boundary.</p><a href="https://github.com/usv240/mosaic-datahub/blob/master/fixtures/datahub_recording/responses/downstream.json">Proof receipt</a></article>
+        <article><div><span>03</span><em>SDK</em></div><h3>Python SDK</h3><p>Creates synthetic assets and reads catalog entities through DataHub-supported interfaces.</p><a href="https://github.com/usv240/mosaic-datahub/blob/master/fixtures/datahub_recording/responses/entity.json">Proof receipt</a></article>
+        <article><div><span>04</span><em>API</em></div><h3>GraphQL API</h3><p>Creates structured privacy state and verifies active incidents after governed publication.</p><a href="https://github.com/usv240/mosaic-datahub/blob/master/src/mosaic/datahub_graphql.py">Code receipt</a></article>
+        <article><div><span>05</span><em>Agent tools</em></div><h3>MCP Server</h3><p>Proves agent-callable search, entity reads, column lineage, tagging, and mutation re-read.</p><a href="https://github.com/usv240/mosaic-datahub/blob/master/src/mosaic/mcp_probe.py">Code receipt</a></article>
+        <article><div><span>06</span><em>Agent judgment</em></div><h3>DataHub Skill</h3><p>Packages discovery, safety, verdict, mitigation, approval, and failure handling for another agent.</p><a href="https://github.com/usv240/mosaic-datahub/tree/master/skills/datahub-privacy-threat-model">Inspect skill</a></article>
+        <article><div><span>07</span><em>Catalog memory</em></div><h3>Governed write-back</h3><p>Persists a field tag, structured property, threat-model Document, and incident&mdash;then re-reads all four.</p><a href="https://github.com/usv240/mosaic-datahub/blob/master/src/mosaic/governed_writeback.py">Code receipt</a></article>
+      </div>
+      <div class="extraordinary-block">
+        <div class="extraordinary-heading"><p class="eyebrow">Beyond the platform primitives</p><h3>What Mosaic adds beyond DataHub out of the box.</h3><p>DataHub provides trusted context and actions. Mosaic composes them into a new privacy decision system.</p></div>
+        <div class="differentiator-grid">
+          <article><span>01</span><h4>Graph-native privacy reasoning</h4><p>Finds risk created by relationships&mdash;not a tag, field, or table in isolation.</p></article>
+          <article><span>02</span><h4>Aggregate-only proof</h4><p>A fail-closed SQL policy measures anonymity while person-level rows stay at zero.</p></article>
+          <article><span>03</span><h4>Reversible mitigation lab</h4><p>Balances privacy improvement and retained analytical utility before action.</p></article>
+          <article><span>04</span><h4>Tamper-evident memory</h4><p>Digest-backed evidence and re-read write-back make the decision inheritable.</p></article>
+        </div>
+      </div>
+      <div class="technology-footer">
+        <div><small>Supporting execution stack</small><p><b>DuckDB</b> aggregate validation &middot; <b>FastAPI</b> typed interfaces &middot; <b>Playwright</b> end-to-end verification</p></div>
+        <a href="https://github.com/datahub-project/datahub/pull/18705"><span>Merged into DataHub</span><strong>Open-source contribution #18705</strong><b>&rarr;</b></a>
       </div>
     </section>
-
     <section class="section credibility-section" aria-labelledby="credibility-title">
       <div class="section-heading"><div><p class="eyebrow">Evidence ladder</p><h2 id="credibility-title">Four ways to challenge the claim.</h2></div><p>Each proof answers a different question. Mosaic keeps their scope visible instead of blending synthetic, recorded, external, and live evidence into one oversized claim.</p></div>
       <div class="credibility-grid">
         <article><small>Regression</small><strong>48 / 48</strong><h3>Exact seeded cases</h3><p>Exact metric agreement, policy boundaries, safe controls, and zero raw rows. Perfect here means the bounded regression passed - not field accuracy.</p><a href="/api/scan">Inspect estate scan</a></article>
         <article><small>Integration</small><strong>5 / 5</strong><h3>Hash-verified replay</h3><p>Versioned DataHub schema, lineage, downstream, MCP, and governed write-back semantics are replayed from a tamper-evident fixture.</p><a href="https://github.com/usv240/mosaic-datahub/tree/master/fixtures/datahub_recording">Inspect fixture</a></article>
-        <article><small>External data</small><strong>k=43 ? 1</strong><h3>Composition in the wild</h3><p>32,561 UCI Adult records processed in memory. Six ordinary attributes create small classes; no source row is committed.</p><a href="https://github.com/usv240/mosaic-datahub/blob/master/evidence/external/uci-adult-proof.json">Inspect aggregate proof</a></article>
+        <article><small>External data</small><strong>k=43 &rarr; 1</strong><h3>Composition in the wild</h3><p>32,561 UCI Adult records processed in memory. Six ordinary attributes create small classes; no source row is committed.</p><a href="https://github.com/usv240/mosaic-datahub/blob/master/evidence/external/uci-adult-proof.json">Inspect aggregate proof</a></article>
         <article><small>Reusable agent</small><strong>1 skill</strong><h3>Workflow, packaged</h3><p>The DataHub privacy skill carries discovery, query safety, verdict, evidence, approval, and failure-handling rules into another agent.</p><a href="https://github.com/usv240/mosaic-datahub/tree/master/skills/datahub-privacy-threat-model">Inspect the skill</a></article>
       </div>
     </section>
 
 
     <section class="section adoption-section" id="adopt" aria-labelledby="adopt-title">
-      <div class="section-heading"><div><p class="eyebrow">Adoption path</p><h2 id="adopt-title">Start without credentials. Grow without replacing the workflow.</h2></div><p>Every stage has an honest boundary. Explore immediately, reproduce locally, connect a disposable DataHub environment, then add your organization’s controls for production.</p></div>
+      <div class="section-heading"><div><p class="eyebrow">Adoption path</p><h2 id="adopt-title">Start without credentials. Grow without replacing the workflow.</h2></div><p>Every stage has an honest boundary. Explore immediately, reproduce locally, connect a disposable DataHub environment, then add your organization&rsquo;s controls for production.</p></div>
       <ol class="adoption-path">
         <li><span>01</span><small>Explore</small><h3>No setup</h3><p>Run four guided cases, inspect evidence, and learn the safety model in this read-only demo.</p><strong>Available now</strong></li>
         <li><span>02</span><small>Evaluate</small><h3>Local and offline</h3><p>Run the CLI, benchmark, DataHub replay fixture, and reusable agent skill with one locked environment.</p><strong>Available now</strong></li>
         <li><span>03</span><small>Connect</small><h3>Disposable DataHub</h3><p>Verify live SDK, GraphQL, MCP, lineage, blast radius, and dry-run governance against synthetic assets.</p><strong>Configuration required</strong></li>
         <li><span>04</span><small>Operate</small><h3>Your control plane</h3><p>Add SSO, RBAC, approved warehouse adapters, asset allowlists, policy thresholds, and named reviewers.</p><strong>Production hardening required</strong></li>
       </ol>
-      <div class="adoption-actions"><a class="primary-button" href="/settings#readiness">Open readiness planner</a><a class="secondary-button" href="https://github.com/usv240/mosaic-datahub#judge-quick-start">Run locally</a><p><b>Implemented today:</b> DataHub Core + DuckDB reference validation. Enterprise warehouses and identity controls are explicit integration boundaries—not unearned claims.</p></div>
+      <div class="adoption-actions"><a class="primary-button" href="/settings#readiness">Open readiness planner</a><a class="secondary-button" href="https://github.com/usv240/mosaic-datahub#judge-quick-start">Run locally</a><p><b>Implemented today:</b> DataHub Core + DuckDB reference validation. Enterprise warehouses and identity controls are explicit integration boundaries&mdash;not unearned claims.</p></div>
     </section>
     <section class="section glossary-section" aria-labelledby="glossary-title">
       <div class="section-heading"><div><p class="eyebrow">Plain-English reference</p><h2 id="glossary-title">Every term used in the demo.</h2></div><p>You do not need privacy-engineering or DataHub experience. Open any term for a thirty-second explanation.</p></div>

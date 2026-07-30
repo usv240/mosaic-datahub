@@ -1,23 +1,28 @@
 {
   "schema_version": 1,
-  "captured_at": "2026-07-30T16:24:30.117502+00:00",
-  "base_url": "http://127.0.0.1:8011",
+  "captured_at": "2026-07-30T18:02:21.724310+00:00",
+  "base_url": "http://127.0.0.1:8125",
   "purpose": "Judge screenshots and edit-ready product footage generated from the running Mosaic application.",
   "files": [
     {
       "path": "01-landing-dark.png",
-      "bytes": 1024744,
-      "sha256": "3457f00dd5a61d64df540560f33d6888ba142e36c8f4f2791c4e8133b8e02887"
+      "bytes": 1262458,
+      "sha256": "c04f70cc521e686ccb8ac8e30d558e539030fd81ffa1f718e73c8f385969f935"
+    },
+    {
+      "path": "08-datahub-architecture.png",
+      "bytes": 259283,
+      "sha256": "6fb6e6bdf0e9914c8b1d8dd5301daaf9b13de0ee5433aa1bf022c2fa85cffdab"
     },
     {
       "path": "02-audience-preset.png",
-      "bytes": 1017149,
-      "sha256": "df19005bbcead7372c26705c5e94a19f39575923a9d9d3775b89880ae0c69040"
+      "bytes": 1254818,
+      "sha256": "00721f83f8ba2024ceb836abae0f44d6a301a1ccace569849d888ccb10cf719d"
     },
     {
       "path": "03-completed-investigation.png",
-      "bytes": 1079461,
-      "sha256": "4694e6297e6c1705d789159ce5ea6c2ab73a906576c986da6e96a653fecdbc54"
+      "bytes": 1301808,
+      "sha256": "a79355f9a609c86bf8da847b2fd9171cb04aff19eac594d33a8439d156085c98"
     },
     {
       "path": "04-evidence-catalog.png",
@@ -31,18 +36,18 @@
     },
     {
       "path": "06-landing-light.png",
-      "bytes": 1117065,
-      "sha256": "2ff53735bc89044f004cf46f29890306b2fb0a2db60efa5fb9f8465cc1567a74"
+      "bytes": 1404937,
+      "sha256": "91d1b4e3ad18f9d297b8c95543ac7b2beefefff27face7587cb81bacbe7c5b4f"
     },
     {
       "path": "07-mobile-landing.png",
-      "bytes": 863954,
-      "sha256": "edc05d484230538d4a92c99b2f861340457d9472e8245ccce7ae4c6e2e4b8811"
+      "bytes": 1033361,
+      "sha256": "b91543c4f31bc22a386a2b06816e23e30a388b5e41ff61336481e8092fba0665"
     },
     {
       "path": "08-product-walkthrough.webm",
-      "bytes": 1835269,
-      "sha256": "767b4a92abfc2403b62395b75920201920cae0ade352604058c5622403e59046"
+      "bytes": 1811833,
+      "sha256": "fbfd3c64d5b93fcedb2473aed8438b27facfdcc763a59252630a2610563087c1"
     }
   ],
   "video_duration_limit_seconds": 180,

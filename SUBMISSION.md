@@ -25,9 +25,19 @@ The hosted product teaches the problem in plain language, then offers four worki
 
 The main critical fixture has 120 synthetic records, minimum k=1, 100% below k=5, three downstream assets, and zero raw rows returned. The mitigation generalizes or suppresses an attribute in shadow mode and reaches minimum k=20 without touching source data.
 
-## Why DataHub is essential
+## How DataHub powers the agent
 
-Fine-grained DataHub lineage reveals that quasi-identifier families originate in separate source systems and converge in one asset. A no-lineage baseline finds zero cross-source convergences; Mosaic finds the convergence and its downstream blast radius. DataHub also becomes durable governance memory through an approved field tag, structured risk property, linked threat-model Document, and active incident, all re-read after publication.
+DataHub is Mosaic's reasoning substrate and action layer. The agent uses seven concrete platform surfaces:
+
+1. Fine-grained lineage reconstructs ordinary columns that originate separately and converge in one asset.
+2. The downstream graph turns the validated finding into an estate-wide impact boundary.
+3. The Python SDK creates isolated synthetic assets and reads supported catalog entities.
+4. GraphQL creates and verifies structured governance context and active incidents.
+5. The MCP Server exposes search, entity, lineage, and tag tools to an MCP-compatible agent.
+6. A packaged DataHub Skill makes the workflow, safety policy, judgment, and failure handling reusable.
+7. Governed write-back publishes a tag, structured property, threat-model Document, and incident only after human approval, then re-reads every mutation.
+
+Mosaic adds graph-native privacy reasoning, a fail-closed aggregate-only proof layer, a reversible mitigation lab, and tamper-evident evidence retention beyond DataHub's out-of-box metadata experience. The complete implementation map is inspectable at `/api/technology`, and the team contributed back through merged upstream PR [datahub-project/datahub#18705](https://github.com/datahub-project/datahub/pull/18705).
 
 ## Evidence, not assertion
 
