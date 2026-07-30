@@ -1,8 +1,10 @@
-﻿# Mosaic product gallery
+# Mosaic product gallery
 
 These browser captures are generated from the running application by `scripts/capture_submission_media.py`. CI repeats the capture after the full test and accessibility gates and publishes the complete `mosaic-submission-media` artifact.
 
-## First-visit story
+## Impact-led first-visit story
+
+The full-page capture leads from the core risk and potential impact through stakeholder outcomes, education, presets, the guided product, evidence, and adoption.
 
 [![Dark-mode landing page](01-landing-dark.png)](01-landing-dark.png)
 
@@ -20,9 +22,9 @@ The audience preset proves that the fourth backend scenario is a complete intera
 
 [![Evidence catalog with benchmark, replay, external data, and contribution proof](04-evidence-catalog.png)](04-evidence-catalog.png)
 
-## Operator safety
+## Adoption and operator readiness
 
-[![Read-only hosted safety and local operator settings](05-operator-safety.png)](05-operator-safety.png)
+[![Adoption planner, integration truth table, production gates, and operator safety](05-operator-safety.png)](05-operator-safety.png)
 
 ## Light and mobile modes
 

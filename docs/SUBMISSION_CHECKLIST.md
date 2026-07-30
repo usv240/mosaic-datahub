@@ -9,6 +9,9 @@
 - [x] Human-readable, printable run evidence with SHA-256 verification
 - [x] Local DataHub health/settings and guarded approval flow
 - [x] Hosted deployment forced read-only
+- [x] Impact-led landing with four stakeholder outcomes and an honest impact disclosure
+- [x] Four-stage adoption journey and live readiness planner
+- [x] One-command read-only container evaluation
 
 ## Evidence and DataHub depth
 
@@ -23,8 +26,8 @@
 
 ## Engineering quality
 
-- [x] 272 passing tests
-- [x] 99.63% measured coverage
+- [x] 278 passing tests
+- [x] 99.64% measured coverage
 - [x] Multi-OS and Python 3.11/3.12 CI
 - [x] Strict lint, format, JSON, UTF-8, CLI-contract, package-build, and accessibility gates
 - [x] Locked standalone environment and Apache-2.0 license

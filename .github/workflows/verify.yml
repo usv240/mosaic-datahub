@@ -47,6 +47,20 @@ jobs:
         run: uv run python scripts/check_utf8.py
       - name: Validate packaged DataHub skill
         run: uv run python scripts/validate_skill_structure.py
+      - name: Smoke production container
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
+        shell: bash
+        run: |
+          docker build --tag mosaic-ci .
+          container_id=$(docker run --detach --rm --publish 8124:8123 mosaic-ci)
+          trap 'docker stop "$container_id" >/dev/null 2>&1 || true' EXIT
+          for _ in $(seq 1 40); do
+            curl -sf http://127.0.0.1:8124/health > /dev/null && break
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:8124/health | grep -F '"status":"ok"'
+          curl -fsS http://127.0.0.1:8124/api/proofs | grep -F '"status":"passed"'
+          curl -fsS http://127.0.0.1:8124/api/adoption | grep -F '"status":"ready_to_evaluate"'
       - name: Browser accessibility gate
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
         shell: bash

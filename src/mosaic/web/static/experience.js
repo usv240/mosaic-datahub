@@ -1,6 +1,13 @@
 (function () {
   "use strict";
 
+  try {
+    const savedTheme = localStorage.getItem("mosaic-theme");
+    if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+  } catch (error) {
+    // Operating-system preference remains the fallback.
+  }
+
   var scenarios = {
     research: {
       title: "Research export investigation",

@@ -2,7 +2,7 @@
 
 ## 0:00-0:20 - Make the risk intuitive
 
-Open the landing page. Say: "No column here is PII. Together, they identify you." Explain minimum k in one sentence: it is the size of the smallest crowd a record blends into. k=1 means a unique combination.
+Open the landing page. Say: "No column here is PII. Together, they identify you." Explain minimum k in one sentence: it is the size of the smallest crowd a record blends into. k=1 means a unique combination. Scroll through Impact and name the outcome: prevent exposure, contain blast radius, preserve utility, and retain the decision.
 
 ## 0:20-0:45 - Show that the demos are real
 

@@ -48,6 +48,7 @@ def main() -> int:
         _ready(desktop, "/runs")
         files.append(_screenshot(desktop, "04-evidence-catalog.png"))
         _ready(desktop, "/settings")
+        desktop.locator("#connector-matrix[data-has-integration-boundary='true']").wait_for()
         files.append(_screenshot(desktop, "05-operator-safety.png"))
         desktop.close()
 

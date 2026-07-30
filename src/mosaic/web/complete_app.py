@@ -10,6 +10,7 @@ from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
+from mosaic.adoption import adoption_catalog
 from mosaic.datahub_graphql import graphql
 from mosaic.engine import run_judge_demo
 from mosaic.estate_scan import scan_estate
@@ -97,6 +98,10 @@ def create_app(project_root: Path | None = None) -> FastAPI:
             raise HTTPException(status_code=400, detail="Exact confirmation phrase required.")
         server = os.getenv("MOSAIC_DATAHUB_URL", "http://localhost:8080")
         return publish(server, approved=True)
+
+    @app.get("/api/adoption")
+    def adoption() -> dict[str, object]:
+        return adoption_catalog()
 
     @app.get("/api/assessment")
     def assessment() -> dict[str, object]:

@@ -1,48 +1,48 @@
 {
   "schema_version": 1,
-  "captured_at": "2026-07-30T14:37:17.126927+00:00",
-  "base_url": "http://127.0.0.1:8000",
+  "captured_at": "2026-07-30T16:24:30.117502+00:00",
+  "base_url": "http://127.0.0.1:8011",
   "purpose": "Judge screenshots and edit-ready product footage generated from the running Mosaic application.",
   "files": [
     {
       "path": "01-landing-dark.png",
-      "bytes": 1067587,
-      "sha256": "18cb57dd93a78902740b479f22f5d2c38a9cb14c31d44d124c69286ea98adf06"
+      "bytes": 1024744,
+      "sha256": "3457f00dd5a61d64df540560f33d6888ba142e36c8f4f2791c4e8133b8e02887"
     },
     {
       "path": "02-audience-preset.png",
-      "bytes": 1071410,
-      "sha256": "e8383529f241fea9fed566668ccd14dd34c297a47783c613540e0b7b4b4f1e3b"
+      "bytes": 1017149,
+      "sha256": "df19005bbcead7372c26705c5e94a19f39575923a9d9d3775b89880ae0c69040"
     },
     {
       "path": "03-completed-investigation.png",
-      "bytes": 1170985,
-      "sha256": "e7484fa318f57af70f2d72622ae5245d9c7b477f1711bf96e61bdff1d0b3881d"
+      "bytes": 1079461,
+      "sha256": "4694e6297e6c1705d789159ce5ea6c2ab73a906576c986da6e96a653fecdbc54"
     },
     {
       "path": "04-evidence-catalog.png",
-      "bytes": 387536,
-      "sha256": "94e42875b0fbbe52c2e055c9b26823792ab25075aef470912e944def70a3aae9"
+      "bytes": 270800,
+      "sha256": "6edbf5d8368018a442e578979a8220909a04b54696af2839839be68362de0185"
     },
     {
       "path": "05-operator-safety.png",
-      "bytes": 159446,
-      "sha256": "3be9acd18577d6954e4be13fcb6b0cfb91da3df9eecf941999d152a8bc0ea58f"
+      "bytes": 301208,
+      "sha256": "429a2b5550e28616d0a579b7ae593f0dda2f9741e4f994f7a8f5d366afeb4969"
     },
     {
       "path": "06-landing-light.png",
-      "bytes": 1150021,
-      "sha256": "93bcf62031c0e7bbcf586accef2e4316e9b9f6414426560aca8050da4c2cd659"
+      "bytes": 1117065,
+      "sha256": "2ff53735bc89044f004cf46f29890306b2fb0a2db60efa5fb9f8465cc1567a74"
     },
     {
       "path": "07-mobile-landing.png",
-      "bytes": 854073,
-      "sha256": "37a04a6acf61e773fd656d3a28060e3ebf73ae46581722270b189cbd2aea848d"
+      "bytes": 863954,
+      "sha256": "edc05d484230538d4a92c99b2f861340457d9472e8245ccce7ae4c6e2e4b8811"
     },
     {
       "path": "08-product-walkthrough.webm",
-      "bytes": 1830260,
-      "sha256": "c1ee5d018910b369c056d1d7b02511fc901546b329c94d947bc500e7262b584c"
+      "bytes": 1835269,
+      "sha256": "767b4a92abfc2403b62395b75920201920cae0ade352604058c5622403e59046"
     }
   ],
   "video_duration_limit_seconds": 180,

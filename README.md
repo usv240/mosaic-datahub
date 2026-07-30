@@ -1,4 +1,4 @@
-﻿# Mosaic
+# Mosaic
 
 > No column here is PII. Together, they identify you.
 
@@ -7,6 +7,17 @@
 Mosaic is a lineage-aware privacy threat-modeling agent built on DataHub. It discovers ordinary attributes that become identifying only after pipelines bring them together, validates the combination with aggregate-only anonymity metrics, traces the downstream blast radius, compares mitigations, and prepares governed catalog evidence for human approval.
 
 A PII scanner classifies columns. Mosaic reasons over the graph.
+
+## Potential impact
+
+Mosaic moves privacy intervention upstream: before a research export, partner delivery, audience, or model dataset spreads a risky combination across the estate.
+
+- **Prevent hidden exposure:** find re-identification risk that field-by-field classification cannot see.
+- **Contain the blast radius:** prioritize every downstream consumer that inherited the combination.
+- **Preserve useful data:** compare reversible mitigations instead of blocking an entire release.
+- **Create institutional memory:** leave reviewed evidence, ownership, incidents, and decisions in DataHub.
+
+The workflow gives privacy, data, governance, and security teams one explainable finding without exposing person-level rows. Real-world impact depends on approved access, organization-owned thresholds, and human review; Mosaic keeps that boundary visible.
 
 ## Understand it in 90 seconds
 
@@ -28,6 +39,12 @@ uv run mosaic serve
 ```
 
 Open `http://127.0.0.1:8123`. The console includes light and dark modes, a narrated attack path, four backend scenarios, safe controls, exact metrics, a mitigation lab, retained evidence history, printable run reports, operator settings, and plain-English definitions.
+
+Or start the safe, read-only container path:
+
+```powershell
+docker compose up --build
+```
 
 The core CLI is completely offline:
 
@@ -93,7 +110,7 @@ Thresholds are demo policy, not a legal conclusion. Read [ETHICS.md](ETHICS.md) 
 
 ## Reusable interfaces
 
-- REST: `/api/scenarios`, `/api/scenarios/{slug}`, `/api/scan`, `/api/runs/{id}`, `/api/proofs`
+- REST: `/api/scenarios`, `/api/scenarios/{slug}`, `/api/scan`, `/api/runs/{id}`, `/api/proofs`, `/api/adoption`
 - CLI: `assess`, `scan`, `benchmark`, `replay-fixture`, `serve`, `live-demo`, `verify-mcp`
 - Agent skill: [`$datahub-privacy-threat-model`](skills/datahub-privacy-threat-model/SKILL.md)
 - Operator console: `/settings` with non-mutating health probe and guarded local approval
@@ -128,4 +145,4 @@ The first command stays dry-run. The approved command creates uniquely named syn
 
 Mosaic has a merged upstream DataHub contribution: [datahub-project/datahub#18705](https://github.com/datahub-project/datahub/pull/18705). The primary product works offline and the recorded integration is reproducible. Production deployment still requires organization-approved thresholds, authenticated warehouse adapters, asset allowlists, access controls, and a fresh live compatibility run.
 
-Apache-2.0 licensed. See [SUBMISSION.md](SUBMISSION.md) for the concise judge narrative and [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md) for the under-three-minute demo.
+Apache-2.0 licensed. See [docs/ADOPTION_GUIDE.md](docs/ADOPTION_GUIDE.md) for the path from zero-setup exploration to production controls, [SUBMISSION.md](SUBMISSION.md) for the concise judge narrative, and [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md) for the under-three-minute demo.

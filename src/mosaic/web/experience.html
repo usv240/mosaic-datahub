@@ -13,14 +13,7 @@
   <title>Mosaic - interactive privacy threat model</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='9' fill='%238b5cf6'/><path d='M8 21V11l8 7 8-7v10' fill='none' stroke='white' stroke-width='3' stroke-linecap='round'/></svg>">
   <link rel="stylesheet" href="/static/experience.css">
-  <script>
-    (function () {
-      try {
-        var saved = localStorage.getItem("mosaic-theme");
-        if (saved) document.documentElement.dataset.theme = saved;
-      } catch (error) { /* OS preference remains the fallback. */ }
-    })();
-  </script>
+
   <script defer src="/static/experience.js"></script>
 </head>
 <body>
@@ -32,9 +25,10 @@
       <span>Mosaic</span>
     </a>
     <nav aria-label="Primary navigation">
+      <a href="#impact">Impact</a>
       <a href="#presets">Preset cases</a>
       <a href="#workspace">Live demo</a>
-      <a href="#proof">Why DataHub</a>
+      <a href="#adopt">Adopt</a>
       <a href="/runs">Evidence</a>
     </nav>
     <div class="topbar-actions">
@@ -50,15 +44,15 @@
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-copy">
         <div class="status-row">
-          <span class="status-pill"><span class="status-dot"></span> Interactive recorded demo</span>
-          <span class="version-pill">Mosaic 0.2</span>
+          <span class="status-pill"><span class="status-dot"></span> Live read-only product demo</span>
+          <span class="version-pill">Mosaic 0.3</span>
         </div>
-        <p class="eyebrow">Privacy threat modeling, powered by DataHub</p>
+        <p class="eyebrow">Lineage-aware privacy protection for the whole data estate</p>
         <h1 id="hero-title">The table looks safe.<br><span>The graph says otherwise.</span></h1>
         <p class="hero-lede">
-          ZIP code, birth date, and gender are ordinary columns in separate systems. DataHub lineage
-          shows where they converge. Mosaic proves the privacy risk using counts only, then finds the
-          safest useful mitigation.
+          Mosaic helps privacy, data, governance, and security teams stop re-identification risk
+          before it spreads. DataHub reveals where ordinary columns converge; Mosaic proves the risk
+          using counts only, traces every affected consumer, and finds the safest useful mitigation.
         </p>
         <div class="hero-actions">
           <button class="primary-button" id="hero-run" type="button">
@@ -69,8 +63,8 @@
         </div>
         <div class="trust-row" aria-label="Demo guarantees">
           <span><b>0</b> raw rows exposed</span>
-          <span><b>3</b> lineage paths</span>
-          <span><b>1</b> reviewer gate</span>
+          <span><b>4</b> teams aligned</span>
+          <span><b>1</b> governed decision</span>
         </div>
       </div>
 
@@ -103,6 +97,32 @@
     </section>
 
 
+    <section class="section impact-section" id="impact" aria-labelledby="impact-title">
+      <div class="impact-lead">
+        <div><p class="eyebrow">Potential impact</p><h2 id="impact-title">Stop a risky release before it becomes an incident.</h2></div>
+        <p>A scanner can approve every column and still miss the dangerous combination. Mosaic moves intervention upstream: before a research export, partner delivery, audience, or model dataset carries the risk across the estate.</p>
+      </div>
+      <div class="impact-outcomes">
+        <article><span>01</span><h3>Prevent hidden exposure</h3><p>Detect ordinary attributes that become identifying only after pipelines combine them.</p><strong>Earlier intervention</strong></article>
+        <article><span>02</span><h3>Contain the blast radius</h3><p>Use DataHub lineage to show every downstream asset that inherited the combination.</p><strong>Prioritized response</strong></article>
+        <article><span>03</span><h3>Preserve useful data</h3><p>Compare reversible mitigations before changing a source or blocking an entire release.</p><strong>Safer utility</strong></article>
+        <article><span>04</span><h3>Leave institutional memory</h3><p>Keep reviewed evidence, ownership, incidents, and decisions where the next team can find them.</p><strong>Durable governance</strong></article>
+      </div>
+      <div class="impact-chain" aria-label="Mosaic impact chain">
+        <div><small>Discover</small><b>Hidden convergence</b></div><i>&rarr;</i>
+        <div><small>Prove</small><b>Aggregate-only risk</b></div><i>&rarr;</i>
+        <div><small>Contain</small><b>Downstream exposure</b></div><i>&rarr;</i>
+        <div><small>Govern</small><b>Human-reviewed action</b></div>
+      </div>
+      <p class="impact-disclosure">Mosaic demonstrates this mechanism with synthetic, recorded, and aggregate-only external evidence. Real-world impact depends on approved data access, organizational policy, and human review.</p>
+      <div class="audience-heading"><p class="eyebrow">Who benefits</p><h3>Built for every team around governed data.</h3></div>
+      <div class="audience-grid">
+        <article><span>Privacy</span><p>Catch re-identification risk before approving a release.</p></article>
+        <article><span>Data</span><p>See the exact pipelines and fields behind a finding.</p></article>
+        <article><span>Governance</span><p>Keep evidence and review state inside DataHub.</p></article>
+        <article><span>Security</span><p>Prioritize validated risk by downstream reach.</p></article>
+      </div>
+    </section>
     <section class="section orientation-section" aria-labelledby="orientation-title">
       <div class="orientation-intro">
         <p class="eyebrow">Start here - no privacy background needed</p>
@@ -265,6 +285,16 @@ GROUP BY zip5, birth_date, gender_category</code></pre>
     </section>
 
 
+    <section class="section adoption-section" id="adopt" aria-labelledby="adopt-title">
+      <div class="section-heading"><div><p class="eyebrow">Adoption path</p><h2 id="adopt-title">Start without credentials. Grow without replacing the workflow.</h2></div><p>Every stage has an honest boundary. Explore immediately, reproduce locally, connect a disposable DataHub environment, then add your organization’s controls for production.</p></div>
+      <ol class="adoption-path">
+        <li><span>01</span><small>Explore</small><h3>No setup</h3><p>Run four guided cases, inspect evidence, and learn the safety model in this read-only demo.</p><strong>Available now</strong></li>
+        <li><span>02</span><small>Evaluate</small><h3>Local and offline</h3><p>Run the CLI, benchmark, DataHub replay fixture, and reusable agent skill with one locked environment.</p><strong>Available now</strong></li>
+        <li><span>03</span><small>Connect</small><h3>Disposable DataHub</h3><p>Verify live SDK, GraphQL, MCP, lineage, blast radius, and dry-run governance against synthetic assets.</p><strong>Configuration required</strong></li>
+        <li><span>04</span><small>Operate</small><h3>Your control plane</h3><p>Add SSO, RBAC, approved warehouse adapters, asset allowlists, policy thresholds, and named reviewers.</p><strong>Production hardening required</strong></li>
+      </ol>
+      <div class="adoption-actions"><a class="primary-button" href="/settings#readiness">Open readiness planner</a><a class="secondary-button" href="https://github.com/usv240/mosaic-datahub#judge-quick-start">Run locally</a><p><b>Implemented today:</b> DataHub Core + DuckDB reference validation. Enterprise warehouses and identity controls are explicit integration boundaries—not unearned claims.</p></div>
+    </section>
     <section class="section glossary-section" aria-labelledby="glossary-title">
       <div class="section-heading"><div><p class="eyebrow">Plain-English reference</p><h2 id="glossary-title">Every term used in the demo.</h2></div><p>You do not need privacy-engineering or DataHub experience. Open any term for a thirty-second explanation.</p></div>
       <div class="glossary-grid">
