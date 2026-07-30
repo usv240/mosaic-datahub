@@ -1,0 +1,16 @@
+{
+  "slug": "control",
+  "name": "Safe operational identifier",
+  "domain": "Platform operations",
+  "situation": "A high-cardinality job execution ID has no person-joinable semantic family or cross-source convergence.",
+  "asset": "job_execution_log",
+  "asset_urn": "urn:li:dataset:(urn:li:dataPlatform:mosaic,job_execution_log,PROD)",
+  "columns": ["job_execution_id"],
+  "families": ["operational_process"],
+  "lineage_paths": [["scheduler_runs.job_execution_id", "job_execution_log.job_execution_id"]],
+  "downstream_assets": [],
+  "source_systems": ["scheduler_runs"],
+  "class_sizes": [],
+  "candidate": false,
+  "mitigation": null
+}

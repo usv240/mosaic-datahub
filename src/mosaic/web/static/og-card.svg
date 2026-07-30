@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
+  <title id="title">Mosaic - privacy risk lives in the graph</title>
+  <desc id="description">Ordinary attributes converge through DataHub lineage into a small anonymity set.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#080b16"/><stop offset="1" stop-color="#14192c"/></linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#4fd1c5"/><stop offset="1" stop-color="#9b7bff"/></linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/><circle cx="1020" cy="110" r="250" fill="#9b7bff" opacity=".08"/><circle cx="160" cy="570" r="230" fill="#4fd1c5" opacity=".06"/>
+  <g font-family="Inter,Segoe UI,Arial,sans-serif"><text x="72" y="92" fill="#f5f7ff" font-size="34" font-weight="800">MOSAIC</text><text x="72" y="204" fill="#f5f7ff" font-size="66" font-weight="800">No column here is PII.</text><text x="72" y="286" fill="url(#accent)" font-size="66" font-weight="800">Together, they identify you.</text><text x="72" y="354" fill="#aab3cf" font-size="27">Lineage-aware privacy threat modeling, built on DataHub.</text></g>
+  <g fill="none" stroke-width="3"><path d="M790 450 925 398M790 450 925 502M925 398 1070 450M925 502 1070 450" stroke="#63708e"/><circle cx="790" cy="450" r="55" fill="#101729" stroke="#4fd1c5"/><circle cx="925" cy="398" r="42" fill="#101729" stroke="#9b7bff"/><circle cx="925" cy="502" r="42" fill="#101729" stroke="#9b7bff"/><circle cx="1070" cy="450" r="64" fill="#271527" stroke="#ff718a"/></g>
+  <g fill="#f5f7ff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="20" text-anchor="middle"><text x="790" y="457">ZIP5</text><text x="925" y="405">Birth date</text><text x="925" y="509">Gender</text><text x="1070" y="443">minimum</text><text x="1070" y="470" fill="#ff8da0" font-weight="800">k = 1</text></g>
+  <rect x="72" y="542" width="590" height="4" rx="2" fill="url(#accent)"/><text x="72" y="590" fill="#7f8aa7" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="20">Aggregate-only evidence • zero raw rows • approval-gated governance</text>
+</svg>

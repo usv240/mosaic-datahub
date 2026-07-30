@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Mosaic evidence run</title><meta name="description" content="A human-readable, integrity-verified Mosaic privacy assessment.">
+  <link rel="stylesheet" href="/static/experience.css"><link rel="stylesheet" href="/static/run-detail.css">
+  <script defer src="/static/run-detail.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#evidence">Skip to evidence</a>
+  <header class="topbar"><a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>Mosaic</span></a><nav aria-label="Primary navigation"><a href="/">Overview</a><a href="/runs">All evidence</a></nav><button id="print-run" class="button secondary" type="button">Print / save PDF</button></header>
+  <main id="evidence" class="run-document" aria-live="polite">
+    <section class="run-hero"><p class="eyebrow">Immutable assessment record</p><h1 id="run-title">Loading evidence…</h1><p id="run-situation"></p><div class="integrity" id="integrity">Verifying SHA-256 digest…</div></section>
+    <section class="run-metrics" aria-label="Assessment summary"><article><small>Verdict</small><strong id="verdict">—</strong></article><article><small>Minimum anonymity</small><strong id="minimum-k">—</strong></article><article><small>Records below k=5</small><strong id="below-five">—</strong></article><article><small>Raw rows returned</small><strong id="raw-rows">—</strong></article></section>
+    <section class="run-grid"><article><p class="eyebrow">Why it matters</p><h2>Finding</h2><ol id="reasons"></ol></article><article><p class="eyebrow">Graph advantage</p><h2>What DataHub revealed</h2><dl id="graph"></dl></article><article><p class="eyebrow">Safe validation</p><h2>Query guardrails</h2><pre id="query">No query issued.</pre></article><article><p class="eyebrow">Next action</p><h2>Governed response</h2><div id="mitigation"></div></article></section>
+    <section class="run-provenance"><h2>Provenance and integrity</h2><dl id="provenance"></dl><a id="download" class="button primary" href="#">Download canonical JSON</a></section>
+  </main>
+</body></html>

@@ -1,23 +1,60 @@
 name: Verify Mosaic
 
+permissions:
+  contents: read
+
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 jobs:
-  offline-evidence:
-    runs-on: ubuntu-latest
+  verify:
+    name: ${{ matrix.os }} / Python ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 18
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.11", "3.12"]
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
-      - run: uv sync --extra dev
-      - name: Test with enforced coverage
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Set up Python
+        run: uv python install ${{ matrix.python-version }}
+      - name: Install locked project
+        run: uv sync --locked --extra dev
+      - name: Lint and format
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+      - name: Test suite
+        run: uv run pytest -q
+      - name: Enforce coverage
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
         run: uv run pytest --cov=mosaic --cov-report=term-missing --cov-fail-under=99
-      - name: Verify intentional critical verdict
+      - name: Build wheel and source distribution
+        run: uv build
+      - name: Verify offline CLI contracts
+        run: uv run python scripts/check_cli_contracts.py
+      - name: Parse every JSON deliverable
+        run: uv run python scripts/check_json_deliverables.py
+      - name: Reject encoding damage
+        run: uv run python scripts/check_utf8.py
+      - name: Validate packaged DataHub skill
+        run: uv run python scripts/validate_skill_structure.py
+      - name: Browser accessibility gate
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
         shell: bash
         run: |
-          set +e
-          uv run mosaic demo --json
-          code=$?
-          set -e
-          test "$code" -eq 3
+          uv run --with playwright playwright install --with-deps chromium
+          MOSAIC_PUBLIC_DEMO=true uv run mosaic serve --host 127.0.0.1 --port 8000 &
+          for _ in $(seq 1 40); do
+            curl -sf http://127.0.0.1:8000/health > /dev/null && break
+            sleep 1
+          done
+          uv run --with playwright python scripts/check_accessibility.py

@@ -1,0 +1,4 @@
+{
+  "schema_version": 1,
+  "assets": ["mosaic.partner_delivery", "mosaic.cohort_explorer", "mosaic.model_training"]
+}

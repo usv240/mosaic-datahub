@@ -1,0 +1,25 @@
+{
+  "slug": "mitigated",
+  "name": "Privacy-preserving release",
+  "domain": "Research data sharing",
+  "situation": "A shadow release suppresses precise birth date while retaining ZIP5 and gender for analysis.",
+  "asset": "research_export_shadow",
+  "asset_urn": "urn:li:dataset:(urn:li:dataPlatform:mosaic,research_export_shadow,PROD)",
+  "columns": ["zip5", "gender_category"],
+  "families": ["location", "demographic"],
+  "lineage_paths": [
+    ["research_export_clean.zip5", "research_export_shadow.zip5"],
+    ["research_export_clean.gender_category", "research_export_shadow.gender_category"]
+  ],
+  "downstream_assets": ["research_partner_delivery", "cohort_explorer_export", "readmission_model_training"],
+  "source_systems": ["research_export_clean", "privacy_transform"],
+  "class_sizes": [20, 20, 20, 20, 20, 20],
+  "candidate": true,
+  "mitigation": {
+    "status": "applied_in_shadow_only",
+    "action": "suppress birth_date from the research export",
+    "metrics": {"minimum_k": 20, "percent_below_5": 0.0, "distinct_combinations": 6},
+    "utility_retained": 0.76,
+    "writes_applied": false
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "urn": "urn:li:dataset:(urn:li:dataPlatform:duckdb,mosaic.research_export_recorded,PROD)",
+  "platform": "duckdb",
+  "schema_fields": ["zip5", "birth_date", "gender_category"],
+  "synthetic": true
+}

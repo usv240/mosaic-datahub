@@ -1,0 +1,26 @@
+{
+  "slug": "research",
+  "name": "Research export investigation",
+  "domain": "Research data sharing",
+  "situation": "A direct-identifier-free research export combines ZIP5, birth date, and gender from separate systems.",
+  "asset": "research_export_clean",
+  "asset_urn": "urn:li:dataset:(urn:li:dataPlatform:mosaic,research_export_clean,PROD)",
+  "columns": ["zip5", "birth_date", "gender_category"],
+  "families": ["location", "date_of_birth", "demographic"],
+  "lineage_paths": [
+    ["support_contacts.zip5", "research_export_clean.zip5"],
+    ["support_contacts.full_birth_date", "research_export_clean.birth_date"],
+    ["member_demographics_coarse.gender_category", "research_export_clean.gender_category"]
+  ],
+  "downstream_assets": ["research_partner_delivery", "cohort_explorer_export", "readmission_model_training"],
+  "source_systems": ["support_contacts", "member_demographics_coarse"],
+  "class_sizes": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  "candidate": true,
+  "mitigation": {
+    "status": "recommended",
+    "action": "suppress birth_date from the research export",
+    "metrics": {"minimum_k": 20, "percent_below_5": 0.0, "distinct_combinations": 6},
+    "utility_retained": 0.76,
+    "writes_applied": false
+  }
+}

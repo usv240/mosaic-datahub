@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "fixture_id": "mosaic-datahub-recording-v1",
+  "description": "Sanitized metadata-only recording of Mosaic's synthetic live workflow.",
+  "captured_at": "2026-07-29",
+  "captured_from": {
+    "datahub_core": "1.5.0.6",
+    "datahub_sdk": "1.6.0.16",
+    "mcp_server_datahub": "0.6.0"
+  },
+  "safety": {
+    "synthetic_only": true,
+    "raw_person_rows": 0
+  },
+  "files": [
+    {
+      "path": "responses/downstream.json",
+      "sha256": "4747c4c99081652e4bdcf722e35dcfe36d21b1510bc3e95aa2b6de4bf242f076"
+    },
+    {
+      "path": "responses/entity.json",
+      "sha256": "604592ce935b797e2ac247a3bb5d972b13513a39428f52d91708a2e39904fff3"
+    },
+    {
+      "path": "responses/lineage.json",
+      "sha256": "8399f1058fcee36acb51b9cecaf3aef2730a56eba3f2beef0ed88831d4bc6b39"
+    },
+    {
+      "path": "responses/mcp.json",
+      "sha256": "4e92b0b2fb45f0c488f15a991408e6965992a2b5ef968e8a168714353aa89bc0"
+    },
+    {
+      "path": "responses/writeback.json",
+      "sha256": "ead6f720b0625e45674463b79c880989ae8e20c7d619719e707eea9d89882277"
+    }
+  ]
+}

@@ -1,35 +1,42 @@
-# Mosaic demo â€” 2:25 target
+# Mosaic demo - 2:40 target
 
-## 0:00â€“0:15 â€” The problem
+## 0:00-0:20 - Make the risk intuitive
 
-Show the landing-page headline: â€œNo column here is PII. Together, they identify you.â€
-Explain that a research export has no direct identifier, yet ordinary fields arrived
-through different pipelines and now create tiny anonymity sets.
+Open the landing page. Say: "No column here is PII. Together, they identify you." Explain minimum k in one sentence: it is the size of the smallest crowd a record blends into. k=1 means a unique combination.
 
-## 0:15â€“0:40 â€” Why DataHub
+## 0:20-0:45 - Show that the demos are real
 
-Select each attack-path node. Show the three lineage paths converging into the research
-export. State that a per-table scanner sees separate harmless fields; DataHubâ€™s
-fine-grained graph reveals where they meet.
+Choose the critical research preset, then the mitigated and control presets. Point out that each changes the backend scenario hash, query, exact metrics, verdict, and downstream count. Return to the research case and start the guided analysis.
 
-## 0:40â€“1:05 â€” Exact, safe validation
+## 0:45-1:15 - Show why DataHub matters
 
-Show the generated `GROUP BY COUNT(*)` query and the metric cards: `k=1`, 100% below
-`k=5`, zero raw rows. Say clearly: Mosaic measures groups; it never identifies anyone.
+Follow the narrated lineage steps as ZIP5, birth date, and demographic category travel from separate systems into one research export. A table scanner sees harmless columns. DataHub reveals where the paths converge and identifies the three downstream consumers.
 
-## 1:05â€“1:30 â€” Blast radius and mitigation
+## 1:15-1:40 - Validate without exposing anyone
 
-Show the three downstream assets. Then show the shadow mitigation: suppress birth date,
-which changes this synthetic fixture from `k=1` to `k=20` without touching source data.
+Open the query tab. Show the allow-listed `GROUP BY COUNT(*)` query, then minimum k=1, 100% below k=5, and raw rows returned=0. Say: "Mosaic measures group sizes. It never asks who is in a group."
 
-## 1:30â€“1:55 â€” Prove it is not a toy
+## 1:40-2:00 - Turn a finding into a decision
 
-Show the safe controls and graph-value comparison: generalized export clears; direct
-PII is deliberately not mislabeled as a compositional finding; baseline finds zero
-cross-source convergences while Mosaic finds one.
+Open mitigation. Show that the shadow strategy reaches minimum k=20 without changing the source. Open DataHub proposal and stress that it is a dry run until a human approves it.
 
-## 1:55â€“2:25 â€” Catalog memory
+## 2:00-2:25 - Prove breadth and honesty
 
-Run the live evidence command. Show DataHub lineage reread, DuckDB aggregate proof,
-and approved tag/Document write-back reread. Close with: â€œMosaic turns a hidden
-connection into a reviewable privacy decision that the next human or agent inherits.â€
+Open Evidence. Mention the 48-case exactness benchmark, hash-verified DataHub replay, and aggregate-only UCI Adult proof: 32,561 records processed in memory, minimum k moving from 43 to 1 when ordinary attributes compose, and no raw rows committed. State clearly that the benchmark is regression evidence, not field accuracy.
+
+## 2:25-2:40 - Close the loop
+
+Open a retained run detail page locally or the current proof on the hosted page. Show the SHA-256 integrity state, printable report, and provenance. Close with: "Mosaic turns a hidden graph connection into a reviewable privacy decision that the next human or agent inherits."
+
+## Backup judge commands
+
+```powershell
+uv sync --locked --extra dev
+uv run mosaic assess --scenario research
+uv run mosaic scan
+uv run mosaic benchmark
+uv run mosaic replay-fixture
+uv run mosaic serve
+```
+
+The critical assessment and estate scan intentionally return exit code 3. That is a policy result, not an application crash.

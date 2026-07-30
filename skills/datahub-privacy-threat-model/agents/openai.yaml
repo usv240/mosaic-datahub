@@ -1,0 +1,5 @@
+interface:
+  display_name: "DataHub Privacy Threat Model"
+  short_description: "Find compositional privacy risk with lineage"
+  brand_color: "#9B7BFF"
+  default_prompt: "Use $datahub-privacy-threat-model to assess compositional privacy risk across my DataHub lineage."

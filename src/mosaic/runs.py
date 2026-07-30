@@ -30,3 +30,19 @@ def list_runs(directory: Path) -> list[dict[str, object]]:
         except json.JSONDecodeError:
             continue
     return rows
+
+
+def load_run(directory: Path, run_id: str) -> dict[str, object]:
+    if not run_id.startswith("mosaic-") or any(char in run_id for char in ("/", "\\", "..")):
+        raise FileNotFoundError(run_id)
+    path = directory / f"{run_id}.json"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    claimed = payload.pop("sha256", None)
+    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
+    actual = hashlib.sha256(canonical).hexdigest()
+    payload["sha256"] = claimed
+    payload["integrity"] = {
+        "status": "verified" if claimed == actual else "failed",
+        "actual_sha256": actual,
+    }
+    return payload

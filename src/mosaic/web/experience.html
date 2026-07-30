@@ -7,6 +7,9 @@
   <meta name="color-scheme" content="dark light">
   <meta property="og:title" content="Mosaic - privacy risk lives in the graph">
   <meta property="og:description" content="An interactive, aggregate-only privacy threat model built on DataHub lineage.">
+  <meta property="og:image" content="https://mosaic-datahub-production.up.railway.app/static/og-card.svg">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
   <title>Mosaic - interactive privacy threat model</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='9' fill='%238b5cf6'/><path d='M8 21V11l8 7 8-7v10' fill='none' stroke='white' stroke-width='3' stroke-linecap='round'/></svg>">
   <link rel="stylesheet" href="/static/experience.css">
@@ -245,6 +248,16 @@ GROUP BY zip5, birth_date, gender_category</code></pre>
       </div>
     </section>
 
+    <section class="section credibility-section" aria-labelledby="credibility-title">
+      <div class="section-heading"><div><p class="eyebrow">Evidence ladder</p><h2 id="credibility-title">Four ways to challenge the claim.</h2></div><p>Each proof answers a different question. Mosaic keeps their scope visible instead of blending synthetic, recorded, external, and live evidence into one oversized claim.</p></div>
+      <div class="credibility-grid">
+        <article><small>Regression</small><strong>48 / 48</strong><h3>Exact seeded cases</h3><p>Exact metric agreement, policy boundaries, safe controls, and zero raw rows. Perfect here means the bounded regression passed - not field accuracy.</p><a href="/api/scan">Inspect estate scan</a></article>
+        <article><small>Integration</small><strong>5 / 5</strong><h3>Hash-verified replay</h3><p>Versioned DataHub schema, lineage, downstream, MCP, and governed write-back semantics are replayed from a tamper-evident fixture.</p><a href="https://github.com/usv240/mosaic-datahub/tree/master/fixtures/datahub_recording">Inspect fixture</a></article>
+        <article><small>External data</small><strong>k=43 ? 1</strong><h3>Composition in the wild</h3><p>32,561 UCI Adult records processed in memory. Six ordinary attributes create small classes; no source row is committed.</p><a href="https://github.com/usv240/mosaic-datahub/blob/master/evidence/external/uci-adult-proof.json">Inspect aggregate proof</a></article>
+        <article><small>Reusable agent</small><strong>1 skill</strong><h3>Workflow, packaged</h3><p>The DataHub privacy skill carries discovery, query safety, verdict, evidence, approval, and failure-handling rules into another agent.</p><a href="https://github.com/usv240/mosaic-datahub/tree/master/skills/datahub-privacy-threat-model">Inspect the skill</a></article>
+      </div>
+    </section>
+
 
     <section class="section glossary-section" aria-labelledby="glossary-title">
       <div class="section-heading"><div><p class="eyebrow">Plain-English reference</p><h2 id="glossary-title">Every term used in the demo.</h2></div><p>You do not need privacy-engineering or DataHub experience. Open any term for a thirty-second explanation.</p></div>
@@ -259,7 +272,7 @@ GROUP BY zip5, birth_date, gender_category</code></pre>
     </section>    <section class="safety-strip" aria-label="Safety guarantees"><div><p class="eyebrow">Built to investigate risk, not enable it</p><h2>Evidence without identities.</h2></div><ul><li><span>&check;</span> Synthetic demo data</li><li><span>&check;</span> Aggregate queries only</li><li><span>&check;</span> Raw-row counter fixed at zero</li><li><span>&check;</span> Human approval before mutation</li></ul></section>
   </main>
 
-  <footer class="footer"><a class="brand compact-brand" href="/"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>Mosaic</span></a><p>Privacy is not a column property. It is a graph property.</p><div><a href="https://github.com/usv240/mosaic-datahub">Source</a><a href="/api/assessment">Evidence API</a><a href="/health">Status</a></div></footer>
+  <footer class="footer"><a class="brand compact-brand" href="/"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>Mosaic</span></a><p>Privacy is not a column property. It is a graph property.</p><div><a href="https://github.com/usv240/mosaic-datahub">Source</a><a href="/api/assessment">Evidence API</a><a href="/health">Status</a><a href="/settings">Settings</a></div></footer>
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 </body>
 </html>

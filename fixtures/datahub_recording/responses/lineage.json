@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "paths": [
+    {"source_asset": "mosaic.contacts", "source_field": "zip5", "target_field": "zip5"},
+    {"source_asset": "mosaic.contacts", "source_field": "full_birth_date", "target_field": "birth_date"},
+    {"source_asset": "mosaic.demographics", "source_field": "gender_category", "target_field": "gender_category"}
+  ]
+}

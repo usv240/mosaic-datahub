@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "checks": {
+    "field_tag_reread": true,
+    "structured_property_reread": true,
+    "threat_document_reread": true,
+    "active_incident_reread": true
+  },
+  "entities": {
+    "tag": "urn:li:tag:mosaic:validated-critical",
+    "structured_property": "urn:li:structuredProperty:mosaic.riskState",
+    "document_subtype": "Privacy Threat Model",
+    "incident_type": "PRIVACY_RISK"
+  }
+}

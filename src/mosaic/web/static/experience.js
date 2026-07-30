@@ -150,6 +150,7 @@
     byId("proposal-risk").textContent = scenario.proposal;
     byId("proposal-k").textContent = scenario.k;
     drawGraph(scenario);
+    hydrateScenario(name);
     if (history.replaceState) history.replaceState(null, "", "?case=" + name + "#workspace");
     if (shouldScroll) byId("workspace").scrollIntoView({ behavior: "smooth", block: "start" });
   }
@@ -306,6 +307,36 @@
     });
   }
 
+  function hydrateScenario(name) {
+    fetch("/api/scenarios/" + encodeURIComponent(name))
+      .then(function (response) {
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        return response.json();
+      })
+      .then(function (report) {
+        var assessment = report.assessment;
+        var metrics = assessment.metrics;
+        var scenario = scenarios[name];
+        if (!scenario) return;
+        scenario.k = metrics ? metrics.minimum_k : "N/A";
+        scenario.below = metrics ? metrics.percent_below_5 : 0;
+        scenario.downstream = assessment.candidate.downstream_assets.length;
+        scenario.proposal = assessment.verdict;
+        if (assessment.aggregate_query) {
+          scenario.query = assessment.aggregate_query
+            .replace(" FROM ", "\nFROM ")
+            .replace(" GROUP BY ", "\nGROUP BY ");
+        }
+        if (selected === name) {
+          byId("query-code").textContent = scenario.query;
+          byId("proposal-risk").textContent = scenario.proposal;
+          byId("proposal-k").textContent = scenario.k;
+        }
+      })
+      .catch(function () {
+        showToast("Using bundled scenario evidence; the scenario API is temporarily unavailable.");
+      });
+  }
   function hydrateLiveEvidence() {
     Promise.all([fetch("/api/assessment").then(function (response) { return response.json(); }), fetch("/api/mitigations").then(function (response) { return response.json(); })])
       .then(function (reports) {

@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "available_tools": ["add_tags", "get_entities", "get_lineage", "search"],
+  "checks": {
+    "search_found_seeded_asset": true,
+    "column_lineage_read_through_mcp": true,
+    "field_tag_mutation_and_reread_through_mcp": true
+  }
+}

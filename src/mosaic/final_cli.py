@@ -12,6 +12,19 @@ def main(argv: Sequence[str] | None = None) -> int:
     demo = commands.add_parser("demo", help="Run deterministic offline judge evidence")
     demo.add_argument("--json", action="store_true")
     demo.add_argument("--output", type=Path)
+    assess = commands.add_parser("assess", help="Assess one configuration-driven privacy scenario")
+    assess.add_argument("--scenario", default="research")
+    assess.add_argument("--output", type=Path)
+    scan = commands.add_parser("scan", help="Screen and rank every configured estate asset")
+    scan.add_argument("--output", type=Path)
+    benchmark = commands.add_parser(
+        "benchmark", help="Measure policy accuracy, safe controls, and scaling"
+    )
+    benchmark.add_argument("--output", type=Path, default=Path("evaluations/benchmark.local.json"))
+    replay = commands.add_parser(
+        "replay-fixture", help="Replay the hash-verified DataHub metadata fixture"
+    )
+    replay.add_argument("--fixture", type=Path, default=Path("fixtures/datahub_recording"))
     serve = commands.add_parser("serve", help="Start the complete privacy evidence console")
     serve.add_argument("--host", default="127.0.0.1")
     serve.add_argument("--port", type=int, default=8123)
@@ -24,6 +37,44 @@ def main(argv: Sequence[str] | None = None) -> int:
     mcp.add_argument("--server", default="http://localhost:8080")
     args = parser.parse_args(argv)
 
+    if args.command == "assess":
+        from mosaic.scenario_registry import assess_scenario
+
+        try:
+            report = assess_scenario(args.scenario)
+        except KeyError:
+            parser.error(f"unknown scenario: {args.scenario}")
+        rendered = json.dumps(report, indent=2) + "\n"
+        if args.output:
+            args.output.parent.mkdir(parents=True, exist_ok=True)
+            args.output.write_text(rendered, encoding="utf-8")
+        print(rendered, end="")
+        return int(report["exit_code"])
+    if args.command == "scan":
+        from mosaic.estate_scan import scan_estate
+
+        report = scan_estate()
+        rendered = json.dumps(report, indent=2) + "\n"
+        if args.output:
+            args.output.parent.mkdir(parents=True, exist_ok=True)
+            args.output.write_text(rendered, encoding="utf-8")
+        print(rendered, end="")
+        return 3 if report["critical_findings"] else 0
+    if args.command == "benchmark":
+        from mosaic.benchmark import run_benchmark
+
+        report = run_benchmark()
+        rendered = json.dumps(report, indent=2) + "\n"
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(rendered, encoding="utf-8")
+        print(rendered, end="")
+        return 0 if report["status"] == "passed" else 2
+    if args.command == "replay-fixture":
+        from mosaic.fixture_replay import replay_fixture
+
+        report = replay_fixture(args.fixture)
+        print(json.dumps(report, indent=2))
+        return 0 if report["status"] == "passed" else 2
     if args.command == "serve":
         import uvicorn
 

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "source": {
+    "name": "UCI Adult",
+    "official_page": "https://archive.ics.uci.edu/dataset/2/adult",
+    "doi": "10.24432/C5XW20",
+    "license": "CC BY 4.0",
+    "source_sha256": "5b00264637dbfec36bdeaab5676b0b309ff9eb788d63554ca0a249491c86603d",
+    "records_processed_in_memory": 32561,
+    "raw_rows_committed": 0
+  },
+  "method": {
+    "purpose": "Demonstrate how individually ordinary attributes can produce small equivalence classes when composed.",
+    "generalization": "Age is grouped by decade; categorical values otherwise retain the source labels.",
+    "missing_values": "Question-mark source categories are retained as explicit unknown values.",
+    "limitations": "This 1994 census-derived dataset is a reproducible mechanism check, not a claim about current populations or production risk prevalence."
+  },
+  "single_attribute_control": {
+    "columns": [
+      "age_band"
+    ],
+    "records": 32561,
+    "distinct_combinations": 9,
+    "minimum_k": 43,
+    "percent_below_5": 0.0,
+    "raw_rows_returned": 0
+  },
+  "composed_attributes": {
+    "columns": [
+      "age_band",
+      "education",
+      "marital_status",
+      "occupation",
+      "sex",
+      "native_country"
+    ],
+    "records": 32561,
+    "distinct_combinations": 6643,
+    "minimum_k": 1,
+    "percent_below_5": 23.786,
+    "raw_rows_returned": 0
+  },
+  "privacy": {
+    "committed_artifact_contains": "Aggregate counts, hashes, provenance, and methodology only.",
+    "committed_artifact_excludes": "Every person-level source row and every equivalence-class value."
+  }
+}
