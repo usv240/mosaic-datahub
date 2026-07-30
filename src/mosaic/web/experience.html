@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Run a guided Mosaic privacy threat-model demo powered by DataHub lineage.">
+  <meta name="color-scheme" content="dark light">
+  <meta property="og:title" content="Mosaic - privacy risk lives in the graph">
+  <meta property="og:description" content="An interactive, aggregate-only privacy threat model built on DataHub lineage.">
+  <title>Mosaic - interactive privacy threat model</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='9' fill='%238b5cf6'/><path d='M8 21V11l8 7 8-7v10' fill='none' stroke='white' stroke-width='3' stroke-linecap='round'/></svg>">
+  <link rel="stylesheet" href="/static/experience.css">
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem("mosaic-theme");
+        if (saved) document.documentElement.dataset.theme = saved;
+      } catch (error) { /* OS preference remains the fallback. */ }
+    })();
+  </script>
+  <script defer src="/static/experience.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to demo</a>
+
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Mosaic home">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span>Mosaic</span>
+    </a>
+    <nav aria-label="Primary navigation">
+      <a href="#presets">Preset cases</a>
+      <a href="#workspace">Live demo</a>
+      <a href="#proof">Why DataHub</a>
+      <a href="/runs">Evidence</a>
+    </nav>
+    <div class="topbar-actions">
+      <a class="repo-link" href="https://github.com/usv240/mosaic-datahub">GitHub</a>
+      <button class="icon-button" id="theme-toggle" type="button" aria-label="Switch color theme">
+        <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <div class="status-row">
+          <span class="status-pill"><span class="status-dot"></span> Interactive recorded demo</span>
+          <span class="version-pill">Mosaic 0.2</span>
+        </div>
+        <p class="eyebrow">Privacy threat modeling, powered by DataHub</p>
+        <h1 id="hero-title">The table looks safe.<br><span>The graph says otherwise.</span></h1>
+        <p class="hero-lede">
+          ZIP code, birth date, and gender are ordinary columns in separate systems. DataHub lineage
+          shows where they converge. Mosaic proves the privacy risk using counts only, then finds the
+          safest useful mitigation.
+        </p>
+        <div class="hero-actions">
+          <button class="primary-button" id="hero-run" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 7 8 5-8 5Z"/></svg>
+            Run the 60-second demo
+          </button>
+          <a class="secondary-button" href="#presets">Choose another case</a>
+        </div>
+        <div class="trust-row" aria-label="Demo guarantees">
+          <span><b>0</b> raw rows exposed</span>
+          <span><b>3</b> lineage paths</span>
+          <span><b>1</b> reviewer gate</span>
+        </div>
+      </div>
+
+      <div class="hero-product" aria-label="Preview of the Mosaic finding">
+        <div class="window-bar"><span></span><span></span><span></span><small>research_export_clean</small></div>
+        <div class="preview-head">
+          <div><p>Privacy assessment</p><h2>Compositional risk</h2></div>
+          <span class="verdict critical">Critical</span>
+        </div>
+        <div class="mini-path" aria-hidden="true">
+          <div><i class="teal"></i><span>Support</span><small>ZIP5 + birth date</small></div>
+          <b></b>
+          <div><i class="violet"></i><span>Demographics</span><small>Gender category</small></div>
+          <b></b>
+          <div class="risk-node"><i></i><span>Research export</span><small>k = 1</small></div>
+        </div>
+        <div class="preview-metrics">
+          <div><small>Minimum anonymity</small><strong>k=1</strong></div>
+          <div><small>Below k=5</small><strong>100%</strong></div>
+          <div class="zero"><small>Person-level rows</small><strong>0</strong></div>
+        </div>
+        <div class="preview-safe"><span>Recommended</span><strong>Suppress precise birth date</strong><em>k=20 after</em></div>
+      </div>
+    </section>
+
+    <section class="public-note" aria-label="Hosted demo status">
+      <div class="note-icon" aria-hidden="true">i</div>
+      <p><strong>This hosted experience is intentionally read-only.</strong> It replays deterministic evidence produced by the real engine. Clone the repository to connect DataHub Core, run live discovery, and approve catalog write-back.</p>
+      <a href="https://github.com/usv240/mosaic-datahub#quickstart">Run locally</a>
+    </section>
+
+    <section class="section presets-section" id="presets" aria-labelledby="presets-title">
+      <div class="section-heading">
+        <div><p class="eyebrow">Preset investigation lab</p><h2 id="presets-title">Choose a case. See if Mosaic knows the difference.</h2></div>
+        <p>One is critical, one becomes safe after mitigation, and one is a deliberate false-positive control.</p>
+      </div>
+      <div class="preset-grid">
+        <button class="preset-card is-selected" type="button" data-scenario="research" aria-pressed="true">
+          <span class="preset-top"><span class="case-icon research">R</span><span class="verdict critical">Critical</span></span>
+          <small>Research data sharing</small>
+          <h3>Clean export, dangerous combination</h3>
+          <p>Three quasi-identifier families converge from two source systems and flow to three consumers.</p>
+          <span class="card-action">Open guided case <b>&rarr;</b></span>
+        </button>
+        <button class="preset-card" type="button" data-scenario="mitigated" aria-pressed="false">
+          <span class="preset-top"><span class="case-icon mitigated">M</span><span class="verdict safe">Mitigated</span></span>
+          <small>Privacy-preserving release</small>
+          <h3>Suppress one field, retain utility</h3>
+          <p>Shadow simulation removes precise birth date and lifts minimum anonymity from k=1 to k=20.</p>
+          <span class="card-action">Open guided case <b>&rarr;</b></span>
+        </button>
+        <button class="preset-card" type="button" data-scenario="control" aria-pressed="false">
+          <span class="preset-top"><span class="case-icon control">C</span><span class="verdict clear">Clear</span></span>
+          <small>Safe negative control</small>
+          <h3>High cardinality is not enough</h3>
+          <p>An operational identifier has many values, but no person-joinable family. Mosaic refuses the false alarm.</p>
+          <span class="card-action">Open guided case <b>&rarr;</b></span>
+        </button>
+      </div>
+    </section>
+
+    <section class="workspace-wrap" id="workspace" aria-labelledby="workspace-title">
+      <div class="workspace-shell">
+        <header class="workspace-header">
+          <div>
+            <span class="live-label"><i></i> Guided evidence replay</span>
+            <h2 id="workspace-title">Research export investigation</h2>
+            <p id="workspace-subtitle">Follow the exact evidence chain from DataHub context to a governed proposal.</p>
+          </div>
+          <div class="workspace-actions">
+            <button class="ghost-button" id="reset-demo" type="button">Reset</button>
+            <button class="primary-button compact" id="run-demo" type="button"><span class="run-label">Run investigation</span></button>
+          </div>
+        </header>
+
+        <ol class="run-progress" aria-label="Investigation progress">
+          <li data-step="0"><b>1</b><span>Discover<small>Read lineage</small></span></li>
+          <li data-step="1"><b>2</b><span>Converge<small>Map families</small></span></li>
+          <li data-step="2"><b>3</b><span>Validate<small>Aggregate only</small></span></li>
+          <li data-step="3"><b>4</b><span>Mitigate<small>Shadow test</small></span></li>
+          <li data-step="4"><b>5</b><span>Propose<small>Human gate</small></span></li>
+        </ol>
+
+        <div class="workspace-grid">
+          <section class="graph-panel panel" aria-labelledby="graph-title">
+            <div class="panel-head">
+              <div><p class="panel-kicker">DataHub column lineage</p><h3 id="graph-title">Convergence and blast radius</h3></div>
+              <span class="source-badge">Metadata only</span>
+            </div>
+            <div class="lineage-stage" id="lineage-stage" aria-label="Interactive metadata lineage graph"></div>
+            <div class="node-inspector" id="node-inspector" aria-live="polite">
+              <span class="inspector-icon">1</span><div><small>Selected evidence</small><strong>Support contacts</strong><p>ZIP5 and full birth date enter through independent column-lineage paths.</p></div>
+            </div>
+          </section>
+
+          <aside class="finding-panel panel" aria-labelledby="finding-title">
+            <div class="panel-head"><div><p class="panel-kicker">Assessment</p><h3 id="finding-title">Waiting to run</h3></div><span class="verdict neutral" id="finding-verdict">Ready</span></div>
+            <div class="metric-stack">
+              <article><span>Minimum anonymity set <button class="help" type="button" data-tip="k is the number of records sharing the same quasi-identifier combination." aria-label="Explain minimum anonymity set">?</button></span><strong id="metric-k">--</strong><small id="metric-k-note">Run validation to calculate</small></article>
+              <article><span>Records below k=5</span><strong id="metric-below">--</strong><small>Calculated from group counts</small></article>
+              <article class="zero-metric"><span>Raw person-level rows returned</span><strong id="metric-raw">0</strong><small>Enforced by query policy</small></article>
+              <article><span>Downstream assets exposed</span><strong id="metric-downstream">--</strong><small>From DataHub blast radius</small></article>
+            </div>
+            <div class="finding-callout" id="finding-callout"><span></span><p>Select <strong>Run investigation</strong> to replay every evidence-producing step.</p></div>
+          </aside>
+        </div>
+
+        <section class="evidence-panel panel" aria-labelledby="evidence-heading">
+          <div class="evidence-tabs" role="tablist" aria-label="Evidence views">
+            <button role="tab" aria-selected="true" aria-controls="tab-finding" id="tab-button-finding" data-tab="finding">Finding</button>
+            <button role="tab" aria-selected="false" aria-controls="tab-query" id="tab-button-query" data-tab="query">Validation query</button>
+            <button role="tab" aria-selected="false" aria-controls="tab-mitigation" id="tab-button-mitigation" data-tab="mitigation">Mitigation lab</button>
+            <button role="tab" aria-selected="false" aria-controls="tab-writeback" id="tab-button-writeback" data-tab="writeback">DataHub proposal</button>
+          </div>
+          <div class="tab-content" id="tab-finding" role="tabpanel" aria-labelledby="tab-button-finding">
+            <div><p class="panel-kicker">What Mosaic proved</p><h3 id="evidence-heading">Risk is created by convergence, not by one tagged column.</h3><p id="finding-copy">The per-table baseline reports no compositional finding. DataHub lineage reveals the exact cross-source combination that baseline cannot see.</p></div>
+            <div class="proof-list" id="proof-list"><p><span>01</span> Independent source families</p><p><span>02</span> Exact aggregate validation</p><p><span>03</span> Downstream impact traced</p></div>
+          </div>
+          <div class="tab-content" id="tab-query" role="tabpanel" aria-labelledby="tab-button-query" hidden>
+            <div class="query-intro"><div><p class="panel-kicker">Fail-closed policy</p><h3>One table. Approved columns. COUNT(*) only.</h3></div><span class="policy-pass">Policy passed</span></div>
+            <pre><code id="query-code">SELECT zip5, birth_date, gender_category,
+       COUNT(*) AS equivalence_class_size
+FROM research_export_clean
+GROUP BY zip5, birth_date, gender_category</code></pre>
+            <div class="query-guardrails"><span>No JOIN</span><span>No WHERE</span><span>No row projection</span><span>No identity output</span></div>
+          </div>
+          <div class="tab-content" id="tab-mitigation" role="tabpanel" aria-labelledby="tab-button-mitigation" hidden>
+            <div class="mitigation-summary"><div><p class="panel-kicker">Reversible shadow simulation</p><h3>Safer without touching source data.</h3><p>Mosaic compares privacy improvement and retained analytical utility before proposing a change.</p></div><div class="k-shift"><span><small>Before</small><strong>k=1</strong></span><b>&rarr;</b><span class="after"><small>Recommended</small><strong>k=20</strong></span></div></div>
+            <div class="strategy-table" role="table" aria-label="Mitigation strategy comparison">
+              <div class="table-row table-head" role="row"><span>Strategy</span><span>Minimum k</span><span>Utility</span><span>Decision</span></div>
+              <div class="table-row" role="row"><strong>Suppress precise birth date</strong><span>20</span><span>76%</span><em class="recommended">Recommend</em></div>
+              <div class="table-row" role="row"><strong>Generalize location and age</strong><span>4</span><span>68%</span><em>Insufficient</em></div>
+              <div class="table-row" role="row"><strong>Coarsen and suppress gender</strong><span>4</span><span>55%</span><em>Insufficient</em></div>
+            </div>
+          </div>
+          <div class="tab-content" id="tab-writeback" role="tabpanel" aria-labelledby="tab-button-writeback" hidden>
+            <div class="writeback-grid">
+              <div><p class="panel-kicker">Governed DataHub write-back</p><h3>The agent proposes. A reviewer decides.</h3><p>The hosted demo performs no mutation. Locally, approved evidence is written and reread as a structured property, tag, document, and active incident.</p><a class="secondary-button small" href="/api/assessment">Open evidence JSON</a></div>
+              <div class="proposal-card"><span class="proposal-status">Awaiting human approval</span><dl><div><dt>Risk state</dt><dd id="proposal-risk">validated_critical</dd></div><div><dt>Minimum k</dt><dd id="proposal-k">1</dd></div><div><dt>Raw rows</dt><dd>0</dd></div><div><dt>Target</dt><dd>research_export_clean</dd></div></dl></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="activity-panel panel" aria-labelledby="activity-title">
+          <div class="panel-head"><div><p class="panel-kicker">Agent activity</p><h3 id="activity-title">Evidence-producing steps</h3></div><span class="elapsed" id="elapsed">00:00.0</span></div>
+          <ol class="activity-log" id="activity-log"><li class="empty-log">No actions yet. Start the guided replay above.</li></ol>
+        </section>
+      </div>
+    </section>
+
+    <section class="section proof-section" id="proof" aria-labelledby="proof-title">
+      <div class="section-heading"><div><p class="eyebrow">Why DataHub is essential</p><h2 id="proof-title">A privacy notebook sees a table. Mosaic sees the estate.</h2></div><p>The graph creates the finding, supplies the blast radius, and keeps the reviewed result for the next human or agent.</p></div>
+      <div class="proof-grid">
+        <article><span>01</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h4v4H5zM15 5h4v4h-4zM10 15h4v4h-4zM9 7h6M7 9l4 6m6-6-4 6"/></svg><h3>Column-level lineage</h3><p>Finds quasi-identifier families that originate in separate systems but converge in one export.</p></article>
+        <article><span>02</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M12 4v16M6 6l12 12M18 6 6 18"/></svg><h3>Estate-wide impact</h3><p>Traces every partner delivery, explorer export, and training set that inherited the combination.</p></article>
+        <article><span>03</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 5 3 8 7 10 4-2 7-5 7-10V6zM9 12l2 2 4-5"/></svg><h3>Durable governance</h3><p>Writes approved evidence back as catalog context so the risk is not rediscovered from scratch.</p></article>
+      </div>
+    </section>
+
+    <section class="safety-strip" aria-label="Safety guarantees"><div><p class="eyebrow">Built to investigate risk, not enable it</p><h2>Evidence without identities.</h2></div><ul><li><span>&check;</span> Synthetic demo data</li><li><span>&check;</span> Aggregate queries only</li><li><span>&check;</span> Raw-row counter fixed at zero</li><li><span>&check;</span> Human approval before mutation</li></ul></section>
+  </main>
+
+  <footer class="footer"><a class="brand compact-brand" href="/"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>Mosaic</span></a><p>Privacy is not a column property. It is a graph property.</p><div><a href="https://github.com/usv240/mosaic-datahub">Source</a><a href="/api/assessment">Evidence API</a><a href="/health">Status</a></div></footer>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

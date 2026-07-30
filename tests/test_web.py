@@ -5,11 +5,12 @@ from mosaic.web import create_app
 
 def test_landing_page_leads_with_plain_language_problem() -> None:
     text = TestClient(create_app()).get("/").text
-    assert "No column here is PII" in text
-    assert "Together, they identify you" in text
+    assert "The table looks safe" in text
+    assert "The graph says otherwise" in text
     assert "DataHub" in text
-    assert 'id="theme"' in text
-    assert 'id="graph"' in text
+    assert 'id="theme-toggle"' in text
+    assert 'id="lineage-stage"' in text
+    assert "Run the 60-second demo" in text
 
 
 def test_evidence_api_is_complete_and_safe() -> None:

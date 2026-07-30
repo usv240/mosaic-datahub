@@ -20,6 +20,15 @@ def create_app(project_root: Path | None = None) -> FastAPI:
     app = FastAPI(title="Mosaic Privacy Console", version="0.2.0")
     app.mount("/static", StaticFiles(directory=WEB_ROOT / "static"), name="static")
 
+    @app.middleware("http")
+    async def security_headers(request, call_next):
+        response = await call_next(request)
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+        return response
+
     @app.get("/health")
     def health() -> dict[str, str]:
         return {"status": "ok"}
@@ -56,10 +65,10 @@ def create_app(project_root: Path | None = None) -> FastAPI:
 
     @app.get("/", response_class=HTMLResponse)
     def overview() -> HTMLResponse:
-        return HTMLResponse((WEB_ROOT / "index.html").read_text(encoding="utf-8"))
+        return HTMLResponse((WEB_ROOT / "experience.html").read_text(encoding="utf-8"))
 
     @app.get("/runs", response_class=HTMLResponse)
     def run_history() -> HTMLResponse:
-        return HTMLResponse((WEB_ROOT / "runs.html").read_text(encoding="utf-8"))
+        return HTMLResponse((WEB_ROOT / "runs_experience.html").read_text(encoding="utf-8"))
 
     return app
