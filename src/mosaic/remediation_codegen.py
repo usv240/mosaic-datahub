@@ -18,6 +18,26 @@ def _digest(content: str) -> str:
     return hashlib.sha256(content.encode("utf-8")).hexdigest()
 
 
+_CONTEXT_KEYS = {
+    "asset",
+    "asset_urn",
+    "columns",
+    "column_types",
+    "families",
+    "lineage_paths",
+    "downstream_assets",
+    "source_systems",
+}
+_UNSAFE_CONTEXT = re.compile(r"[\x00-\x1f\x7f\u200b-\u200f\u202a-\u202e\u2066-\u2069\ufeff`\[\]]")
+
+
+def _safe_context_text(value: object, label: str) -> str:
+    rendered = str(value)
+    if not rendered or len(rendered) > 500 or _UNSAFE_CONTEXT.search(rendered):
+        raise ValueError(f"DataHub context {label} contains unsafe text")
+    return rendered
+
+
 def _artifact(path: str, media_type: str, content: str) -> dict[str, Any]:
     normalized = content.rstrip() + "\n"
     return {
@@ -87,6 +107,15 @@ def _validate_artifacts(
         raise RuntimeError("generated privacy test projects disallowed values")
     if "human_review_required: true" not in policy["content"]:
         raise RuntimeError("generated policy lost its review gate")
+    if "contract:" not in schema["content"] or "enforced: true" not in schema["content"]:
+        raise RuntimeError("generated dbt model lost its enforced contract")
+    if schema["content"].count("data_type:") < 1:
+        raise RuntimeError("generated dbt contract lost its column types")
+    assurance = manifest.get("assurance", {})
+    if assurance.get("context_policy") != "structured_allowlist" or not assurance.get(
+        "human_review_required"
+    ):
+        raise RuntimeError("generated manifest lost its code-generation trust boundary")
     ref_pattern = re.compile(r"\{\{\s*ref\('([^']+)'\)\s*\}\}")
     compiled_model = ref_pattern.sub(r"\1", model["content"])
     compiled_model = "\n".join(
@@ -113,7 +142,9 @@ def _validate_artifacts(
         "DataHub source URN and scenario digest embedded",
         "dbt refs resolved and generated SQL compiled with DuckDB",
         "aggregate-only minimum-k test structurally checked",
-        "human review and provenance manifest gates checked",
+        "enforced typed dbt contract structurally checked",
+        "structured-context trust boundary and human review checked",
+        "provenance manifest gates checked",
     ]
 
 
@@ -126,18 +157,38 @@ def generate_remediation_bundle(
         raise ValueError(f"scenario {slug!r} has no validated remediation candidate")
     assessment = assess_scenario(slug)["assessment"]
     context = dict(datahub_context or {})
-    asset = str(context.get("asset", spec.asset))
-    asset_urn = str(context.get("asset_urn", spec.asset_urn))
-    source_columns = tuple(str(column) for column in context.get("columns", spec.columns))
-    families = tuple(str(family) for family in context.get("families", spec.families))
+    unknown_keys = sorted(set(context) - _CONTEXT_KEYS)
+    if unknown_keys:
+        raise ValueError(f"unsupported DataHub context fields: {', '.join(unknown_keys)}")
+    asset = _safe_context_text(context.get("asset", spec.asset), "asset")
+    asset_urn = _safe_context_text(context.get("asset_urn", spec.asset_urn), "asset_urn")
+    source_columns = tuple(
+        _safe_context_text(column, "column") for column in context.get("columns", spec.columns)
+    )
+    if context and "column_types" not in context:
+        raise ValueError("DataHub context must include source column types")
+    raw_types = context.get("column_types", dict(spec.column_types))
+    if not isinstance(raw_types, Mapping):
+        raise ValueError("DataHub context column_types must be a mapping")
+    source_column_types = {
+        _safe_context_text(column, "typed column"): _safe_context_text(data_type, "data type")
+        for column, data_type in raw_types.items()
+    }
+    families = tuple(
+        _safe_context_text(family, "family") for family in context.get("families", spec.families)
+    )
     lineage_paths = tuple(
-        tuple(str(node) for node in path)
+        tuple(_safe_context_text(node, "lineage node") for node in path)
         for path in context.get("lineage_paths", spec.lineage_paths)
     )
     downstream_assets = tuple(
-        str(item) for item in context.get("downstream_assets", spec.downstream_assets)
+        _safe_context_text(item, "downstream asset")
+        for item in context.get("downstream_assets", spec.downstream_assets)
     )
-    source_systems = tuple(str(item) for item in context.get("source_systems", spec.source_systems))
+    source_systems = tuple(
+        _safe_context_text(item, "source system")
+        for item in context.get("source_systems", spec.source_systems)
+    )
     context_sha256 = (
         _digest(json.dumps(context, sort_keys=True, separators=(",", ":")))
         if context
@@ -147,11 +198,26 @@ def generate_remediation_bundle(
         raise ValueError("DataHub context asset must map to a safe dbt model identifier")
     if not asset_urn.startswith("urn:"):
         raise ValueError("DataHub context must include a valid source asset URN")
+    if not all(re.fullmatch(r"[a-z][a-z0-9_]*", column) for column in source_columns):
+        raise ValueError("DataHub context columns must be safe SQL identifiers")
     if not set(spec.columns).issubset(source_columns):
         raise ValueError("DataHub context schema is missing mitigation-required columns")
+    if set(source_column_types) != set(source_columns):
+        raise ValueError("DataHub context types must exactly match source columns")
+    if not all(
+        re.fullmatch(r"[a-z][a-z0-9_]*(?:\([0-9]+(?:,[0-9]+)?\))?", data_type)
+        for data_type in source_column_types.values()
+    ):
+        raise ValueError("DataHub context contains an unsafe or unsupported data type")
     if not families or not lineage_paths or not source_systems:
         raise ValueError("DataHub context must include families, lineage paths, and source systems")
+    if any(len(path) < 2 for path in lineage_paths):
+        raise ValueError("DataHub context lineage paths must contain at least two nodes")
     expressions, output_columns, strategy = _strategy(slug)
+    output_column_types = {
+        column: "varchar" if column == "region" else source_column_types[column]
+        for column in output_columns
+    }
     model_name = f"{asset}_privacy_safe"
     select_list = ",\n    ".join(expressions)
     group_list = ", ".join(output_columns)
@@ -167,7 +233,8 @@ SELECT
 FROM {{{{ ref('{asset}') }}}}
 """
     schema_columns = "\n".join(
-        f"      - name: {column}\n        description: Privacy-reviewed output column."
+        f"      - name: {column}\n        data_type: {output_column_types[column]}\n"
+        "        description: Privacy-reviewed output column."
         for column in output_columns
     )
     schema_yml = f"""version: 2
@@ -178,6 +245,8 @@ models:
       Mosaic-generated shadow remediation for {spec.name}. Review before merge.
     config:
       tags: [mosaic_privacy_remediation, human_review_required]
+      contract:
+        enforced: true
     meta:
       datahub_source_urn: "{asset_urn}"
       mosaic_scenario_sha256: "{context_sha256}"
@@ -218,6 +287,9 @@ controls:
 mitigation:
   strategy: "{strategy}"
   generated_model: "{model_name}"
+generation:
+  context_policy: structured_allowlist
+  execute_generated_code: false
 approval:
   required_roles: [privacy_reviewer, data_owner]
   writeback_after_merge: [tag, structured_property, document, incident]
@@ -241,6 +313,7 @@ synthetic scenario. These thresholds are review policy, not a legal conclusion.
 
 - Source asset: `{asset_urn}`
 - Scenario digest: `{context_sha256}`
+- Context trust: structured metadata allowlist; free-form instructions are rejected
 - Fine-grained lineage:
 {lineage}
 - Downstream review boundary:
@@ -271,7 +344,15 @@ Generated artifacts are proposals. Mosaic does not commit, merge, or execute the
         "scenario": slug,
         "source_asset_urn": asset_urn,
         "scenario_sha256": context_sha256,
+        "assurance": {
+            "context_policy": "structured_allowlist",
+            "human_review_required": True,
+            "generated_code_executed": False,
+            "sql_compile_gate": "duckdb_explain",
+            "dbt_contract_enforced": True,
+        },
         "datahub_context": {
+            "column_types": source_column_types,
             "families": list(families),
             "lineage_paths": [list(path) for path in lineage_paths],
             "downstream_assets": list(downstream_assets),

@@ -4,8 +4,20 @@
   "track": "Metadata-Aware Code Generation & Development",
   "scenario": "audience",
   "source_asset_urn": "urn:li:dataset:(urn:li:dataPlatform:mosaic,partner_audience_export,PROD)",
-  "scenario_sha256": "acc2f467c84fc3844db158e788487eba11d30ad7169313a4a6507d3119674e3e",
+  "scenario_sha256": "77e00c31c263d925d571fa5ca1db949e0c4bb2b4d41c73e59f8820242f576576",
+  "assurance": {
+    "context_policy": "structured_allowlist",
+    "human_review_required": true,
+    "generated_code_executed": false,
+    "sql_compile_gate": "duckdb_explain",
+    "dbt_contract_enforced": true
+  },
   "datahub_context": {
+    "column_types": {
+      "neighborhood": "varchar",
+      "age_band": "varchar",
+      "household_size": "integer"
+    },
     "families": [
       "location",
       "age",
@@ -37,7 +49,7 @@
     },
     {
       "path": "models/partner_audience_export_privacy_safe.yml",
-      "sha256": "df765aac83da1335bf73252c8221694f1729db4fdbbfa7da0fc419175905aab3"
+      "sha256": "0fe5ead0b1cf380bf72e658cfa93de70ac91a1b0bc1471b829be6d9b936d6902"
     },
     {
       "path": "tests/assert_partner_audience_export_privacy_safe_minimum_k.sql",
@@ -45,11 +57,11 @@
     },
     {
       "path": ".mosaic/privacy-policy.yml",
-      "sha256": "71462a8de15f985fbe09502d996811c945c6585080f0601c7d0f2a0fc4723e0c"
+      "sha256": "30b98c7d23f50859d97c6394aae54d6d693239b4f289a8ade93e8ca5e3f83a60"
     },
     {
       "path": "PR_SUMMARY.md",
-      "sha256": "460b2279249755e63e19839b3f070898f662a7dbd729aa9252080a2c3adec67d"
+      "sha256": "1e16879e2e01baac192deb2b867907b0611293614ede2fe166dd6dca01193515"
     }
   ]
 }

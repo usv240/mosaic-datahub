@@ -6,6 +6,7 @@
   "asset": "research_export_shadow",
   "asset_urn": "urn:li:dataset:(urn:li:dataPlatform:mosaic,research_export_shadow,PROD)",
   "columns": ["zip5", "gender_category"],
+  "column_types": {"zip5": "varchar", "gender_category": "varchar"},
   "families": ["location", "demographic"],
   "lineage_paths": [
     ["research_export_clean.zip5", "research_export_shadow.zip5"],

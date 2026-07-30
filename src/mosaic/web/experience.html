@@ -252,12 +252,12 @@ GROUP BY zip5, birth_date, gender_category</code></pre>
             </div>
           </div>
           <div class="tab-content codegen-panel" id="tab-codegen" role="tabpanel" aria-labelledby="tab-button-codegen" hidden>
-            <div class="codegen-head"><div><p class="panel-kicker">Metadata-aware code generation</p><h3>From DataHub context to a review-ready PR.</h3><p>Mosaic generates deterministic artifacts from the selected scenario. Nothing is committed, merged, or executed without review.</p></div><div class="codegen-actions"><span class="policy-pass" id="codegen-status">6 checks passed</span><a class="primary-button compact" id="codegen-download" href="/api/remediation-bundles/research/download">Download ZIP</a></div></div>
+            <div class="codegen-head"><div><p class="panel-kicker">Metadata-aware code generation</p><h3>From DataHub context to a review-ready PR.</h3><p>Mosaic generates deterministic artifacts from the selected scenario. Nothing is committed, merged, or executed without review.</p></div><div class="codegen-actions"><span class="policy-pass" id="codegen-status">Validating bundle...</span><a class="primary-button compact" id="codegen-download" href="/api/remediation-bundles/research/download">Download ZIP</a></div></div>
             <div class="codegen-workbench">
               <div class="generated-files"><small>Generated change set</small><div id="generated-file-list"><button class="generated-file is-active" type="button" data-artifact-index="0"><span>SQL</span><b>privacy_safe.sql</b></button></div><div class="generation-receipt"><span>DataHub grounded</span><p id="codegen-receipt">Lineage, schema, scenario digest, and downstream impact retained.</p><code id="codegen-sha">Loading bundle digest...</code></div></div>
               <div class="generated-preview"><div><span id="generated-path">models/privacy_safe.sql</span><small>Generated proposal - human review required</small></div><pre><code id="generated-code">Loading generated artifact...</code></pre></div>
             </div>
-            <div class="codegen-proof" aria-label="Generation validation"><span>DataHub URN embedded</span><span>dbt schema emitted</span><span>Aggregate test emitted</span><span>Zero row projection</span><span>Review gate retained</span></div>
+            <div class="codegen-proof" aria-label="Generation validation"><span>DataHub URN embedded</span><span>Typed contract enforced</span><span>Aggregate test emitted</span><span>SQL compiled</span><span>Structured context only</span><span>Review gate retained</span></div>
           </div>
           <div class="tab-content" id="tab-writeback" role="tabpanel" aria-labelledby="tab-button-writeback" hidden>
             <div class="writeback-grid">
@@ -315,7 +315,16 @@ GROUP BY zip5, birth_date, gender_category</code></pre>
         <a href="https://github.com/datahub-project/datahub/pull/18705"><span>Merged into DataHub</span><strong>Open-source contribution #18705</strong><b>&rarr;</b></a>
       </div>
     </section>
-    <section class="section credibility-section" aria-labelledby="credibility-title">
+    <section class="section standards-section" aria-labelledby="standards-title">
+      <div class="section-heading"><div><p class="eyebrow">Research-backed engineering</p><h2 id="standards-title">Built on standards, not vibes.</h2></div><p>Each source changes a control you can inspect. None is presented as certification or a substitute for organization-specific review.</p></div>
+      <div class="standards-grid">
+        <a href="https://datahub.com/blog/build-with-datahub-agent-hackathon/"><small>Official architecture</small><h3>DataHub context before code</h3><p>Schema, lineage, governance, examples, and validation shape the generated change.</p><span>DataHub &rarr;</span></a>
+        <a href="https://docs.getdbt.com/docs/mesh/govern/model-contracts"><small>Artifact correctness</small><h3>Enforced typed contracts</h3><p>Every generated output column has a declared type and an enforced dbt contract.</p><span>dbt &rarr;</span></a>
+        <a href="https://www.nist.gov/publications/de-identification-personal-information"><small>Privacy boundary</small><h3>Risk reduction, not absolutes</h3><p>Utility and re-identification risk stay visible; Mosaic never calls k-anonymity a legal guarantee.</p><span>NIST &rarr;</span></a>
+        <a href="https://cheatsheetseries.owasp.org/cheatsheets/Secure_Coding_with_AI_Cheat_Sheet.html"><small>Generation safety</small><h3>Untrusted context, human owner</h3><p>Structured allowlists, compiled SQL, artifact hashes, and explicit review guard every bundle.</p><span>OWASP &rarr;</span></a>
+      </div>
+      <a class="standards-receipt" href="https://github.com/usv240/mosaic-datahub/blob/master/docs/RESEARCH_FOUNDATIONS.md">Inspect the complete claim-to-control map and implementation receipts &rarr;</a>
+    </section>    <section class="section credibility-section" aria-labelledby="credibility-title">
       <div class="section-heading"><div><p class="eyebrow">Evidence ladder</p><h2 id="credibility-title">Four ways to challenge the claim.</h2></div><p>Each proof answers a different question. Mosaic keeps their scope visible instead of blending synthetic, recorded, external, and live evidence into one oversized claim.</p></div>
       <div class="credibility-grid">
         <article><small>Regression</small><strong>48 / 48</strong><h3>Exact seeded cases</h3><p>Exact metric agreement, policy boundaries, safe controls, and zero raw rows. Perfect here means the bounded regression passed - not field accuracy.</p><a href="/api/scan">Inspect estate scan</a></article>

@@ -6,14 +6,18 @@ models:
       Mosaic-generated shadow remediation for Partner audience export. Review before merge.
     config:
       tags: [mosaic_privacy_remediation, human_review_required]
+      contract:
+        enforced: true
     meta:
       datahub_source_urn: "urn:li:dataset:(urn:li:dataPlatform:mosaic,partner_audience_export,PROD)"
-      mosaic_scenario_sha256: "acc2f467c84fc3844db158e788487eba11d30ad7169313a4a6507d3119674e3e"
+      mosaic_scenario_sha256: "77e00c31c263d925d571fa5ca1db949e0c4bb2b4d41c73e59f8820242f576576"
       minimum_k_before: 1
       minimum_k_after: 8
       raw_person_rows_returned: 0
     columns:
       - name: region
+        data_type: varchar
         description: Privacy-reviewed output column.
       - name: age_band
+        data_type: varchar
         description: Privacy-reviewed output column.

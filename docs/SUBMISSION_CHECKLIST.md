@@ -36,8 +36,8 @@
 
 ## Engineering quality
 
-- [x] 319 passing tests
-- [x] 99.70% measured coverage
+- [x] 332 passing tests
+- [x] 99.71% measured coverage
 - [x] Multi-OS and Python 3.11/3.12 CI
 - [x] Strict lint, format, JSON, UTF-8, CLI/codegen-contract, package-build, and accessibility gates
 - [x] Locked standalone environment and Apache-2.0 license
@@ -47,7 +47,7 @@
 
 - [x] Public repository: https://github.com/usv240/mosaic-datahub
 - [x] Hosted demo: https://mosaic-datahub-production.up.railway.app
-- [x] CI-generated nine-screenshot product gallery, including a dedicated DataHub architecture capture, committed to the public repository
+- [x] CI-generated ten-screenshot product gallery, including dedicated DataHub architecture, remediation PR, and research-standards captures, committed to the public repository
 - [x] Edit-ready browser-recorded walkthrough committed with a SHA-256 media manifest
 - [ ] Attach under-three-minute public video to the submission form
 

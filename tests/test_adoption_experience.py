@@ -71,6 +71,7 @@ def test_one_command_container_evaluation_defaults_to_read_only() -> None:
     assert "data-has-integration-boundary" in capture
     assert "08-datahub-architecture.png" in capture
     assert "09-remediation-pr.png" in capture
+    assert "10-research-standards.png" in capture
     assert '("query", "mitigation", "codegen", "writeback")' in capture
     workflow = Path(".github/workflows/verify.yml").read_text(encoding="utf-8")
     assert "Smoke production container" in workflow

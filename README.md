@@ -88,13 +88,19 @@ Mosaic turns a validated graph finding into code a data team can review and merg
 | Generated artifact | Purpose |
 |---|---|
 | `models/*_privacy_safe.sql` | dbt model implementing the selected suppression or generalization |
-| `models/*_privacy_safe.yml` | Column contract, DataHub URN, scenario digest, and before/after metrics |
+| `models/*_privacy_safe.yml` | Enforced typed column contract, DataHub URN, scenario digest, and before/after metrics |
 | `tests/assert_*_minimum_k.sql` | Singular dbt test that returns only an aggregate failure metric |
 | `.mosaic/privacy-policy.yml` | Review thresholds, required roles, and post-merge write-back plan |
 | `mosaic-manifest.json` | DataHub context and SHA-256 digest for every generated artifact |
 | `PR_SUMMARY.md` | Reviewer-ready rationale, lineage, blast radius, and approval checklist |
 
 Inspect the committed [research](examples/generated/research-remediation) and [audience](examples/generated/audience-remediation) outputs, call `/api/remediation-bundles/{scenario}`, or download the reproducible ZIP from `/api/remediation-bundles/{scenario}/download`. A safe negative control produces no bundle; Mosaic refuses to manufacture unnecessary code.
+
+### Research-backed controls
+
+The generator follows the official [DataHub metadata-aware code-generation architecture](https://datahub.com/blog/build-with-datahub-agent-hackathon/): structured schema, lineage, and governance context must arrive before code, examples are committed for review, and output is validated before commit. Generated YAML uses [dbt enforced model contracts](https://docs.getdbt.com/docs/mesh/govern/model-contracts), while the minimum-k check follows dbt's [singular data-test contract](https://docs.getdbt.com/docs/build/data-tests): a test returns a failure row only when its assertion fails.
+
+The privacy claim remains deliberately narrower than "anonymous." [NISTIR 8053](https://www.nist.gov/publications/de-identification-personal-information) explains both the risk-reduction value and the limits of de-identification. [OWASP's Secure Coding with AI guidance](https://cheatsheetseries.owasp.org/cheatsheets/Secure_Coding_with_AI_Cheat_Sheet.html) motivates Mosaic's structured context allowlist, injection rejection, validation, audit receipts, and mandatory human owner. See the complete [claim-to-control research map](docs/RESEARCH_FOUNDATIONS.md).
 
 ## Evidence ladder
 
@@ -118,6 +124,8 @@ See [evaluations/benchmark.json](evaluations/benchmark.json), [fixtures/datahub_
 | [![Reproducible proof catalog](docs/screenshots/04-evidence-catalog.png)](docs/screenshots/04-evidence-catalog.png) | [![Mosaic landing page in light mode](docs/screenshots/06-landing-light.png)](docs/screenshots/06-landing-light.png) |
 | **Remediation PR Studio** | **DataHub architecture** |
 | [![Generated remediation code review](docs/screenshots/09-remediation-pr.png)](docs/screenshots/09-remediation-pr.png) | [![DataHub technology architecture](docs/screenshots/08-datahub-architecture.png)](docs/screenshots/08-datahub-architecture.png) |
+| **Research-backed controls** | **Audience scenario** |
+| [![Research and standards receipts](docs/screenshots/10-research-standards.png)](docs/screenshots/10-research-standards.png) | [![Audience preset](docs/screenshots/02-audience-preset.png)](docs/screenshots/02-audience-preset.png) |
 
 The repository also includes the complete [screenshot gallery](docs/screenshots/README.md) and an [edit-ready product walkthrough](docs/demo/08-product-walkthrough.webm). The walkthrough is source footage for the required narrated public submission video; it is not presented as the final YouTube/Vimeo entry.
 

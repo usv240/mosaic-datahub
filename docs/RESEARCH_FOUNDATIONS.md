@@ -1,0 +1,18 @@
+# Research and standards foundations
+
+Mosaic uses external guidance as design constraints, not as evidence that a generated remediation is legally sufficient. Organization-specific policy and human review remain mandatory.
+
+## Claim-to-control map
+
+| Source | Relevant finding | Mosaic implementation | Verifiable receipt |
+|---|---|---|---|
+| [DataHub hackathon reference architecture](https://datahub.com/blog/build-with-datahub-agent-hackathon/) | Metadata-aware generators should read real schema, lineage, and rules, emit mergeable production artifacts, include examples, and validate before commit. | DataHub context drives dbt SQL, an enforced schema contract, a singular privacy test, policy, PR summary, and provenance manifest. Two deterministic bundles live under `examples/generated/`; generated SQL is compiled before return. | `src/mosaic/remediation_codegen.py`, `examples/generated/` |
+| [DataHub MCP Server overview](https://datahub.com/resources/datahub-mcp-server-overview/) | Schema fields, entities, lineage, dataset queries, and exact lineage paths are structured context surfaces; MCP responses cross a trust boundary. | Live discovery passes only an allowlisted structured context contract into generation. Unknown fields, unsafe identifiers, control characters, bidi controls, Markdown delimiters, oversized values, and malformed paths fail closed. | `src/mosaic/live_estate.py`, `src/mosaic/mcp_probe.py`, `tests/test_remediation_codegen.py` |
+| [dbt model contracts](https://docs.getdbt.com/docs/mesh/govern/model-contracts) | An enforced contract declares every output column name and data type and lets dbt preflight the model shape. | Generated model YAML sets `contract.enforced: true` and derives retained output types from DataHub schema metadata; derived region text is explicitly typed `varchar`. Mosaic rejects missing, mismatched, or unsafe types and artifacts that lose the contract. | `examples/generated/*/models/*.yml` |
+| [dbt data tests](https://docs.getdbt.com/docs/build/data-tests) | A singular test is a SQL `select` in `tests/` that returns failing records; zero rows means pass. | Mosaic emits one singular test that returns only the aggregate `minimum_k` failure metric when the approved threshold fails—never a person-level row or quasi-identifier value. | `examples/generated/*/tests/*.sql` |
+| [NISTIR 8053](https://www.nist.gov/publications/de-identification-personal-information) | De-identification reduces risk but must balance usefulness, and some de-identified data can still be re-identified. | Mosaic compares privacy improvement with retained utility, labels thresholds as policy rather than law, preserves exact evidence, and never claims k-anonymity proves anonymity. | `README.md`, `ETHICS.md`, `.mosaic/privacy-policy.yml` |
+| [OWASP Secure Coding with AI](https://cheatsheetseries.owasp.org/cheatsheets/Secure_Coding_with_AI_Cheat_Sheet.html) | Agent inputs and MCP responses are untrusted; generated code needs validation, scoped changes, audit trails, and explicit human ownership before merge. | Generation is deterministic and network-free, context is allowlisted and sanitized, every file is hashed, SQL is compiled, auto-execution is false, and privacy/data-owner approval is mandatory. | `mosaic-manifest.json`, `PR_SUMMARY.md`, CI smoke and adversarial tests |
+
+## Honest boundary
+
+These references justify engineering choices; they do not certify Mosaic, establish legal compliance, or make a demo threshold universally appropriate. A production adopter must map DataHub ownership, glossary terms, quality signals, permitted query patterns, warehouse types, and privacy thresholds to its own controls.

@@ -110,6 +110,7 @@ def test_live_estate_status_matrix(monkeypatch, upstream, downstream_count, expe
     assert report["blast_radius"]["downstream_count"] == downstream_count
     assert report["codegen_context"]["asset"] == "research_export_123"
     assert report["codegen_context"]["columns"] == ["zip5", "birth_date", "gender_category"]
+    assert report["codegen_context"]["column_types"]["birth_date"] == "date"
     assert len(report["codegen_context"]["downstream_assets"]) == downstream_count
     assert state.server == "http://core"
     assert state.connection_tests == 1

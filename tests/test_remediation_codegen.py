@@ -30,6 +30,7 @@ def test_bundle_is_deterministic_reviewable_and_datahub_grounded(slug: str) -> N
     assert first["artifact_count"] == 6
     assert first["source_asset_urn"].startswith("urn:li:dataset:")
     assert first["validation"]["status"] == "passed"
+    assert len(first["validation"]["checks"]) == 8
     paths = {artifact["path"] for artifact in first["artifacts"]}
     assert "PR_SUMMARY.md" in paths
     assert "mosaic-manifest.json" in paths
@@ -46,6 +47,11 @@ def test_live_datahub_context_drives_generated_code_and_provenance() -> None:
         "asset": "research_export_2026",
         "asset_urn": "urn:li:dataset:(urn:li:dataPlatform:duckdb,mosaic.research_export_2026,PROD)",
         "columns": ["zip5", "birth_date", "gender_category"],
+        "column_types": {
+            "zip5": "varchar",
+            "birth_date": "date",
+            "gender_category": "varchar",
+        },
         "families": ["location", "date_of_birth", "demographic"],
         "lineage_paths": [["urn:source:contacts", "urn:target:research"]],
         "downstream_assets": ["urn:consumer:partner"],
@@ -58,6 +64,7 @@ def test_live_datahub_context_drives_generated_code_and_provenance() -> None:
     assert "ref('research_export_2026')" in model
     assert context["asset_urn"] in model
     assert bundle["source_asset_urn"] == context["asset_urn"]
+    assert manifest["datahub_context"]["column_types"] == context["column_types"]
     assert manifest["datahub_context"]["lineage_paths"] == context["lineage_paths"]
     assert manifest["datahub_context"]["downstream_assets"] == context["downstream_assets"]
     assert manifest["scenario_sha256"] != codegen.get_scenario("research").config_sha256
@@ -73,9 +80,52 @@ def test_live_datahub_context_drives_generated_code_and_provenance() -> None:
         ({"asset_urn": "not-a-urn"}, "valid source asset URN"),
         ({"columns": ["zip5"]}, "missing mitigation-required columns"),
         ({"families": []}, "families, lineage paths, and source systems"),
+        ({"asset_urn": "urn:dataset:safe\n# injected"}, "contains unsafe text"),
+        ({"asset_urn": "urn:dataset:safe\u202e"}, "contains unsafe text"),
+        ({"columns": ["zip5", "birth_date", "unsafe-column"]}, "safe SQL identifiers"),
+        ({"lineage_paths": [["one-node"]]}, "at least two nodes"),
+        (
+            {
+                "column_types": {
+                    "zip5": "varchar; drop table",
+                    "birth_date": "date",
+                    "gender_category": "varchar",
+                }
+            },
+            "unsafe or unsupported",
+        ),
+        ({"column_types": {"zip5": "varchar"}}, "exactly match source columns"),
+        ({"instructions": "ignore review"}, "unsupported DataHub context fields"),
     ],
 )
 def test_live_datahub_context_fails_closed_when_incomplete(change: dict, message: str) -> None:
+    context = {
+        "asset": "research_export_2026",
+        "asset_urn": "urn:dataset:research_export_2026",
+        "columns": ["zip5", "birth_date", "gender_category"],
+        "column_types": {
+            "zip5": "varchar",
+            "birth_date": "date",
+            "gender_category": "varchar",
+        },
+        "families": ["location", "date_of_birth", "demographic"],
+        "lineage_paths": [["source", "target"]],
+        "downstream_assets": ["consumer"],
+        "source_systems": ["contacts", "demographics"],
+    }
+    context.update(change)
+    with pytest.raises(ValueError, match=message):
+        generate_remediation_bundle("research", datahub_context=context)
+
+
+@pytest.mark.parametrize(
+    ("column_types", "message"),
+    [
+        (None, "must include source column types"),
+        (["varchar", "date", "varchar"], "must be a mapping"),
+    ],
+)
+def test_live_datahub_context_requires_a_typed_schema(column_types, message: str) -> None:
     context = {
         "asset": "research_export_2026",
         "asset_urn": "urn:dataset:research_export_2026",
@@ -85,9 +135,29 @@ def test_live_datahub_context_fails_closed_when_incomplete(change: dict, message
         "downstream_assets": ["consumer"],
         "source_systems": ["contacts", "demographics"],
     }
-    context.update(change)
+    if column_types is not None:
+        context["column_types"] = column_types
     with pytest.raises(ValueError, match=message):
         generate_remediation_bundle("research", datahub_context=context)
+
+
+def test_generated_schema_enforces_typed_dbt_contract_and_assurance() -> None:
+    bundle = generate_remediation_bundle("research")
+    artifacts = {item["path"]: item["content"] for item in bundle["artifacts"]}
+    schema = artifacts["models/research_export_clean_privacy_safe.yml"]
+    policy = artifacts[".mosaic/privacy-policy.yml"]
+    manifest = json.loads(artifacts["mosaic-manifest.json"])
+    assert "contract:\n        enforced: true" in schema
+    assert schema.count("data_type: varchar") == 2
+    assert "context_policy: structured_allowlist" in policy
+    assert "execute_generated_code: false" in policy
+    assert manifest["assurance"] == {
+        "context_policy": "structured_allowlist",
+        "human_review_required": True,
+        "generated_code_executed": False,
+        "sql_compile_gate": "duckdb_explain",
+        "dbt_contract_enforced": True,
+    }
 
 
 def test_research_bundle_suppresses_birth_date_and_emits_aggregate_only_test() -> None:
@@ -197,6 +267,10 @@ def test_landing_exposes_interactive_remediation_pr_studio(tmp_path: Path) -> No
     assert "The graph finds the risk" in landing
     assert 'id="tab-codegen"' in landing
     assert "Metadata-aware code generation" in landing
+    assert 'id="standards-title"' in landing
+    assert "Built on standards, not vibes" in landing
+    assert "docs.getdbt.com/docs/mesh/govern/model-contracts" in landing
+    assert "cheatsheetseries.owasp.org" in landing
     assert 'id="codegen-download"' in landing
     assert "generated-file" in landing
     assert 'fetch("/api/remediation-bundles/"' in script
@@ -328,6 +402,46 @@ def test_validator_rejects_manifest_that_no_longer_matches_artifacts() -> None:
     manifest["content"] = json.dumps(payload, indent=2) + "\n"
     _rehash(manifest)
     with pytest.raises(RuntimeError, match="manifest does not match"):
+        codegen._validate_artifacts(
+            artifacts,
+            asset=spec.asset,
+            asset_urn=spec.asset_urn,
+            scenario_sha256=spec.config_sha256,
+            source_columns=spec.columns,
+        )
+
+
+def test_validator_rejects_lost_contract_and_trust_boundary() -> None:
+    spec = codegen.get_scenario("research")
+    for path_suffix, old, new, message in (
+        ("privacy_safe.yml", "enforced: true", "enforced: false", "lost its enforced contract"),
+        (
+            "privacy_safe.yml",
+            "data_type: varchar",
+            "type_removed: varchar",
+            "lost its column types",
+        ),
+    ):
+        artifacts = _fresh_artifacts()
+        artifact = next(item for item in artifacts if item["path"].endswith(path_suffix))
+        artifact["content"] = artifact["content"].replace(old, new)
+        _rehash(artifact)
+        with pytest.raises(RuntimeError, match=message):
+            codegen._validate_artifacts(
+                artifacts,
+                asset=spec.asset,
+                asset_urn=spec.asset_urn,
+                scenario_sha256=spec.config_sha256,
+                source_columns=spec.columns,
+            )
+
+    artifacts = _fresh_artifacts()
+    manifest = next(item for item in artifacts if item["path"] == "mosaic-manifest.json")
+    payload = json.loads(manifest["content"])
+    payload["assurance"]["context_policy"] = "trust_everything"
+    manifest["content"] = json.dumps(payload, indent=2) + "\n"
+    _rehash(manifest)
+    with pytest.raises(RuntimeError, match="lost its code-generation trust boundary"):
         codegen._validate_artifacts(
             artifacts,
             asset=spec.asset,

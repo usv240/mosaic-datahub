@@ -22,6 +22,7 @@ class ScenarioSpec:
     asset: str
     asset_urn: str
     columns: tuple[str, ...]
+    column_types: tuple[tuple[str, str], ...]
     families: tuple[str, ...]
     lineage_paths: tuple[tuple[str, ...], ...]
     downstream_assets: tuple[str, ...]
@@ -43,6 +44,7 @@ def _load(path: Path) -> ScenarioSpec:
         asset=data["asset"],
         asset_urn=data["asset_urn"],
         columns=tuple(data["columns"]),
+        column_types=tuple(data["column_types"].items()),
         families=tuple(data["families"]),
         lineage_paths=tuple(tuple(path) for path in data["lineage_paths"]),
         downstream_assets=tuple(data["downstream_assets"]),

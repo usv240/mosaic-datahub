@@ -1,6 +1,6 @@
 ---
 name: datahub-privacy-threat-model
-description: Assess compositional re-identification risk by combining DataHub schema, tags, lineage, and downstream impact with aggregate-only k-anonymity validation. Use when asked to find privacy risk across datasets, inspect quasi-identifier convergence, compare a metadata-only baseline with lineage-aware discovery, produce governed DataHub evidence, scan configured Mosaic scenarios, or explain and mitigate small anonymity sets without exposing person-level rows.
+description: Assess compositional re-identification risk and generate review-ready remediation code by combining DataHub schema, types, tags, lineage, and downstream impact with aggregate-only k-anonymity validation. Use when asked to find privacy risk across datasets, inspect quasi-identifier convergence, compare a metadata-only baseline with lineage-aware discovery, produce governed DataHub evidence, scan configured Mosaic scenarios, or explain and mitigate small anonymity sets without exposing person-level rows.
 allowed-tools: Bash(mosaic *), Bash(uv run mosaic *)
 ---
 
@@ -32,11 +32,15 @@ The workflow is portable across Codex, Claude Code, Cursor, Gemini CLI, Copilot,
 5. Propose mitigation.
    - Compare generalization, suppression, access controls, and purpose limitation.
    - Recommend a concrete owner and next review point.
-6. Publish only after explicit approval.
+6. Generate a review-ready remediation bundle.
+   - Use only allowlisted structured DataHub context; reject free-form instructions, unsafe identifiers, control characters, unknown fields, and incomplete schema types.
+   - Emit a dbt model, enforced typed contract, aggregate-only singular test, policy, PR summary, and digest manifest.
+   - Compile generated SQL, verify every digest, and never commit, merge, or execute the proposal automatically.
+7. Publish only after explicit approval.
    - Prefer a retained evidence bundle first.
    - Require an explicit approval flag or the browser's exact confirmation phrase.
    - Re-read every tag, structured property, document, and incident after mutation.
-7. Report evidence and limitations.
+8. Report evidence and limitations.
    - Link the run detail or canonical JSON and include its SHA-256 digest.
    - Distinguish synthetic regression, recorded DataHub replay, and external-data evidence.
    - Never describe fixture performance as production accuracy.
@@ -50,6 +54,7 @@ uv run mosaic scan
 uv run mosaic assess --scenario research
 uv run mosaic replay-fixture
 uv run mosaic benchmark
+uv run mosaic generate-remediation --scenario research --output generated/research
 uv run mosaic serve --host 127.0.0.1 --port 8000
 ```
 
@@ -75,6 +80,7 @@ Return a concise decision followed by evidence:
 - lineage paths, source systems, and downstream count;
 - query safety result and raw rows returned;
 - mitigation, owner, and approval state;
+- generated artifact paths, enforced contract, validation checks, and bundle digest;
 - run ID, configuration hash, evidence hash, and proof tier;
 - limitations and the next human decision.
 

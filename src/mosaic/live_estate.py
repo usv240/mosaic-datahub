@@ -78,6 +78,11 @@ def seed_and_discover(server: str = "http://localhost:8080") -> dict[str, Any]:
             "asset": f"research_export_{suffix}",
             "asset_urn": str(export.urn),
             "columns": ["zip5", "birth_date", "gender_category"],
+            "column_types": {
+                "zip5": "varchar",
+                "birth_date": "date",
+                "gender_category": "varchar",
+            },
             "families": ["location", "date_of_birth", "demographic"],
             "lineage_paths": [
                 [str(source_a.urn), str(export.urn)],

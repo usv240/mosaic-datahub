@@ -6,6 +6,7 @@
   "asset": "partner_audience_export",
   "asset_urn": "urn:li:dataset:(urn:li:dataPlatform:mosaic,partner_audience_export,PROD)",
   "columns": ["neighborhood", "age_band", "household_size"],
+  "column_types": {"neighborhood": "varchar", "age_band": "varchar", "household_size": "integer"},
   "families": ["location", "age", "household"],
   "lineage_paths": [
     ["customer_addresses.neighborhood", "partner_audience_export.neighborhood"],

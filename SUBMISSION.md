@@ -38,6 +38,7 @@ DataHub is Mosaic's reasoning substrate and action layer. The agent uses seven c
 7. Governed write-back publishes a tag, structured property, threat-model Document, and incident only after human approval, then re-reads every mutation.
 
 Mosaic adds graph-native privacy reasoning, a fail-closed aggregate-only proof layer, a reversible mitigation lab, merge-ready remediation code generation, and tamper-evident evidence retention beyond DataHub's out-of-box metadata experience. The complete implementation map is inspectable at `/api/technology`, and the team contributed back through merged upstream PR [datahub-project/datahub#18705](https://github.com/datahub-project/datahub/pull/18705).
+Generated output is not trusted merely because it was generated. Mosaic enforces typed dbt contracts, compiles generated SQL, rejects unstructured or injection-shaped DataHub context, records per-file digests, and requires a named human review boundary. These controls are mapped to official DataHub, dbt, NIST, and OWASP sources in [`docs/RESEARCH_FOUNDATIONS.md`](docs/RESEARCH_FOUNDATIONS.md).
 
 ## Evidence, not assertion
 

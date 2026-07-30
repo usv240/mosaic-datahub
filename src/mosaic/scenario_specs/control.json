@@ -6,6 +6,7 @@
   "asset": "job_execution_log",
   "asset_urn": "urn:li:dataset:(urn:li:dataPlatform:mosaic,job_execution_log,PROD)",
   "columns": ["job_execution_id"],
+  "column_types": {"job_execution_id": "varchar"},
   "families": ["operational_process"],
   "lineage_paths": [["scheduler_runs.job_execution_id", "job_execution_log.job_execution_id"]],
   "downstream_assets": [],

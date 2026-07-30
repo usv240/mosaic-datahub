@@ -4,7 +4,7 @@ status: proposed
 human_review_required: true
 source:
   datahub_urn: "urn:li:dataset:(urn:li:dataPlatform:mosaic,research_export_clean,PROD)"
-  scenario_sha256: "97b5bc8f5881898b3e8debcf4bf13284b52b4537ca8fb4df5bc7622e38bfb63a"
+  scenario_sha256: "5626a6b7e08141a5857dbe771a3dabaf74672778211ea3e2cf96e2a5b8dc9bab"
 controls:
   minimum_k: 5
   maximum_percent_below_k5: 0.0
@@ -12,6 +12,9 @@ controls:
 mitigation:
   strategy: "Suppress precise birth_date while retaining ZIP5 and demographic category."
   generated_model: "research_export_clean_privacy_safe"
+generation:
+  context_policy: structured_allowlist
+  execute_generated_code: false
 approval:
   required_roles: [privacy_reviewer, data_owner]
   writeback_after_merge: [tag, structured_property, document, incident]

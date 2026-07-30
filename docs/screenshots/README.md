@@ -14,11 +14,17 @@ The sponsor-technology view maps seven DataHub capabilities to their exact role,
 
 [![DataHub-backed agent architecture](08-datahub-architecture.png)](08-datahub-architecture.png)
 
+## Research and standards receipts
+
+The standards view maps official DataHub, dbt, NIST, and OWASP guidance to controls visible in the generated artifacts and links to the full claim-to-control record.
+
+[![Research-backed code-generation controls](10-research-standards.png)](10-research-standards.png)
 ## Merge-ready Remediation PR
 
 The generated-code workbench exposes all six artifacts, validation receipts, DataHub provenance, safe refusal behavior, and a reproducible ZIP download.
 
 [![Metadata-aware remediation PR studio](09-remediation-pr.png)](09-remediation-pr.png)
+
 ## Four preset investigations
 
 The audience preset proves that the fourth backend scenario is a complete interactive client experience, not an API-only fixture.

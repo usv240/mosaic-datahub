@@ -4,8 +4,20 @@
   "track": "Metadata-Aware Code Generation & Development",
   "scenario": "research",
   "source_asset_urn": "urn:li:dataset:(urn:li:dataPlatform:mosaic,research_export_clean,PROD)",
-  "scenario_sha256": "97b5bc8f5881898b3e8debcf4bf13284b52b4537ca8fb4df5bc7622e38bfb63a",
+  "scenario_sha256": "5626a6b7e08141a5857dbe771a3dabaf74672778211ea3e2cf96e2a5b8dc9bab",
+  "assurance": {
+    "context_policy": "structured_allowlist",
+    "human_review_required": true,
+    "generated_code_executed": false,
+    "sql_compile_gate": "duckdb_explain",
+    "dbt_contract_enforced": true
+  },
   "datahub_context": {
+    "column_types": {
+      "zip5": "varchar",
+      "birth_date": "date",
+      "gender_category": "varchar"
+    },
     "families": [
       "location",
       "date_of_birth",
@@ -38,7 +50,7 @@
     },
     {
       "path": "models/research_export_clean_privacy_safe.yml",
-      "sha256": "3c1926f49a3302702acb53116702a7b174716df02619040b51caa50029192a17"
+      "sha256": "700e7ab1387ca1e3183fd168bcfd471be7188e8b5e0cae3041c636fdcb69a627"
     },
     {
       "path": "tests/assert_research_export_clean_privacy_safe_minimum_k.sql",
@@ -46,11 +58,11 @@
     },
     {
       "path": ".mosaic/privacy-policy.yml",
-      "sha256": "0e2ea895cbf8413533e0e35e4231e85267a49b8bc1988fda4776caf3854ed8c2"
+      "sha256": "b3a1059cb7168a87460ac819b7d9001eb79729c7eaa5687e40eb2f802b634f38"
     },
     {
       "path": "PR_SUMMARY.md",
-      "sha256": "587babaf5835e6312720ed1e4f1cbd638b81d99d352d8ba3bafe66c2dec6d128"
+      "sha256": "305008a7bb066c79cffedfecfda589810498e405b812569608c828972e8a6c09"
     }
   ]
 }

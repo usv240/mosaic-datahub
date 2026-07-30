@@ -44,6 +44,12 @@ def main() -> int:
         architecture_path = OUTPUT / "08-datahub-architecture.png"
         architecture.screenshot(path=architecture_path)
         files.append(architecture_path)
+        standards = desktop.locator(".standards-section")
+        standards.scroll_into_view_if_needed()
+        desktop.wait_for_timeout(500)
+        standards_path = OUTPUT / "10-research-standards.png"
+        standards.screenshot(path=standards_path)
+        files.append(standards_path)
         desktop.locator('[data-scenario="audience"]').click()
         desktop.wait_for_timeout(600)
         files.append(_screenshot(desktop, "02-audience-preset.png"))

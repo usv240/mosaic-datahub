@@ -4,7 +4,7 @@ status: proposed
 human_review_required: true
 source:
   datahub_urn: "urn:li:dataset:(urn:li:dataPlatform:mosaic,partner_audience_export,PROD)"
-  scenario_sha256: "acc2f467c84fc3844db158e788487eba11d30ad7169313a4a6507d3119674e3e"
+  scenario_sha256: "77e00c31c263d925d571fa5ca1db949e0c4bb2b4d41c73e59f8820242f576576"
 controls:
   minimum_k: 5
   maximum_percent_below_k5: 0.0
@@ -12,6 +12,9 @@ controls:
 mitigation:
   strategy: "Generalize neighborhood to region and suppress household_size."
   generated_model: "partner_audience_export_privacy_safe"
+generation:
+  context_policy: structured_allowlist
+  execute_generated_code: false
 approval:
   required_roles: [privacy_reviewer, data_owner]
   writeback_after_merge: [tag, structured_property, document, incident]
