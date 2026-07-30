@@ -1,0 +1,11 @@
+{
+  "skills": ["datahub-privacy-threat-model"],
+  "query": "Check this high-cardinality operational job ID for compositional privacy risk.",
+  "expected_behavior": [
+    "Does not equate high cardinality with compositional privacy risk",
+    "Requires multiple quasi-identifier families and a credible person-joinable convergence",
+    "Returns a screening-only result when metadata does not justify aggregate validation",
+    "Issues no data query and reports zero raw rows",
+    "Does not create a write-back proposal without exact metrics"
+  ]
+}

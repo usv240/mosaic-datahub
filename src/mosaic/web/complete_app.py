@@ -15,6 +15,7 @@ from mosaic.engine import run_judge_demo
 from mosaic.estate_scan import scan_estate
 from mosaic.governed_writeback import publish
 from mosaic.mitigation_lab import compare_mitigations
+from mosaic.proof_catalog import proof_catalog
 from mosaic.runs import list_runs, load_run, record
 from mosaic.scenario_registry import assess_scenario, list_scenarios
 
@@ -125,6 +126,10 @@ def create_app(project_root: Path | None = None) -> FastAPI:
     @app.get("/api/scan")
     def estate_scan() -> dict[str, object]:
         return scan_estate()
+
+    @app.get("/api/proofs")
+    def proofs() -> dict[str, object]:
+        return proof_catalog(root)
 
     @app.post("/api/runs")
     def create_run(scenario: str = "research") -> dict[str, object]:

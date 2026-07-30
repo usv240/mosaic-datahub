@@ -9,7 +9,8 @@ def test_landing_page_is_an_interactive_preset_demo(tmp_path) -> None:
     page = TestClient(create_app(tmp_path)).get("/")
     assert page.status_code == 200
     assert page.headers["content-type"].startswith("text/html")
-    assert page.text.count('class="preset-card') == 3
+    assert page.text.count('class="preset-card') == 4
+    assert 'data-scenario="audience"' in page.text
     assert 'data-scenario="research"' in page.text
     assert 'data-scenario="mitigated"' in page.text
     assert 'data-scenario="control"' in page.text

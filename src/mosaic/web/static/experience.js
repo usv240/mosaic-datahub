@@ -61,6 +61,27 @@
         { id: "clear", label: "No finding", detail: "False positive avoided", x: 76, y: 28, kind: "consumer", text: "Mosaic records the negative control as clear and performs no write-back mutation." }
       ],
       edges: [["ops", "screen"], ["screen", "clear"]]
+    },
+    audience: {
+      title: "Partner audience investigation",
+      subtitle: "See the same privacy mechanism emerge in a second business domain.",
+      verdict: "Critical",
+      verdictClass: "critical",
+      k: 1,
+      below: 44.444,
+      downstream: 2,
+      proposal: "validated_critical",
+      finding: "Marketing segments can become quasi-identifiers when the graph combines them.",
+      copy: "DataHub shows geography, age band, household segment, and device cohort converging from three systems before two partner-facing deliveries.",
+      query: "SELECT geography, age_band, household_segment, device_cohort,\n       COUNT(*) AS equivalence_class_size\nFROM partner_audience_export\nGROUP BY geography, age_band, household_segment, device_cohort",
+      nodes: [
+        { id: "crm", label: "CRM geography", detail: "Region + household", x: 5, y: 12, kind: "source", text: "CRM contributes geography and household context through fine-grained lineage." },
+        { id: "analytics", label: "Product analytics", detail: "Age + device cohort", x: 5, y: 50, kind: "source", text: "Behavioral analytics contributes age band and device cohort from a separate platform." },
+        { id: "audience", label: "Audience export", detail: "4 families / k=1", x: 42, y: 31, kind: "risk", text: "The partner audience contains small equivalence classes that neither source reveals alone." },
+        { id: "activation", label: "Ad activation", detail: "Downstream exposure", x: 77, y: 16, kind: "consumer", text: "The activation feed inherits the composed audience attributes." },
+        { id: "measurement", label: "Campaign measurement", detail: "Downstream exposure", x: 77, y: 51, kind: "consumer", text: "The measurement export extends the blast radius." }
+      ],
+      edges: [["crm", "audience"], ["analytics", "audience"], ["audience", "activation"], ["audience", "measurement"]]
     }
   };
 

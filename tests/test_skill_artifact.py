@@ -25,6 +25,8 @@ def test_skill_has_complete_interface_and_safety_reference() -> None:
     assert "raw rows returned (`0`)" in skill
     assert "$datahub-privacy-threat-model" in interface
     assert (SKILL / "references/safety-and-evidence.md").is_file()
+    assert len(list((SKILL / "evaluations").glob("*.json"))) == 3
+    assert "allowed-tools: Bash(mosaic *)" in skill
 
 
 def test_skill_verifier_accepts_retained_bundle(tmp_path) -> None:

@@ -118,7 +118,7 @@
     </section>    <section class="section presets-section" id="presets" aria-labelledby="presets-title">
       <div class="section-heading">
         <div><p class="eyebrow">Preset investigation lab</p><h2 id="presets-title">Choose a case. See if Mosaic knows the difference.</h2></div>
-        <p>One is critical, one becomes safe after mitigation, and one is a deliberate false-positive control.</p>
+        <p>Two domains are critical, one becomes safe after mitigation, and one is a deliberate false-positive control.</p>
       </div>
       <div class="preset-grid">
         <button class="preset-card is-selected" type="button" data-scenario="research" aria-pressed="true">
@@ -140,6 +140,12 @@
           <small>Safe negative control</small>
           <h3>High cardinality is not enough</h3>
           <p>An operational identifier has many values, but no person-joinable family. Mosaic refuses the false alarm.</p>
+          <span class="card-action">Open guided case <b>&rarr;</b></span>
+        </button>        <button class="preset-card" type="button" data-scenario="audience" aria-pressed="false">
+          <span class="preset-top"><span class="case-icon audience">A</span><span class="verdict critical">Critical</span></span>
+          <small>Marketing audience delivery</small>
+          <h3>Segments become identifying together</h3>
+          <p>Geography, age band, household segment, and device cohort converge across three systems before partner delivery.</p>
           <span class="card-action">Open guided case <b>&rarr;</b></span>
         </button>
       </div>

@@ -1,11 +1,16 @@
 ---
 name: datahub-privacy-threat-model
 description: Assess compositional re-identification risk by combining DataHub schema, tags, lineage, and downstream impact with aggregate-only k-anonymity validation. Use when asked to find privacy risk across datasets, inspect quasi-identifier convergence, compare a metadata-only baseline with lineage-aware discovery, produce governed DataHub evidence, scan configured Mosaic scenarios, or explain and mitigate small anonymity sets without exposing person-level rows.
+allowed-tools: Bash(mosaic *), Bash(uv run mosaic *)
 ---
 
 # DataHub Privacy Threat Model
 
 Use Mosaic to find graph-shaped privacy risk: ordinary columns that become identifying only after lineage brings them together. Keep discovery metadata-first, validate with aggregate counts only, and separate proposals from approved catalog mutations.
+
+## Multi-agent compatibility
+
+The workflow is portable across Codex, Claude Code, Cursor, Gemini CLI, Copilot, Windsurf, and other Agent Skills-compatible clients. The `allowed-tools` frontmatter is a Claude-specific least-privilege hint; other clients may ignore it safely. Use the Mosaic CLI when available, and the structured API endpoints when operating against the hosted read-only demo.
 
 ## Workflow
 

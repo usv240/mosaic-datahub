@@ -11,6 +11,9 @@ def main() -> int:
         SKILL / "agents/openai.yaml",
         SKILL / "references/safety-and-evidence.md",
         SKILL / "scripts/verify_evidence.py",
+        SKILL / "evaluations/critical-convergence.json",
+        SKILL / "evaluations/safe-control.json",
+        SKILL / "evaluations/governed-publication.json",
     )
     missing = [str(path) for path in required if not path.is_file()]
     if missing:

@@ -1,0 +1,11 @@
+{
+  "skills": ["datahub-privacy-threat-model"],
+  "query": "Assess whether the research export creates re-identification risk even though none of its columns is tagged as direct PII.",
+  "expected_behavior": [
+    "Uses DataHub column lineage to identify quasi-identifier families that converge from separate source systems",
+    "Compares the lineage-aware candidate with a metadata-only or no-lineage baseline",
+    "Issues only an allow-listed aggregate grouped-count validation",
+    "Reports minimum k, percentages below policy thresholds, downstream impact, and zero raw rows",
+    "Produces a dry-run mitigation and requires reviewer approval before catalog mutation"
+  ]
+}

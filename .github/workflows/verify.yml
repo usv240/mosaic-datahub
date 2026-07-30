@@ -58,3 +58,12 @@ jobs:
             sleep 1
           done
           uv run --with playwright python scripts/check_accessibility.py
+          uv run --with playwright python scripts/capture_submission_media.py
+      - name: Upload judge media
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
+        uses: actions/upload-artifact@v4
+        with:
+          name: mosaic-submission-media
+          path: artifacts/submission-media/
+          if-no-files-found: error
+          retention-days: 30
