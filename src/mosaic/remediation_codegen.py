@@ -11,6 +11,7 @@ from typing import Any
 
 import duckdb
 
+from mosaic.policy import load_policy
 from mosaic.scenario_registry import assess_scenario, get_scenario
 
 
@@ -58,7 +59,7 @@ def _strategy(slug: str) -> tuple[tuple[str, ...], tuple[str, ...], str]:
         )
     if slug == "audience":
         return (
-            ("substr(neighborhood, 1, 3) AS region", "age_band"),
+            ("split_part(neighborhood, '-', 1) AS region", "age_band"),
             ("region", "age_band"),
             "Generalize neighborhood to region and suppress household_size.",
         )
@@ -153,6 +154,7 @@ def generate_remediation_bundle(
 ) -> dict[str, Any]:
     """Generate a deterministic, review-first dbt remediation bundle from DataHub context."""
     spec = get_scenario(slug)
+    policy = load_policy()
     if not spec.candidate or not spec.mitigation:
         raise ValueError(f"scenario {slug!r} has no validated remediation candidate")
     assessment = assess_scenario(slug)["assessment"]
@@ -251,7 +253,7 @@ models:
       datahub_source_urn: "{asset_urn}"
       mosaic_scenario_sha256: "{context_sha256}"
       minimum_k_before: {assessment["metrics"]["minimum_k"]}
-      minimum_k_after: {spec.mitigation["metrics"]["minimum_k"]}
+      minimum_k_after: {assessment["mitigation"]["metrics"]["minimum_k"]}
       raw_person_rows_returned: 0
     columns:
 {schema_columns}
@@ -271,7 +273,7 @@ privacy_summary AS (
 )
 SELECT minimum_k
 FROM privacy_summary
-WHERE minimum_k < 5
+WHERE minimum_k < {policy.minimum_k}
 """
     policy_yml = f"""schema_version: 1
 policy_id: mosaic-{slug}-minimum-k
@@ -280,10 +282,13 @@ human_review_required: true
 source:
   datahub_urn: "{asset_urn}"
   scenario_sha256: "{context_sha256}"
+  organization_policy_sha256: "{policy.sha256}"
 controls:
-  minimum_k: 5
-  maximum_percent_below_k5: 0.0
-  raw_person_rows_allowed: 0
+  minimum_k: {policy.minimum_k}
+  critical_minimum_k: {policy.critical_minimum_k}
+  critical_percent_below_5: {policy.critical_percent_below_5}
+  maximum_percent_below_k5: {policy.maximum_percent_below_k5}
+  raw_person_rows_allowed: {policy.raw_person_rows_allowed}
 mitigation:
   strategy: "{strategy}"
   generated_model: "{model_name}"
@@ -291,7 +296,7 @@ generation:
   context_policy: structured_allowlist
   execute_generated_code: false
 approval:
-  required_roles: [privacy_reviewer, data_owner]
+  required_roles: [{", ".join(policy.required_roles)}]
   writeback_after_merge: [tag, structured_property, document, incident]
 """
     pr_summary = f"""# Privacy remediation: {spec.name}
@@ -303,10 +308,14 @@ converging across {len(source_systems)} source systems in `{asset}`. Mosaic's
 aggregate-only validation measured minimum k={assessment["metrics"]["minimum_k"]} with
 zero person-level rows returned.
 
+## Adversarial self-check
+
+{assessment["adversarial_self_check"] or "No critical verdict was issued."}
+
 ## Proposed code change
 
-{strategy} The shadow result reaches minimum k={spec.mitigation["metrics"]["minimum_k"]}
-with {spec.mitigation["utility_retained"] * 100:.0f}% measured utility retained in the
+{strategy} The shadow result reaches minimum k={assessment["mitigation"]["metrics"]["minimum_k"]}
+with {assessment["mitigation"]["utility_retained"] * 100:.0f}% measured utility retained in the
 synthetic scenario. These thresholds are review policy, not a legal conclusion.
 
 ## DataHub context used
@@ -344,6 +353,7 @@ Generated artifacts are proposals. Mosaic does not commit, merge, or execute the
         "scenario": slug,
         "source_asset_urn": asset_urn,
         "scenario_sha256": context_sha256,
+        "organization_policy_sha256": policy.sha256,
         "assurance": {
             "context_policy": "structured_allowlist",
             "human_review_required": True,

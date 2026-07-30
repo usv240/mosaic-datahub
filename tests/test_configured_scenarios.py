@@ -17,7 +17,7 @@ from mosaic.web.complete_app import create_app
         ("research", "validated_critical", 1, 100.0, True),
         ("mitigated", "validated_low", 20, 0.0, True),
         ("control", "screening_only", None, None, False),
-        ("audience", "validated_critical", 1, 44.444, True),
+        ("audience", "validated_critical", 1, 100.0, True),
     ],
 )
 def test_configured_scenarios_are_independent_backend_assessments(

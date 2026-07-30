@@ -7,6 +7,7 @@ from collections import Counter
 from time import perf_counter
 from typing import Any
 
+from mosaic.qi_classifier import classify_column
 from mosaic.risk import exact_k_metrics
 
 
@@ -96,6 +97,21 @@ def run_benchmark() -> dict[str, Any]:
                 "runtime_ms": round((perf_counter() - scale_started) * 1000, 3),
             }
         )
+    catalog_started = perf_counter()
+    catalog_classified = sum(
+        classify_column(
+            f"field_{index}_postal_code" if index % 100 == 0 else f"measure_{index}",
+            "varchar",
+        )
+        is not None
+        for index in range(10_000)
+    )
+    catalog_scale = {
+        "columns": 10_000,
+        "classified_quasi_identifiers": catalog_classified,
+        "runtime_ms": round((perf_counter() - catalog_started) * 1000, 3),
+        "input": "deterministic generated catalog schema",
+    }
     stable_payload = {
         "cases": results,
         "counts": dict(counts),
@@ -128,6 +144,7 @@ def run_benchmark() -> dict[str, Any]:
             json.dumps(stable_payload, sort_keys=True, separators=(",", ":")).encode()
         ).hexdigest(),
         "scale": scale,
+        "catalog_scale": catalog_scale,
         "total_runtime_seconds": round(perf_counter() - started, 3),
         "results": results,
     }

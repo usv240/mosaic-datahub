@@ -1,17 +1,47 @@
 {
-  "slug": "control",
-  "name": "Safe operational identifier",
-  "domain": "Platform operations",
-  "situation": "A high-cardinality job execution ID has no person-joinable semantic family or cross-source convergence.",
-  "asset": "job_execution_log",
-  "asset_urn": "urn:li:dataset:(urn:li:dataPlatform:mosaic,job_execution_log,PROD)",
-  "columns": ["job_execution_id"],
-  "column_types": {"job_execution_id": "varchar"},
-  "families": ["operational_process"],
-  "lineage_paths": [["scheduler_runs.job_execution_id", "job_execution_log.job_execution_id"]],
-  "downstream_assets": [],
-  "source_systems": ["scheduler_runs"],
-  "class_sizes": [],
-  "candidate": false,
-  "mitigation": null
+    "slug":  "control",
+    "name":  "Safe operational identifier",
+    "domain":  "Platform operations",
+    "situation":  "A high-cardinality job execution ID has no person-joinable semantic family or cross-source convergence.",
+    "asset":  "job_execution_log",
+    "asset_urn":  "urn:li:dataset:(urn:li:dataPlatform:mosaic,job_execution_log,PROD)",
+    "columns":  [
+                    "job_execution_id"
+                ],
+    "column_types":  {
+                         "job_execution_id":  "varchar"
+                     },
+    "families":  [
+                     "operational_process"
+                 ],
+    "lineage_paths":  [
+                          [
+                              "scheduler_runs.job_execution_id",
+                              "job_execution_log.job_execution_id"
+                          ]
+                      ],
+    "downstream_assets":  [
+
+                          ],
+    "source_systems":  [
+                           "scheduler_runs"
+                       ],
+    "candidate":  false,
+    "mitigation":  null,
+    "row_generator":  {
+                          "count":  40,
+                          "seed":  31,
+                          "fields":  {
+                                         "job_execution_id":  {
+                                                                  "domain":  [
+                                                                                 "job-a",
+                                                                                 "job-b",
+                                                                                 "job-c",
+                                                                                 "job-d"
+                                                                             ],
+                                                                  "distribution":  "cycle",
+                                                                  "stride":  1
+                                                              }
+                                     }
+                      }
 }

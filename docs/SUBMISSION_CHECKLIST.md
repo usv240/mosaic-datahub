@@ -24,6 +24,9 @@
 
 ## Evidence and DataHub depth
 
+- [x] External-catalog reader with ranked glossary/tag/type/name QI evidence and single-source negative control
+- [x] Cross-asset join privacy detection and adversarial false-positive self-check
+- [x] Organization-owned policy input, Snowflake adapter boundary, and pre-merge GitHub Action
 - [x] Exact aggregate-only metrics with zero raw rows
 - [x] No-lineage comparative baseline and downstream blast radius
 - [x] Hash-verified SDK/GraphQL/MCP/write-back fixture replay
@@ -36,8 +39,8 @@
 
 ## Engineering quality
 
-- [x] 332 passing tests
-- [x] 99.71% measured coverage
+- [x] 356 passing tests
+- [x] 99.55% measured coverage
 - [x] Multi-OS and Python 3.11/3.12 CI
 - [x] Strict lint, format, JSON, UTF-8, CLI/codegen-contract, package-build, and accessibility gates
 - [x] Locked standalone environment and Apache-2.0 license

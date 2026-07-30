@@ -12,7 +12,7 @@ def test_technology_catalog_maps_every_datahub_claim_to_proof() -> None:
     assert catalog["sponsor"]["technology"] == "Open-source Context Platform"
     assert len(catalog["workflow"]) == 5
     assert len(catalog["datahub_capabilities"]) == 7
-    assert len(catalog["differentiators"]) == 4
+    assert len(catalog["differentiators"]) == 6
     for capability in catalog["datahub_capabilities"]:
         assert Path(capability["implementation"]).is_file()
         assert Path(capability["proof"]).is_file()

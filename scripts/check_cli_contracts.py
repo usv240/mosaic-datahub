@@ -25,6 +25,7 @@ def run(*args: str, expected: int = 0) -> dict[str, object]:
 def main() -> int:
     critical = run("demo", "--json", expected=3)
     scan = run("scan", expected=3)
+    gate = run("check", "--fail-on", "critical", expected=3)
     benchmark = run("benchmark")
     replay = run("replay-fixture")
     with tempfile.TemporaryDirectory() as directory:
@@ -37,12 +38,14 @@ def main() -> int:
         )
     assert critical["assessment"]["verdict"] == "validated_critical"
     assert scan["critical_findings"] >= 1
+    assert gate["status"] == "failed"
+    assert gate["raw_person_rows_returned"] == 0
     assert benchmark["status"] == "passed"
     assert replay["status"] == "passed"
     assert generated["artifact_count"] == 6
     assert generated["track"] == "Metadata-Aware Code Generation & Development"
     print(
-        "CLI contracts passed: verdicts, estate scan, benchmark, fixture replay, and remediation codegen."
+        "CLI contracts passed: verdicts, estate scan, pre-merge gate, benchmark, fixture replay, and remediation codegen."
     )
     return 0
 

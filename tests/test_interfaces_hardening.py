@@ -181,7 +181,15 @@ def _assessment(metrics: RiskMetrics | None, verdict=Verdict.VALIDATED_CRITICAL)
     candidate = Candidate(
         "urn:asset", ("zip5",), ("location",), (("source",),), True, ("downstream",)
     )
-    return Assessment(candidate, verdict, ("reason",), metrics, "SELECT aggregate", 0)
+    return Assessment(
+        candidate,
+        verdict,
+        ("reason",),
+        metrics,
+        "SELECT aggregate",
+        0,
+        adversarial_self_check="checked" if verdict is Verdict.VALIDATED_CRITICAL else None,
+    )
 
 
 @pytest.mark.parametrize("verdict", list(Verdict))

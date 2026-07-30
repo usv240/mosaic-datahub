@@ -125,7 +125,15 @@ def test_query_policy_accepts_only_equivalent_whitespace_and_case(query: str) ->
 @pytest.mark.parametrize("verdict", list(Verdict))
 def test_assessment_exit_code_contract(verdict: Verdict) -> None:
     candidate = Candidate("urn:test", ("x",), ("location",), (("a", "b"),), True, ())
-    assessment = Assessment(candidate, verdict, (), None, None, 0)
+    assessment = Assessment(
+        candidate,
+        verdict,
+        (),
+        None,
+        None,
+        0,
+        adversarial_self_check="checked" if verdict is Verdict.VALIDATED_CRITICAL else None,
+    )
     assert assessment.exit_code == (3 if verdict is Verdict.VALIDATED_CRITICAL else 0)
     assert assessment.to_dict()["verdict"] == verdict.value
 

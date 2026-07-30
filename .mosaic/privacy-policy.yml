@@ -1,0 +1,17 @@
+{
+    "schema_version":  1,
+    "policy_id":  "organization-compositional-privacy",
+    "controls":  {
+                     "minimum_k":  5,
+                     "maximum_percent_below_k5":  0.0,
+                     "raw_person_rows_allowed":  0,
+                     "critical_minimum_k":  2,
+                     "critical_percent_below_5":  20
+                 },
+    "approval":  {
+                     "required_roles":  [
+                                            "privacy_reviewer",
+                                            "data_owner"
+                                        ]
+                 }
+}

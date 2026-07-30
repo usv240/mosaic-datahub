@@ -16,6 +16,7 @@ uv run mosaic assess --scenario research
 uv run mosaic assess --scenario mitigated
 uv run mosaic assess --scenario control
 uv run mosaic scan
+uv run mosaic check --fail-on critical
 uv run mosaic benchmark
 uv run mosaic replay-fixture
 ```
@@ -25,6 +26,17 @@ uv run mosaic replay-fixture
 ## Retain inspectable evidence
 
 The local console can create a digest-backed scenario run. Open **Evidence**, choose **Inspect evidence**, verify its SHA-256 status, and print or save the human-readable report as PDF. The public deployment intentionally refuses this filesystem write.
+
+## Existing DataHub catalog proof
+
+Start DataHub with its supported quickstart, then read an asset Mosaic did not create:
+
+```powershell
+datahub docker quickstart
+uv run mosaic discover --server http://localhost:8080 --urn "<existing-dataset-urn>"
+```
+
+The command returns evidence-ranked origins only when multiple QI families arrive from multiple upstream datasets.
 
 ## Optional live DataHub proof
 

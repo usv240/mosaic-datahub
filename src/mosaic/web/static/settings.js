@@ -56,7 +56,7 @@
         .map((gate) => "<li>" + escapeHTML(gate) + "</li>")
         .join("");
       // Keep the exact API state visible for reviewers and contract tests.
-      if (catalog.connectors.some((connector) => connector.status === "integration_required")) {
+      if (catalog.connectors.some((connector) => connector.status === "integration_required" || connector.status.endsWith("_required"))) {
         id("connector-matrix").dataset.hasIntegrationBoundary = "true";
       }
     })

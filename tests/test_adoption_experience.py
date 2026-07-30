@@ -21,7 +21,7 @@ def test_adoption_catalog_is_honest_and_actionable() -> None:
         "configuration_required",
         "production_hardening_required",
     ]
-    assert catalog["connectors"][2]["status"] == "integration_required"
+    assert catalog["connectors"][2]["status"] == "adapter_implemented_credentials_required"
     assert len(catalog["production_gates"]) == 5
 
 
@@ -50,7 +50,7 @@ def test_settings_contains_a_machine_backed_readiness_planner(tmp_path) -> None:
     assert 'id="adoption-paths"' in page.text
     assert 'id="connector-matrix"' in page.text
     assert 'fetch("/api/adoption")' in script.text
-    assert "integration_required" in script.text
+    assert 'connector.status.endsWith("_required")' in script.text
 
 
 def test_csp_compatible_theme_boot_has_no_inline_script(tmp_path) -> None:
@@ -66,7 +66,7 @@ def test_one_command_container_evaluation_defaults_to_read_only() -> None:
     assert 'MOSAIC_PUBLIC_DEMO: "true"' in compose
     assert "docker compose up --build" in guide
     assert "MOSAIC_ENABLE_WEB_WRITEBACK=false" in environment
-    assert "integration boundaries, not claimed built-in connectors" in guide
+    assert "optional Snowflake DB-API adapter" in guide
     capture = Path("scripts/capture_submission_media.py").read_text(encoding="utf-8")
     assert "data-has-integration-boundary" in capture
     assert "08-datahub-architecture.png" in capture

@@ -53,6 +53,7 @@ The core CLI is completely offline:
 ```powershell
 uv run mosaic assess --scenario research
 uv run mosaic scan
+uv run mosaic check --fail-on critical
 uv run mosaic benchmark
 uv run mosaic replay-fixture
 uv run mosaic generate-remediation --scenario research --output generated/research
@@ -68,16 +69,26 @@ That run seeds isolated SDK assets, reads fine-grained lineage and downstream im
 
 A validated critical result returns exit code `3`; this is the policy outcome, not a crash.
 
+To inspect an existing DataHub asset that Mosaic did not seed, run:
+
+```powershell
+uv run mosaic discover --server http://localhost:8080 --urn "<dataset-urn>" --max-hops 3
+```
+
+The reader traverses schema plus column lineage, ranks QI evidence as glossary term > tag > type-and-name > name, and emits a convergence only when at least two families arrive from at least two upstream datasets. Empty lineage and single-source assets return no convergence rather than an invented finding.
+
+The organization owns `.mosaic/privacy-policy.yml`. Changing its minimum-k threshold changes the backend verdict, generated dbt test, policy snapshot, and provenance digest. The included GitHub Action runs `mosaic check --fail-on critical` as a pre-merge gate. Snowflake is supported through an optional DB-API adapter (`uv sync --extra snowflake`); credentials remain outside generated artifacts.
+
 ## What the agent does
 
 1. Screens DataHub schemas, tags, fine-grained lineage, and downstream dependencies.
-2. Requires credible convergence across multiple quasi-identifier families before querying data.
+2. Derives QI families from ranked DataHub glossary, tag, schema-type, and name evidence; then requires multi-source convergence.
 3. Builds and validates one aggregate-only `COUNT(*) ... GROUP BY` shape.
 4. Measures minimum k and record percentages below k=2, k=5, and k=10.
-5. Compares the lineage-aware finding with a no-lineage baseline.
+5. Tests graph-only convergence, including cross-asset join risk no single-table scanner can express.
 6. Ranks estate findings by severity, anonymity, and downstream reach.
 7. Compares generalization, suppression, access control, and purpose limitation.
-8. Generates a dbt model, schema contract, aggregate-only test, policy, manifest, and PR summary.
+8. Runs an adversarial false-positive self-check, then generates a dbt model, contract, aggregate-only test, policy snapshot, manifest, and PR summary.
 9. Records digest-backed evidence and prepares DataHub governance context.
 10. Publishes only after explicit approval, then re-reads every mutation.
 
@@ -108,7 +119,7 @@ The privacy claim remains deliberately narrower than "anonymous." [NISTIR 8053](
 |---|---:|---|
 | Configured scenarios | 4 working backend cases across two domains | Deterministic product behavior |
 | Generated remediation | 2 committed bundles; 6 artifacts each; hashes reproducible | Review-ready examples, not automatically merged code |
-| Regression benchmark | 48 cases; exact agreement 100%; seeded precision/recall 100% | Deliberately bounded policy regression, not field accuracy |
+| Regression benchmark | 48 cases plus a 10,000-column catalog scan; exact agreement 100% | Deliberately bounded policy and scale regression, not field accuracy |
 | DataHub recording replay | Hashes and semantic checks pass | Versioned normalized integration semantics, not a live server |
 | UCI Adult external proof | 32,561 rows processed in memory; k=43 to k=1 after composition; 23.786% below k=5 | Historical external mechanism check, not current prevalence |
 | Live local DataHub workflow | Schema, lineage, downstream, generated six-file remediation, SQL compile, write-back, and re-read | Environment-specific proof when the operator runs it |
@@ -231,6 +242,6 @@ The first command stays dry-run. The approved command creates uniquely named syn
 
 ## Project status and limitations
 
-Mosaic has a merged upstream DataHub contribution: [datahub-project/datahub#18705](https://github.com/datahub-project/datahub/pull/18705). The primary product works offline and the recorded integration is reproducible. Production deployment still requires organization-approved thresholds, authenticated warehouse adapters, asset allowlists, access controls, and a fresh live compatibility run.
+Mosaic has a merged upstream DataHub contribution: [datahub-project/datahub#18705](https://github.com/datahub-project/datahub/pull/18705). The primary product works offline and the recorded integration is reproducible. Mosaic now accepts organization-owned thresholds, includes a Snowflake adapter boundary, and ships a pre-merge gate. Production deployment still requires real warehouse credentials, asset allowlists, SSO/RBAC, policy owners, and a fresh compatibility run against the target DataHub and warehouse.
 
 Apache-2.0 licensed. See [docs/ADOPTION_GUIDE.md](docs/ADOPTION_GUIDE.md) for the path from zero-setup exploration to production controls, [SUBMISSION.md](SUBMISSION.md) for the concise judge narrative, and [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md) for the under-three-minute demo.

@@ -83,9 +83,9 @@ def adoption_catalog() -> dict[str, Any]:
             },
             {
                 "id": "warehouse",
-                "label": "Enterprise warehouses",
-                "status": "integration_required",
-                "detail": "Use an organization-approved aggregate-query adapter; direct connectors are not claimed.",
+                "label": "Snowflake warehouse",
+                "status": "adapter_implemented_credentials_required",
+                "detail": "Optional DB-API adapter executes aggregate queries; deployment supplies credentials and query identity.",
             },
             {
                 "id": "identity",

@@ -1,43 +1,44 @@
-# Mosaic demo - 2:40 target
+# Mosaic demo — 2:50 target
 
-## 0:00-0:20 - Make the risk intuitive
+## 0:00–0:20 — The claim
 
-Open the landing page. Say: "No column here is PII. Together, they identify you." Explain minimum k in one sentence: it is the size of the smallest crowd a record blends into. k=1 means a unique combination. Scroll through Impact and name the outcome: prevent exposure, contain blast radius, preserve utility, and retain the decision.
+Open at the top of the landing page: “Three ordinary columns, three systems, one export. No field is direct PII. DataHub’s graph shows why the combination matters.” Define minimum k in one sentence: the size of the smallest crowd a record blends into; k=1 is unique.
 
-## 0:20-0:45 - Show that the demos are real
+## 0:20–0:45 — Read a catalog Mosaic did not create
 
-Choose the critical research preset, then the mitigated and control presets. Point out that each changes the backend scenario hash, query, exact metrics, verdict, and downstream count. Return to the research case and start the guided analysis.
+Run `mosaic discover` against an existing DataHub quickstart sample URN. Keep the tool output visible. Point to schema, glossary/tag evidence, column lineage, and distinct upstream datasets. Run the single-source control and show `no_convergence`. Say: “Mosaic does not need to seed this asset, and it refuses to invent a graph finding.”
 
-## 0:45-1:15 - Show why DataHub matters
+## 0:45–1:05 — The model proposes; policy disposes
 
-Pause on the DataHub architecture section: the product names seven used surfaces--fine-grained lineage, downstream graph, Python SDK, GraphQL, MCP Server, DataHub Skill, and governed write-back--and links each claim to code or a proof receipt. Then follow ZIP5, birth date, and demographic category from separate systems into one research export. A table scanner sees harmless columns; DataHub reveals where they converge and who inherits the risk.
+Show an agent-proposed query containing `member_id`. Let the query policy reject it. Then show the approved aggregate-only `GROUP BY COUNT(*)` shape. This is the architecture: an agent can propose; deterministic policy owns data access and the verdict.
 
-## 1:15-1:40 - Validate without exposing anyone
+## 1:05–1:30 — Measured evidence
 
-Open the query tab. Show the allow-listed `GROUP BY COUNT(*)` query, then minimum k=1, 100% below k=5, and raw rows returned=0. Say: "Mosaic measures group sizes. It never asks who is in a group."
+Run the research investigation. Show k=1, 100% below k=5, zero raw person-level rows, and three downstream assets. Open the false-positive rebuttal: ordinary fields and high cardinality alone are insufficient; independent lineage convergence plus measured small classes earns the critical verdict.
 
-## 1:40-2:08 - Generate code a team could merge
+## 1:30–2:05 — Generated PR bundle
 
-Open Mitigation lab and show that the shadow strategy reaches minimum k=20. Then open Remediation PR. Click through the generated dbt model, schema, aggregate-only test, policy, manifest, and PR summary. Show the embedded DataHub URN and digest, then download the ZIP. Stress that Mosaic generates a proposal but never commits or merges it.
+Open Remediation PR and click the six files: dbt model, enforced typed contract, aggregate-only test, organization-policy snapshot, provenance manifest, and PR summary. Show DataHub URN, policy/scenario digests, Snowflake-ready adapter boundary, and human-review gate. Download the reproducible ZIP.
 
-## 2:08-2:28 - Prove breadth and governance
+## 2:05–2:35 — Write back, then re-read
 
-Open DataHub proposal and show the human gate. Then mention the two committed remediation bundles, 48-case exactness benchmark, hash-verified DataHub replay, and aggregate-only UCI Adult proof: 32,561 records processed in memory, minimum k moving from 43 to 1 when ordinary attributes compose, and no raw rows committed. State clearly that the benchmark is regression evidence, not field accuracy.
+Show the DataHub proposal. Approve only in disposable local DataHub. Re-read the field tag, structured property, threat-model Document, and active incident. State: “The decision survives for the next human or agent.” Mention the merged upstream DataHub contribution.
 
-## 2:28-2:40 - Close the loop
+## 2:35–2:50 — Limits and close
 
-Open a retained run detail page locally or the current proof on the hosted page. Show the SHA-256 integrity state, printable report, and provenance. Close with: "Mosaic turns a hidden graph connection into code a data team can review--and context the next human or agent inherits."
+Say this out loud: “This is privacy risk reduction, not proof of anonymity or legal compliance. Production needs organization policy owners, scoped DataHub and warehouse identities, SSO/RBAC, and compatibility validation.” Close: “Mosaic turns hidden graph context into code a data team can review before risk spreads.”
 
 ## Backup judge commands
 
 ```powershell
 uv sync --locked --extra dev
+uv run mosaic discover --server http://localhost:8080 --urn "<existing-sample-urn>"
 uv run mosaic assess --scenario research
-uv run mosaic scan
+uv run mosaic check --fail-on critical
 uv run mosaic benchmark
 uv run mosaic replay-fixture
 uv run mosaic generate-remediation --scenario research --output generated/research
 uv run mosaic serve
 ```
 
-The critical assessment and estate scan intentionally return exit code 3. That is a policy result, not an application crash.
+Critical assessment, estate scan, and pre-merge gate intentionally return exit code 3. That is a policy result, not an application crash.

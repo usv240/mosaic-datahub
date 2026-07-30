@@ -7,16 +7,20 @@ converging across 3 source systems in `partner_audience_export`. Mosaic's
 aggregate-only validation measured minimum k=1 with
 zero person-level rows returned.
 
+## Adversarial self-check
+
+False-positive case considered: individually ordinary fields and high cardinality are not sufficient. The verdict is allowed only because independent upstream datasets converge and aggregate class counts breach the configured policy.
+
 ## Proposed code change
 
-Generalize neighborhood to region and suppress household_size. The shadow result reaches minimum k=8
-with 71% measured utility retained in the
+Generalize neighborhood to region and suppress household_size. The shadow result reaches minimum k=5
+with 54% measured utility retained in the
 synthetic scenario. These thresholds are review policy, not a legal conclusion.
 
 ## DataHub context used
 
 - Source asset: `urn:li:dataset:(urn:li:dataPlatform:mosaic,partner_audience_export,PROD)`
-- Scenario digest: `77e00c31c263d925d571fa5ca1db949e0c4bb2b4d41c73e59f8820242f576576`
+- Scenario digest: `6c7f996d5c12d185dcb0c3f69a23b2881997cc926401194482e7568dd44c14ab`
 - Context trust: structured metadata allowlist; free-form instructions are rejected
 - Fine-grained lineage:
 - `customer_addresses.neighborhood` -> `partner_audience_export.neighborhood`

@@ -67,7 +67,18 @@ def test_recorded_fixture_detects_tampering(tmp_path, monkeypatch) -> None:
 
 def test_elevated_policy_branch(monkeypatch) -> None:
     original = registry.get_scenario("research")
-    elevated = replace(original, class_sizes=(2, 3, 5, 5, 5, 5))
+    elevated = replace(
+        original,
+        row_generator={
+            "count": 10,
+            "seed": 1,
+            "fields": {
+                "zip5": {"domain": ["a", "b"], "distribution": "cycle"},
+                "birth_date": {"domain": ["d1", "d2", "d3", "d4"], "distribution": "cycle"},
+                "gender_category": {"domain": ["x"], "distribution": "cycle"},
+            },
+        },
+    )
     monkeypatch.setattr(registry, "get_scenario", lambda _slug: elevated)
     assert registry.assess_scenario("research")["assessment"]["verdict"] == "validated_elevated"
 

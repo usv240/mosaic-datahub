@@ -178,7 +178,7 @@ def test_audience_bundle_generalizes_and_suppresses_expected_columns() -> None:
     model = next(
         item["content"] for item in bundle["artifacts"] if item["path"].endswith("privacy_safe.sql")
     )
-    assert "substr(neighborhood, 1, 3) AS region" in model
+    assert "split_part(neighborhood, '-', 1) AS region" in model
     assert "household_size" not in model.split("SELECT", 1)[1]
 
 

@@ -35,6 +35,11 @@ def assess_demo() -> Assessment:
         aggregate_query=query,
         raw_rows_returned=0,
         mitigation=simulate_birth_date_suppression(estate.rows),
+        adversarial_self_check=(
+            "False-positive case considered: the fields are not direct identifiers and each "
+            "source alone is ordinary. Independent lineage convergence plus measured k=1 "
+            "is the evidence that defeats that alternative explanation."
+        ),
     )
 
 

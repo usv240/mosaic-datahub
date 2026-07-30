@@ -2,11 +2,14 @@ from __future__ import annotations
 
 import hashlib
 import json
+import random
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from mosaic.mitigation import simulate_mitigation
 from mosaic.models import Assessment, Candidate, Verdict
+from mosaic.policy import load_policy
 from mosaic.query_policy import aggregate_query, validate_aggregate_query
 from mosaic.risk import exact_k_metrics
 
@@ -26,7 +29,7 @@ class ScenarioSpec:
     families: tuple[str, ...]
     lineage_paths: tuple[tuple[str, ...], ...]
     downstream_assets: tuple[str, ...]
-    class_sizes: tuple[int, ...]
+    row_generator: dict[str, Any]
     candidate: bool
     mitigation: dict[str, Any] | None
     source_systems: tuple[str, ...]
@@ -48,7 +51,7 @@ def _load(path: Path) -> ScenarioSpec:
         families=tuple(data["families"]),
         lineage_paths=tuple(tuple(path) for path in data["lineage_paths"]),
         downstream_assets=tuple(data["downstream_assets"]),
-        class_sizes=tuple(data["class_sizes"]),
+        row_generator=data["row_generator"],
         candidate=bool(data["candidate"]),
         mitigation=data.get("mitigation"),
         source_systems=tuple(data["source_systems"]),
@@ -71,17 +74,43 @@ def get_scenario(slug: str) -> ScenarioSpec:
     return _load(path)
 
 
-def _aggregate_fixture(spec: ScenarioSpec) -> tuple[dict[str, str], ...]:
-    """Expand class sizes into synthetic keys; no identity-bearing values are created."""
-    return tuple(
-        {column: f"class-{class_index}-{column}" for column in spec.columns}
-        for class_index, size in enumerate(spec.class_sizes)
-        for _ in range(size)
-    )
+def generate_rows(spec: ScenarioSpec) -> tuple[dict[str, str], ...]:
+    """Generate deterministic fictional rows from domains, never precomputed class sizes."""
+    config = spec.row_generator
+    count = int(config.get("count", 0))
+    seed = int(config.get("seed", 0))
+    fields = config.get("fields", {})
+    if count < 1 or set(fields) != set(spec.columns):
+        raise ValueError(f"invalid row generator for scenario {spec.slug}")
+    randomizer = random.Random(seed)
+    rows: list[dict[str, str]] = []
+    for index in range(count):
+        row: dict[str, str] = {}
+        for column in spec.columns:
+            field = fields[column]
+            domain = tuple(str(value) for value in field.get("domain", ()))
+            if not domain:
+                raise ValueError(f"empty row-generator domain for {column}")
+            distribution = field.get("distribution", "cycle")
+            if distribution == "cycle":
+                position = index * int(field.get("stride", 1)) + int(field.get("offset", 0))
+                row[column] = domain[position % len(domain)]
+            elif distribution == "uniform":
+                row[column] = randomizer.choice(domain)
+            elif distribution == "weighted":
+                weights = field.get("weights")
+                if not isinstance(weights, list) or len(weights) != len(domain):
+                    raise ValueError(f"invalid weights for {column}")
+                row[column] = randomizer.choices(domain, weights=weights, k=1)[0]
+            else:
+                raise ValueError(f"unsupported distribution for {column}: {distribution}")
+        rows.append(row)
+    return tuple(rows)
 
 
 def assess_scenario(slug: str) -> dict[str, Any]:
     spec = get_scenario(slug)
+    policy = load_policy()
     candidate = Candidate(
         asset_urn=spec.asset_urn,
         columns=spec.columns,
@@ -95,10 +124,17 @@ def assess_scenario(slug: str) -> dict[str, Any]:
     if spec.candidate:
         query = aggregate_query(spec.asset, spec.columns)
         validate_aggregate_query(query, spec.asset, spec.columns)
-        metrics = exact_k_metrics(_aggregate_fixture(spec), spec.columns)
-        if metrics.minimum_k < 2 and metrics.percent_below_5 >= 20:
+        rows = generate_rows(spec)
+        metrics = exact_k_metrics(rows, spec.columns)
+        if (
+            metrics.minimum_k < policy.critical_minimum_k
+            and metrics.percent_below_5 >= policy.critical_percent_below_5
+        ):
             verdict = Verdict.VALIDATED_CRITICAL
-        elif metrics.minimum_k >= 5 and metrics.percent_below_5 == 0:
+        elif (
+            metrics.minimum_k >= policy.minimum_k
+            and metrics.percent_below_5 <= policy.maximum_percent_below_k5
+        ):
             verdict = Verdict.VALIDATED_LOW
         else:
             verdict = Verdict.VALIDATED_ELEVATED
@@ -116,6 +152,15 @@ def assess_scenario(slug: str) -> dict[str, Any]:
             "No aggregate data query was issued.",
             "High cardinality alone is not treated as compositional privacy risk.",
         )
+    mitigation = None
+    if spec.mitigation and spec.candidate:
+        mitigation = simulate_mitigation(
+            generate_rows(spec),
+            spec.columns,
+            drop=tuple(spec.mitigation.get("drop", ())),
+            generalize=spec.mitigation.get("generalize", {}),
+            action=str(spec.mitigation["action"]),
+        )
     assessment = Assessment(
         candidate=candidate,
         verdict=verdict,
@@ -123,7 +168,14 @@ def assess_scenario(slug: str) -> dict[str, Any]:
         metrics=metrics,
         aggregate_query=query,
         raw_rows_returned=0,
-        mitigation=spec.mitigation,
+        mitigation=mitigation,
+        adversarial_self_check=(
+            "False-positive case considered: individually ordinary fields and high cardinality "
+            "are not sufficient. The verdict is allowed only because independent upstream "
+            "datasets converge and aggregate class counts breach the configured policy."
+            if verdict is Verdict.VALIDATED_CRITICAL
+            else None
+        ),
     )
     graph_only = spec.candidate and len(spec.source_systems) > 1
     return {
@@ -151,6 +203,13 @@ def assess_scenario(slug: str) -> dict[str, Any]:
         "source": {
             "kind": "configuration_driven_synthetic_fixture",
             "raw_person_rows_returned": 0,
+        },
+        "policy": {
+            "policy_id": policy.policy_id,
+            "sha256": policy.sha256,
+            "source": policy.source,
+            "minimum_k": policy.minimum_k,
+            "maximum_percent_below_k5": policy.maximum_percent_below_k5,
         },
         "exit_code": assessment.exit_code,
     }

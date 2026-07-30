@@ -1,27 +1,104 @@
 {
-  "slug": "audience",
-  "name": "Partner audience export",
-  "domain": "Advertising and partnerships",
-  "situation": "A partner audience export combines neighborhood, age band, household composition, and a sensitive interest segment.",
-  "asset": "partner_audience_export",
-  "asset_urn": "urn:li:dataset:(urn:li:dataPlatform:mosaic,partner_audience_export,PROD)",
-  "columns": ["neighborhood", "age_band", "household_size"],
-  "column_types": {"neighborhood": "varchar", "age_band": "varchar", "household_size": "integer"},
-  "families": ["location", "age", "household"],
-  "lineage_paths": [
-    ["customer_addresses.neighborhood", "partner_audience_export.neighborhood"],
-    ["customer_profiles.age_band", "partner_audience_export.age_band"],
-    ["billing_households.household_size", "partner_audience_export.household_size"]
-  ],
-  "downstream_assets": ["ad_partner_delivery", "campaign_activation"],
-  "source_systems": ["customer_addresses", "customer_profiles", "billing_households"],
-  "class_sizes": [1, 1, 1, 1, 2, 2, 2, 3, 3, 4, 5, 8, 12],
-  "candidate": true,
-  "mitigation": {
-    "status": "recommended",
-    "action": "generalize neighborhood to region and suppress household_size",
-    "metrics": {"minimum_k": 8, "percent_below_5": 0.0, "distinct_combinations": 5},
-    "utility_retained": 0.71,
-    "writes_applied": false
-  }
+    "slug":  "audience",
+    "name":  "Partner audience export",
+    "domain":  "Advertising and partnerships",
+    "situation":  "A partner audience export combines neighborhood, age band, household composition, and a sensitive interest segment.",
+    "asset":  "partner_audience_export",
+    "asset_urn":  "urn:li:dataset:(urn:li:dataPlatform:mosaic,partner_audience_export,PROD)",
+    "columns":  [
+                    "neighborhood",
+                    "age_band",
+                    "household_size"
+                ],
+    "column_types":  {
+                         "neighborhood":  "varchar",
+                         "age_band":  "varchar",
+                         "household_size":  "integer"
+                     },
+    "families":  [
+                     "location",
+                     "age",
+                     "household"
+                 ],
+    "lineage_paths":  [
+                          [
+                              "customer_addresses.neighborhood",
+                              "partner_audience_export.neighborhood"
+                          ],
+                          [
+                              "customer_profiles.age_band",
+                              "partner_audience_export.age_band"
+                          ],
+                          [
+                              "billing_households.household_size",
+                              "partner_audience_export.household_size"
+                          ]
+                      ],
+    "downstream_assets":  [
+                              "ad_partner_delivery",
+                              "campaign_activation"
+                          ],
+    "source_systems":  [
+                           "customer_addresses",
+                           "customer_profiles",
+                           "billing_households"
+                       ],
+    "candidate":  true,
+    "mitigation":  {
+                       "action":  "generalize neighborhood to region and suppress household_size",
+                       "drop":  [
+                                    "household_size"
+                                ],
+                       "generalize":  {
+                                          "neighborhood":  {
+                                                               "mapping":  {
+                                                                               "north-1":  "north",
+                                                                               "north-2":  "north",
+                                                                               "south-1":  "south",
+                                                                               "south-2":  "south",
+                                                                               "west-1":  "west",
+                                                                               "west-2":  "west"
+                                                                           }
+                                                           }
+                                      }
+                   },
+    "row_generator":  {
+                          "count":  61,
+                          "seed":  23,
+                          "fields":  {
+                                         "neighborhood":  {
+                                                              "domain":  [
+                                                                             "north-1",
+                                                                             "north-2",
+                                                                             "south-1",
+                                                                             "south-2",
+                                                                             "west-1",
+                                                                             "west-2"
+                                                                         ],
+                                                              "distribution":  "cycle",
+                                                              "stride":  1
+                                                          },
+                                         "age_band":  {
+                                                          "domain":  [
+                                                                         "18-24",
+                                                                         "25-34",
+                                                                         "35-44",
+                                                                         "45-54"
+                                                                     ],
+                                                          "distribution":  "cycle",
+                                                          "stride":  1
+                                                      },
+                                         "household_size":  {
+                                                                "domain":  [
+                                                                               "1",
+                                                                               "2",
+                                                                               "3",
+                                                                               "4",
+                                                                               "5"
+                                                                           ],
+                                                                "distribution":  "cycle",
+                                                                "stride":  1
+                                                            }
+                                     }
+                      }
 }

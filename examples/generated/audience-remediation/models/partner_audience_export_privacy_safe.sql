@@ -3,6 +3,6 @@
 -- Source asset: urn:li:dataset:(urn:li:dataPlatform:mosaic,partner_audience_export,PROD)
 -- Human review is required before merge or execution.
 SELECT
-    substr(neighborhood, 1, 3) AS region,
+    split_part(neighborhood, '-', 1) AS region,
     age_band
 FROM {{ ref('partner_audience_export') }}

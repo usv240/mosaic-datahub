@@ -17,6 +17,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     assess.add_argument("--output", type=Path)
     scan = commands.add_parser("scan", help="Screen and rank every configured estate asset")
     scan.add_argument("--output", type=Path)
+    check = commands.add_parser("check", help="Run Mosaic as a pre-merge privacy gate")
+    check.add_argument("--fail-on", choices=("critical", "elevated"), default="critical")
+    check.add_argument("--output", type=Path)
+    discover = commands.add_parser(
+        "discover", help="Derive convergence from an existing DataHub asset"
+    )
+    discover.add_argument("--server", default="http://localhost:8080")
+    discover.add_argument("--urn", required=True)
+    discover.add_argument("--max-hops", type=int, default=3)
     benchmark = commands.add_parser(
         "benchmark", help="Measure policy accuracy, safe controls, and scaling"
     )
@@ -66,6 +75,65 @@ def main(argv: Sequence[str] | None = None) -> int:
             args.output.write_text(rendered, encoding="utf-8")
         print(rendered, end="")
         return 3 if report["critical_findings"] else 0
+    if args.command == "check":
+        from mosaic.estate_scan import scan_estate
+
+        report = scan_estate()
+        threshold = 4 if args.fail_on == "critical" else 3
+        failures = [item for item in report["ranked_findings"] if item["severity"] >= threshold]
+        result = {
+            "schema_version": 1,
+            "status": "failed" if failures else "passed",
+            "gate": f"fail_on_{args.fail_on}",
+            "findings": failures,
+            "raw_person_rows_returned": 0,
+        }
+        rendered = json.dumps(result, indent=2) + "\n"
+        if args.output:
+            args.output.parent.mkdir(parents=True, exist_ok=True)
+            args.output.write_text(rendered, encoding="utf-8")
+        print(rendered, end="")
+        return 3 if failures else 0
+    if args.command == "discover":
+        from mosaic.catalog_reader import derive_convergence
+
+        try:
+            from datahub.sdk import DataHubClient
+
+            client = DataHubClient(server=args.server)
+            client.test_connection()
+            convergence = derive_convergence(client, args.urn, args.max_hops)
+        except (
+            ImportError,
+            ConnectionError,
+            OSError,
+            PermissionError,
+            LookupError,
+            RuntimeError,
+        ) as error:
+            print(json.dumps({"status": "failed", "error": str(error)}))
+            return 2
+        result = {
+            "status": "convergence" if convergence else "no_convergence",
+            "target_urn": args.urn,
+            "families": list(convergence.families) if convergence else [],
+            "upstream_datasets": list(convergence.upstream_datasets) if convergence else [],
+            "origins": [
+                {
+                    "column": origin.column,
+                    "upstream_urn": origin.upstream_urn,
+                    "upstream_field": origin.upstream_field,
+                    "platform": origin.platform,
+                    "source_dataset": origin.source_dataset,
+                    "family": origin.classification.family,
+                    "confidence": origin.classification.confidence,
+                    "evidence": origin.classification.evidence,
+                }
+                for origin in (convergence.origins if convergence else ())
+            ],
+        }
+        print(json.dumps(result, indent=2))
+        return 0
     if args.command == "benchmark":
         from mosaic.benchmark import run_benchmark
 

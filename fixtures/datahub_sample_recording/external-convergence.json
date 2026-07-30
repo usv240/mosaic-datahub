@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "created_by_mosaic": false,
+  "target_urn": "urn:li:dataset:(urn:li:dataPlatform:hive,SampleDashboardDataset,PROD)",
+  "surfaces": ["schema", "glossary_or_tags", "column_lineage", "downstream_context"],
+  "origins": [
+    {
+      "column": "postal_code",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:hive,SampleHiveDataset,PROD)",
+      "upstream_field": "postal_code",
+      "family": "location",
+      "evidence": "schema type varchar + name pattern postal_code"
+    },
+    {
+      "column": "birth_date",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:kafka,SampleKafkaDataset,PROD)",
+      "upstream_field": "birth_date",
+      "family": "date_of_birth",
+      "evidence": "schema type date + name pattern birth_date"
+    }
+  ],
+  "expected": "convergence"
+}

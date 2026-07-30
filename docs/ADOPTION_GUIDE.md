@@ -71,7 +71,7 @@ Before applying Mosaic to a real estate, provide all of the following:
 6. Named reviewers who own approval and remediation decisions.
 7. A compatibility run against the deployed DataHub and warehouse versions.
 
-Mosaic currently implements DataHub Core integration and DuckDB reference validation. Snowflake, BigQuery, Databricks, Postgres, and enterprise identity systems are integration boundaries, not claimed built-in connectors.
+Mosaic implements DataHub Core integration, isolated DuckDB validation, and an optional Snowflake DB-API adapter. Snowflake still requires organization credentials and a scoped query identity; BigQuery, Databricks, Postgres, and enterprise identity systems remain integration boundaries.
 
 ## Environment contract
 
@@ -82,6 +82,19 @@ Copy `.env.example` and keep the safe defaults until a local review explicitly c
 | `MOSAIC_PUBLIC_DEMO` | `true` | Forces hosted read-only behavior and blocks retained runs and publication. |
 | `MOSAIC_DATAHUB_URL` | `http://localhost:8080` | Selects the DataHub Core endpoint used by health and publication workflows. |
 | `MOSAIC_ENABLE_WEB_WRITEBACK` | `false` | Enables the local browser approval flow; ignored whenever public-demo mode is on. |
+
+## Existing-catalog acceptance
+
+Use DataHub’s supported quickstart (`datahub docker quickstart`), then point Mosaic at an asset it did not seed:
+
+```powershell
+uv run mosaic discover --server http://localhost:8080 --urn "<existing-dataset-urn>"
+uv run mosaic check --fail-on critical
+```
+
+The first command combines schema, glossary/tag evidence, and column lineage; a single-source asset must return `no_convergence`. The second is the same pre-merge contract shipped in `.github/workflows/mosaic-privacy-gate.yml`.
+
+The repository intentionally does not duplicate DataHub’s multi-service quickstart inside Mosaic’s one-service `compose.yaml`; the official CLI owns those dependency versions. Mosaic’s Compose file remains the 60-second read-only product evaluation path.
 
 ## Warehouse adapter safety contract
 

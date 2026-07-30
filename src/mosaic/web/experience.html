@@ -307,11 +307,13 @@ GROUP BY zip5, birth_date, gender_category</code></pre>
           <article><span>01</span><h4>Graph-native privacy reasoning</h4><p>Finds risk created by relationships&mdash;not a tag, field, or table in isolation.</p></article>
           <article><span>02</span><h4>Aggregate-only proof</h4><p>A fail-closed SQL policy measures anonymity while person-level rows stay at zero.</p></article>
           <article><span>03</span><h4>Merge-ready remediation codegen</h4><p>Emits dbt code, aggregate tests, policy, provenance, and PR documentation.</p></article>
-          <article><span>04</span><h4>Tamper-evident memory</h4><p>Digest-backed evidence and re-read write-back make the decision inheritable.</p></article>
+          <article><span>04</span><h4>Cross-asset join privacy</h4><p>Detects when two individually ordinary tables become re-identifying only through a shared join key.</p></article>
+          <article><span>05</span><h4>Model proposes, policy disposes</h4><p>Unsafe row-level SQL is rejected; organization policy, not an LLM, controls the verdict and generated test.</p></article>
+          <article><span>06</span><h4>Tamper-evident memory</h4><p>Digest-backed evidence and re-read write-back make the decision inheritable.</p></article>
         </div>
       </div>
       <div class="technology-footer">
-        <div><small>Supporting execution stack</small><p><b>DuckDB</b> aggregate validation &middot; <b>dbt</b> generated artifacts &middot; <b>FastAPI</b> typed interfaces &middot; <b>Playwright</b> end-to-end verification</p></div>
+        <div><small>Supporting execution stack</small><p><b>Snowflake</b> production adapter &middot; <b>DuckDB</b> isolated validation &middot; <b>dbt</b> generated artifacts &middot; <b>FastAPI</b> typed interfaces &middot; <b>Playwright</b> end-to-end verification</p></div>
         <a href="https://github.com/datahub-project/datahub/pull/18705"><span>Merged into DataHub</span><strong>Open-source contribution #18705</strong><b>&rarr;</b></a>
       </div>
     </section>

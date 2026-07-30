@@ -9,6 +9,7 @@ WORKDIR /app
 COPY --from=ghcr.io/astral-sh/uv:0.8.22 /uv /uvx /bin/
 COPY pyproject.toml uv.lock README.md LICENSE ./
 COPY src ./src
+COPY .mosaic ./.mosaic
 COPY evaluations ./evaluations
 COPY evidence ./evidence
 COPY fixtures ./fixtures

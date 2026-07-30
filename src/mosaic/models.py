@@ -43,6 +43,11 @@ class Assessment:
     aggregate_query: str | None
     raw_rows_returned: int
     mitigation: dict[str, Any] | None = None
+    adversarial_self_check: str | None = None
+
+    def __post_init__(self) -> None:
+        if self.verdict is Verdict.VALIDATED_CRITICAL and not self.adversarial_self_check:
+            raise ValueError("a critical verdict requires an adversarial false-positive self-check")
 
     @property
     def exit_code(self) -> int:

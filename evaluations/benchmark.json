@@ -23,20 +23,26 @@
     {
       "records": 1000,
       "classes": 100,
-      "runtime_ms": 0.975
+      "runtime_ms": 1.29
     },
     {
       "records": 10000,
       "classes": 1000,
-      "runtime_ms": 9.952
+      "runtime_ms": 14.932
     },
     {
       "records": 50000,
       "classes": 5000,
-      "runtime_ms": 55.035
+      "runtime_ms": 71.156
     }
   ],
-  "total_runtime_seconds": 0.077,
+  "catalog_scale": {
+    "columns": 10000,
+    "classified_quasi_identifiers": 100,
+    "runtime_ms": 106.094,
+    "input": "deterministic generated catalog schema"
+  },
+  "total_runtime_seconds": 0.207,
   "results": [
     {
       "case_id": "seed-20260730-critical",

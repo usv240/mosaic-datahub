@@ -38,9 +38,9 @@ def technology_catalog() -> dict[str, Any]:
             {
                 "id": "sdk",
                 "surface": "DataHub Python SDK",
-                "role": "Creates synthetic assets and reads catalog entities through supported interfaces.",
-                "implementation": "src/mosaic/live_estate.py",
-                "proof": "fixtures/datahub_recording/responses/entity.json",
+                "role": "Reads existing schemas and traverses column lineage without requiring Mosaic-seeded assets.",
+                "implementation": "src/mosaic/catalog_reader.py",
+                "proof": "fixtures/datahub_sample_recording/external-convergence.json",
             },
             {
                 "id": "graphql",
@@ -77,6 +77,14 @@ def technology_catalog() -> dict[str, Any]:
                 "detail": "Finds risk created by relationships, beyond DataHub's out-of-box metadata views and beyond column scanners.",
             },
             {
+                "label": "Cross-asset join privacy",
+                "detail": "Finds re-identifying combinations created only when two catalog assets share a join key.",
+            },
+            {
+                "label": "Model proposes, policy disposes",
+                "detail": "Adversarial self-checks and organization policy gate every critical verdict and generated test.",
+            },
+            {
                 "label": "Aggregate-only proof",
                 "detail": "A fail-closed SQL policy measures anonymity while keeping person-level rows at zero.",
             },
@@ -90,6 +98,7 @@ def technology_catalog() -> dict[str, Any]:
             },
         ],
         "supporting_stack": [
+            {"name": "Snowflake", "role": "Optional production aggregate-query adapter"},
             {"name": "DuckDB", "role": "Isolated in-memory aggregate validation"},
             {"name": "FastAPI", "role": "Typed read-only demo and operator APIs"},
             {

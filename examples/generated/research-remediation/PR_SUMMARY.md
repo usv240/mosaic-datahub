@@ -7,16 +7,20 @@ converging across 2 source systems in `research_export_clean`. Mosaic's
 aggregate-only validation measured minimum k=1 with
 zero person-level rows returned.
 
+## Adversarial self-check
+
+False-positive case considered: individually ordinary fields and high cardinality are not sufficient. The verdict is allowed only because independent upstream datasets converge and aggregate class counts breach the configured policy.
+
 ## Proposed code change
 
 Suppress precise birth_date while retaining ZIP5 and demographic category. The shadow result reaches minimum k=20
-with 76% measured utility retained in the
+with 67% measured utility retained in the
 synthetic scenario. These thresholds are review policy, not a legal conclusion.
 
 ## DataHub context used
 
 - Source asset: `urn:li:dataset:(urn:li:dataPlatform:mosaic,research_export_clean,PROD)`
-- Scenario digest: `5626a6b7e08141a5857dbe771a3dabaf74672778211ea3e2cf96e2a5b8dc9bab`
+- Scenario digest: `227d4f643ac5db172d815f1d2a5a88decda3f7844bffe207478b9b480880fe03`
 - Context trust: structured metadata allowlist; free-form instructions are rejected
 - Fine-grained lineage:
 - `support_contacts.zip5` -> `research_export_clean.zip5`
