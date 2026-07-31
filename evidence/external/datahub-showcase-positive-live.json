@@ -1,0 +1,491 @@
+{
+  "status": "convergence",
+  "target_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+  "schema_field_count": 55,
+  "classified_fields": [
+    {
+      "column": "order_date",
+      "data_type": "unknown",
+      "family": "temporal",
+      "confidence": 0.55,
+      "evidence": "name pattern: order_date"
+    },
+    {
+      "column": "payment_method_code",
+      "data_type": "unknown",
+      "family": "financial",
+      "confidence": 0.55,
+      "evidence": "name pattern: payment_method_code"
+    },
+    {
+      "column": "billing_address_line1",
+      "data_type": "unknown",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: billing_address_line1"
+    },
+    {
+      "column": "billing_address_line2",
+      "data_type": "unknown",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: billing_address_line2"
+    },
+    {
+      "column": "billing_town_city",
+      "data_type": "unknown",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: billing_town_city"
+    },
+    {
+      "column": "billing_country",
+      "data_type": "unknown",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: billing_country"
+    },
+    {
+      "column": "billing_zipcode",
+      "data_type": "unknown",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: billing_zipcode"
+    },
+    {
+      "column": "billing_region",
+      "data_type": "unknown",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: billing_region"
+    },
+    {
+      "column": "shipping_address_line1",
+      "data_type": "unknown",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: shipping_address_line1"
+    },
+    {
+      "column": "shipping_address_line2",
+      "data_type": "unknown",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: shipping_address_line2"
+    },
+    {
+      "column": "shipping_town_city",
+      "data_type": "unknown",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: shipping_town_city"
+    },
+    {
+      "column": "shipping_country",
+      "data_type": "unknown",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: shipping_country"
+    },
+    {
+      "column": "shipping_zipcode",
+      "data_type": "unknown",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: shipping_zipcode"
+    },
+    {
+      "column": "shipping_region",
+      "data_type": "unknown",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: shipping_region"
+    },
+    {
+      "column": "dispatch_date",
+      "data_type": "unknown",
+      "family": "temporal",
+      "confidence": 0.55,
+      "evidence": "name pattern: dispatch_date"
+    },
+    {
+      "column": "return_date",
+      "data_type": "unknown",
+      "family": "temporal",
+      "confidence": 0.55,
+      "evidence": "name pattern: return_date"
+    },
+    {
+      "column": "updated_at",
+      "data_type": "unknown",
+      "family": "temporal",
+      "confidence": 0.55,
+      "evidence": "name pattern: updated_at"
+    }
+  ],
+  "dataset_lineage_upstreams": [
+    "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.addresses,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.countries,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.customers,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.inventories,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.order_items,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.orders,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.product_categories,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.products,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.promotions,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.regions,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.warehouses,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.addresses,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.countries,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.customers,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.inventories,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.order_items,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.orders,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.product_categories,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.products,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.promotions,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.regions,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.warehouses,PROD)"
+  ],
+  "families": [
+    "financial",
+    "location",
+    "temporal"
+  ],
+  "upstream_datasets": [
+    "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.addresses,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.countries,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.order_items,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.orders,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.regions,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.addresses,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.countries,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.order_items,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.orders,PROD)",
+    "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.regions,PROD)"
+  ],
+  "origins": [
+    {
+      "column": "order_date",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.orders,PROD)",
+      "upstream_field": "order_date",
+      "platform": "dbt",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.orders",
+      "family": "temporal",
+      "confidence": 0.55,
+      "evidence": "name pattern: order_date"
+    },
+    {
+      "column": "order_date",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.orders,PROD)",
+      "upstream_field": "order_date",
+      "platform": "snowflake",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.orders",
+      "family": "temporal",
+      "confidence": 0.55,
+      "evidence": "name pattern: order_date"
+    },
+    {
+      "column": "payment_method_code",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.orders,PROD)",
+      "upstream_field": "payment_method_code",
+      "platform": "dbt",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.orders",
+      "family": "financial",
+      "confidence": 0.55,
+      "evidence": "name pattern: payment_method_code"
+    },
+    {
+      "column": "payment_method_code",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.orders,PROD)",
+      "upstream_field": "payment_method_code",
+      "platform": "snowflake",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.orders",
+      "family": "financial",
+      "confidence": 0.55,
+      "evidence": "name pattern: payment_method_code"
+    },
+    {
+      "column": "billing_address_line1",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.addresses,PROD)",
+      "upstream_field": "billing_address_line1",
+      "platform": "dbt",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.addresses",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: billing_address_line1"
+    },
+    {
+      "column": "billing_address_line1",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.addresses,PROD)",
+      "upstream_field": "billing_address_line1",
+      "platform": "snowflake",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.addresses",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: billing_address_line1"
+    },
+    {
+      "column": "billing_address_line2",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.addresses,PROD)",
+      "upstream_field": "billing_address_line2",
+      "platform": "dbt",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.addresses",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: billing_address_line2"
+    },
+    {
+      "column": "billing_address_line2",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.addresses,PROD)",
+      "upstream_field": "billing_address_line2",
+      "platform": "snowflake",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.addresses",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: billing_address_line2"
+    },
+    {
+      "column": "billing_town_city",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.addresses,PROD)",
+      "upstream_field": "billing_town_city",
+      "platform": "dbt",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.addresses",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: billing_town_city"
+    },
+    {
+      "column": "billing_town_city",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.addresses,PROD)",
+      "upstream_field": "billing_town_city",
+      "platform": "snowflake",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.addresses",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: billing_town_city"
+    },
+    {
+      "column": "billing_country",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.countries,PROD)",
+      "upstream_field": "billing_country",
+      "platform": "dbt",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.countries",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: billing_country"
+    },
+    {
+      "column": "billing_country",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.countries,PROD)",
+      "upstream_field": "billing_country",
+      "platform": "snowflake",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.countries",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: billing_country"
+    },
+    {
+      "column": "billing_zipcode",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.addresses,PROD)",
+      "upstream_field": "billing_zipcode",
+      "platform": "dbt",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.addresses",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: billing_zipcode"
+    },
+    {
+      "column": "billing_zipcode",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.addresses,PROD)",
+      "upstream_field": "billing_zipcode",
+      "platform": "snowflake",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.addresses",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: billing_zipcode"
+    },
+    {
+      "column": "billing_region",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.regions,PROD)",
+      "upstream_field": "billing_region",
+      "platform": "dbt",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.regions",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: billing_region"
+    },
+    {
+      "column": "billing_region",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.regions,PROD)",
+      "upstream_field": "billing_region",
+      "platform": "snowflake",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.regions",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: billing_region"
+    },
+    {
+      "column": "shipping_address_line1",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.addresses,PROD)",
+      "upstream_field": "shipping_address_line1",
+      "platform": "dbt",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.addresses",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: shipping_address_line1"
+    },
+    {
+      "column": "shipping_address_line1",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.addresses,PROD)",
+      "upstream_field": "shipping_address_line1",
+      "platform": "snowflake",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.addresses",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: shipping_address_line1"
+    },
+    {
+      "column": "shipping_address_line2",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.addresses,PROD)",
+      "upstream_field": "shipping_address_line2",
+      "platform": "dbt",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.addresses",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: shipping_address_line2"
+    },
+    {
+      "column": "shipping_address_line2",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.addresses,PROD)",
+      "upstream_field": "shipping_address_line2",
+      "platform": "snowflake",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.addresses",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: shipping_address_line2"
+    },
+    {
+      "column": "shipping_town_city",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.addresses,PROD)",
+      "upstream_field": "shipping_town_city",
+      "platform": "dbt",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.addresses",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: shipping_town_city"
+    },
+    {
+      "column": "shipping_town_city",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.addresses,PROD)",
+      "upstream_field": "shipping_town_city",
+      "platform": "snowflake",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.addresses",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: shipping_town_city"
+    },
+    {
+      "column": "shipping_country",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.countries,PROD)",
+      "upstream_field": "shipping_country",
+      "platform": "dbt",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.countries",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: shipping_country"
+    },
+    {
+      "column": "shipping_country",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.countries,PROD)",
+      "upstream_field": "shipping_country",
+      "platform": "snowflake",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.countries",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: shipping_country"
+    },
+    {
+      "column": "shipping_zipcode",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.addresses,PROD)",
+      "upstream_field": "shipping_zipcode",
+      "platform": "dbt",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.addresses",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: shipping_zipcode"
+    },
+    {
+      "column": "shipping_zipcode",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.addresses,PROD)",
+      "upstream_field": "shipping_zipcode",
+      "platform": "snowflake",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.addresses",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: shipping_zipcode"
+    },
+    {
+      "column": "shipping_region",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.regions,PROD)",
+      "upstream_field": "shipping_region",
+      "platform": "dbt",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.regions",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: shipping_region"
+    },
+    {
+      "column": "shipping_region",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.regions,PROD)",
+      "upstream_field": "shipping_region",
+      "platform": "snowflake",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.regions",
+      "family": "location",
+      "confidence": 0.55,
+      "evidence": "name pattern: shipping_region"
+    },
+    {
+      "column": "dispatch_date",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.order_items,PROD)",
+      "upstream_field": "dispatch_date",
+      "platform": "dbt",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.order_items",
+      "family": "temporal",
+      "confidence": 0.55,
+      "evidence": "name pattern: dispatch_date"
+    },
+    {
+      "column": "dispatch_date",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.order_items,PROD)",
+      "upstream_field": "dispatch_date",
+      "platform": "snowflake",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.order_items",
+      "family": "temporal",
+      "confidence": 0.55,
+      "evidence": "name pattern: dispatch_date"
+    },
+    {
+      "column": "return_date",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.order_items,PROD)",
+      "upstream_field": "return_date",
+      "platform": "dbt",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.order_items",
+      "family": "temporal",
+      "confidence": 0.55,
+      "evidence": "name pattern: return_date"
+    },
+    {
+      "column": "return_date",
+      "upstream_urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.order_items,PROD)",
+      "upstream_field": "return_date",
+      "platform": "snowflake",
+      "source_dataset": "b2fd91.order_entry_db.order_entry.order_items",
+      "family": "temporal",
+      "confidence": 0.55,
+      "evidence": "name pattern: return_date"
+    }
+  ],
+  "decision_reason": "at least two quasi-identifier families converge from at least two upstream datasets",
+  "raw_person_rows_returned": 0
+}

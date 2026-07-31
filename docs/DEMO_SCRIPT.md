@@ -4,14 +4,13 @@
 
 Open at the top of the landing page: “Three ordinary columns, three systems, one export. No field is direct PII. DataHub’s graph shows why the combination matters.” Define minimum k in one sentence: the size of the smallest crowd a record blends into; k=1 is unique.
 
-## 0:20–0:45 — Read a catalog Mosaic did not create
+## 0:20–0:48 — Challenge a catalog Mosaic did not create
 
-Run `mosaic discover` against an existing DataHub quickstart sample URN. Keep the tool output visible. Point to schema, glossary/tag evidence, column lineage, and distinct upstream datasets. Run the single-source control and show `no_convergence`. Say: “Mosaic does not need to seed this asset, and it refuses to invent a graph finding.”
+Run `mosaic discover` against DataHub's official showcase `order_details` asset. Point to 55 inspected fields, three classified families, 10 true upstream datasets, dataset-only column origins, and zero raw rows. Then show the single-source `order_items` control returning `no_convergence`. Say: “Same reader, opposite result. Mosaic excludes job nodes and refuses to invent a graph finding.”
 
-## 0:45–1:05 — The model proposes; policy disposes
+## 0:48–1:05 — The model proposes; policy disposes
 
-Show an agent-proposed query containing `member_id`. Let the query policy reject it. Then show the approved aggregate-only `GROUP BY COUNT(*)` shape. This is the architecture: an agent can propose; deterministic policy owns data access and the verdict.
-
+Open `/api/agent-receipts`. Show the real local Mistral proposal that nominated an asset and columns, followed by Mosaic's deterministic query and critical verdict. Then show the preserved veto receipt. Say: “The model writes rationale, never SQL. Policy owns the query, verdict, execution boundary, and veto.”
 ## 1:05–1:30 — Measured evidence
 
 Run the research investigation. Show k=1, 100% below k=5, zero raw person-level rows, and three downstream assets. Open the false-positive rebuttal: ordinary fields and high cardinality alone are insufficient; independent lineage convergence plus measured small classes earns the critical verdict.

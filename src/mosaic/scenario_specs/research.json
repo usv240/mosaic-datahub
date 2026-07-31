@@ -5,6 +5,9 @@
     "situation":  "A direct-identifier-free research export combines ZIP5, birth date, and gender from separate systems.",
     "asset":  "research_export_clean",
     "asset_urn":  "urn:li:dataset:(urn:li:dataPlatform:mosaic,research_export_clean,PROD)",
+    "join_keys":  [
+                      "member_id"
+                  ],
     "columns":  [
                     "zip5",
                     "birth_date",

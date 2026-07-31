@@ -169,6 +169,28 @@ def create_app(project_root: Path | None = None) -> FastAPI:
     def estate_scan() -> dict[str, object]:
         return scan_estate()
 
+    @app.get("/api/agent-receipts")
+    def agent_receipts() -> dict[str, object]:
+        receipt_root = root / "evidence" / "external"
+        names = ("ollama-agent-accepted-live.json", "ollama-agent-veto-live.json")
+        receipts = []
+        for name in names:
+            path = receipt_root / name
+            if path.is_file():
+                try:
+                    receipts.append(json.loads(path.read_text(encoding="utf-8")))
+                except json.JSONDecodeError as error:
+                    raise HTTPException(
+                        status_code=503, detail="Agent receipt is malformed"
+                    ) from error
+        if not receipts:
+            raise HTTPException(status_code=404, detail="No local-model receipt is packaged")
+        return {
+            "schema_version": 1,
+            "execution_boundary": "recorded local Ollama runs; hosted page performs no inference",
+            "receipts": receipts,
+        }
+
     @app.get("/api/proofs")
     def proofs() -> dict[str, object]:
         return proof_catalog(root)

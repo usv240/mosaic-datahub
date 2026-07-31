@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "status": "vetoed",
+  "track": "Metadata-Aware Code Generation & Development",
+  "model_role": "proposal_only",
+  "policy_role": "deterministic_verdict_and_veto",
+  "model": {
+    "provider": "ollama-compatible",
+    "model": "mistral:latest",
+    "done": true,
+    "prompt_eval_count": 261,
+    "eval_count": 190
+  },
+  "proposal": {
+    "selected_scenario": "research",
+    "nominated_columns": [
+      "zip5"
+    ],
+    "rationale": "The 'zip5' column is a quasi-identifier and its usage in an aggregate query can help maintain privacy while providing valuable insights for research purposes.",
+    "proposed_query": "SELECT zip5, COUNT(*) AS equivalence_class_size FROM research_export_clean GROUP BY zip5",
+    "pr_narrative": "Proposal to enhance the privacy of the 'research_export_clean' dataset by introducing an aggregate query on the quasi-identifier column 'zip5'. This change will help maintain privacy while providing valuable insights for research purposes. The proposed query is: SELECT zip5, COUNT(*) AS equivalence_class_size FROM research_export_clean GROUP BY zip5."
+  },
+  "verification": {
+    "status": "vetoed",
+    "policy_veto": true,
+    "veto_reasons": [
+      "at least two string quasi-identifier columns must be nominated"
+    ],
+    "selected_scenario": "research",
+    "deterministic_assessment": {
+      "schema_version": 1,
+      "scenario": {
+        "slug": "research",
+        "name": "Research export investigation",
+        "domain": "Research data sharing",
+        "situation": "A direct-identifier-free research export combines ZIP5, birth date, and gender from separate systems.",
+        "configuration_sha256": "4b15dd3113f16884e84612cd5f7b58532ac7732f0cc58ca9825f03622036c509"
+      },
+      "assessment": {
+        "candidate": {
+          "asset_urn": "urn:li:dataset:(urn:li:dataPlatform:mosaic,research_export_clean,PROD)",
+          "columns": [
+            "zip5",
+            "birth_date",
+            "gender_category"
+          ],
+          "families": [
+            "location",
+            "date_of_birth",
+            "demographic"
+          ],
+          "lineage_paths": [
+            [
+              "support_contacts.zip5",
+              "research_export_clean.zip5"
+            ],
+            [
+              "support_contacts.full_birth_date",
+              "research_export_clean.birth_date"
+            ],
+            [
+              "member_demographics_coarse.gender_category",
+              "research_export_clean.gender_category"
+            ]
+          ],
+          "sensitive_attribute_present": true,
+          "downstream_assets": [
+            "research_partner_delivery",
+            "cohort_explorer_export",
+            "readmission_model_training"
+          ]
+        },
+        "verdict": "validated_critical",
+        "reasons": [
+          "3 quasi-identifier families converge across 2 source systems.",
+          "Aggregate-only validation found minimum k=1 and 100.000% of records below k=5.",
+          "DataHub lineage identifies 3 downstream assets."
+        ],
+        "metrics": {
+          "total_records": 120,
+          "distinct_combinations": 120,
+          "minimum_k": 1,
+          "percent_below_2": 100.0,
+          "percent_below_5": 100.0,
+          "percent_below_10": 100.0,
+          "class_size_distribution": {
+            "1": 120
+          }
+        },
+        "aggregate_query": "SELECT zip5, birth_date, gender_category, COUNT(*) AS equivalence_class_size FROM research_export_clean GROUP BY zip5, birth_date, gender_category",
+        "raw_rows_returned": 0,
+        "mitigation": {
+          "status": "recommended",
+          "action": "suppress birth_date from the research export",
+          "drop": [
+            "birth_date"
+          ],
+          "generalize": {},
+          "evaluated_columns": [
+            "zip5",
+            "gender_category"
+          ],
+          "metrics": {
+            "minimum_k": 20,
+            "percent_below_5": 0.0,
+            "distinct_combinations": 6
+          },
+          "utility_retained": 0.667,
+          "writes_applied": false
+        },
+        "adversarial_self_check": "False-positive case considered: individually ordinary fields and high cardinality are not sufficient. The verdict is allowed only because independent upstream datasets converge and aggregate class counts breach the configured policy.",
+        "exit_code": 3
+      },
+      "graph_value": {
+        "lineage_aware_convergences": 1,
+        "no_lineage_baseline_convergences": 0,
+        "delta": 1,
+        "source_systems": [
+          "support_contacts",
+          "member_demographics_coarse"
+        ]
+      },
+      "writeback": {
+        "status": "dry_run",
+        "requires_reviewer_approval": true,
+        "target_urn": "urn:li:dataset:(urn:li:dataPlatform:mosaic,research_export_clean,PROD)",
+        "mutation_performed": false
+      },
+      "source": {
+        "kind": "configuration_driven_synthetic_fixture",
+        "raw_person_rows_returned": 0
+      },
+      "policy": {
+        "policy_id": "organization-compositional-privacy",
+        "sha256": "9ad1dad8362ddbb26ea89ee085ea55d52fff7a9a4fa0294f6a0cc61fe312b5e2",
+        "source": ".mosaic\\privacy-policy.yml",
+        "minimum_k": 5,
+        "maximum_percent_below_k5": 0.0
+      },
+      "exit_code": 3
+    },
+    "raw_person_rows_returned": 0,
+    "generated_code_executed": false,
+    "mutation_performed": false
+  }
+}

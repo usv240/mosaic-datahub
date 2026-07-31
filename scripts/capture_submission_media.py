@@ -50,6 +50,12 @@ def main() -> int:
         standards_path = OUTPUT / "10-research-standards.png"
         standards.screenshot(path=standards_path)
         files.append(standards_path)
+        agent_proof = desktop.locator(".agent-proof")
+        agent_proof.scroll_into_view_if_needed()
+        desktop.wait_for_timeout(500)
+        agent_path = OUTPUT / "11-agent-policy-boundary.png"
+        agent_proof.screenshot(path=agent_path)
+        files.append(agent_path)
         desktop.locator('[data-scenario="audience"]').click()
         desktop.wait_for_timeout(600)
         files.append(_screenshot(desktop, "02-audience-preset.png"))
@@ -99,6 +105,10 @@ def main() -> int:
         for tab in ("query", "mitigation", "codegen", "writeback"):
             walkthrough.locator(f'[data-tab="{tab}"]').click()
             walkthrough.wait_for_timeout(1_000)
+        walkthrough.locator("#cross-asset-title").scroll_into_view_if_needed()
+        walkthrough.wait_for_timeout(1_200)
+        walkthrough.locator("#agent-proof-title").scroll_into_view_if_needed()
+        walkthrough.wait_for_timeout(1_500)
         _ready(walkthrough, "/runs")
         walkthrough.mouse.wheel(0, 850)
         walkthrough.wait_for_timeout(1_500)

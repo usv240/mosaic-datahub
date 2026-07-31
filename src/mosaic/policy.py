@@ -1,10 +1,11 @@
 from __future__ import annotations
 
-import hashlib
 import json
 import os
 from dataclasses import dataclass
 from pathlib import Path
+
+from mosaic.canonical import canonical_json_sha256
 
 
 @dataclass(frozen=True)
@@ -42,7 +43,7 @@ def load_policy(path: Path | None = None) -> PrivacyPolicy:
         maximum_percent_below_k5=float(controls.get("maximum_percent_below_k5", -1)),
         raw_person_rows_allowed=int(controls.get("raw_person_rows_allowed", -1)),
         required_roles=tuple(str(role) for role in approval.get("required_roles", ())),
-        sha256=hashlib.sha256(raw).hexdigest(),
+        sha256=canonical_json_sha256(data),
         source=str(candidate),
     )
     if (

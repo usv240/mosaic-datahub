@@ -4,8 +4,8 @@ status: proposed
 human_review_required: true
 source:
   datahub_urn: "urn:li:dataset:(urn:li:dataPlatform:mosaic,partner_audience_export,PROD)"
-  scenario_sha256: "6c7f996d5c12d185dcb0c3f69a23b2881997cc926401194482e7568dd44c14ab"
-  organization_policy_sha256: "3f305ad186ec93cce4b7f47180e810f881e31a0ea7800cfd774daaa04554119d"
+  scenario_sha256: "1cadeab1b674830f671e685d5aa52f77931b0baa9fe494bb81a44b3452e2c9de"
+  organization_policy_sha256: "9ad1dad8362ddbb26ea89ee085ea55d52fff7a9a4fa0294f6a0cc61fe312b5e2"
 controls:
   minimum_k: 5
   critical_minimum_k: 2

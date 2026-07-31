@@ -10,7 +10,7 @@ models:
         enforced: true
     meta:
       datahub_source_urn: "urn:li:dataset:(urn:li:dataPlatform:mosaic,research_export_clean,PROD)"
-      mosaic_scenario_sha256: "227d4f643ac5db172d815f1d2a5a88decda3f7844bffe207478b9b480880fe03"
+      mosaic_scenario_sha256: "4b15dd3113f16884e84612cd5f7b58532ac7732f0cc58ca9825f03622036c509"
       minimum_k_before: 1
       minimum_k_after: 20
       raw_person_rows_returned: 0

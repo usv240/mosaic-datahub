@@ -57,6 +57,9 @@ def test_estate_scan_ranks_critical_findings_first_without_raw_rows() -> None:
     assert report["assets_screened"] == 4
     assert report["critical_findings"] == 2
     assert report["raw_rows_returned"] == 0
+    assert report["cross_asset_candidates"] >= 1
+    assert report["cross_asset_safety"]["verdict_scope"] == "metadata_screening_only"
+    assert all(item["shared_join_keys"] for item in report["cross_asset_findings"])
     assert [item["severity"] for item in findings] == sorted(
         [item["severity"] for item in findings], reverse=True
     )
@@ -72,7 +75,9 @@ def test_scenario_and_scan_apis_are_judge_inspectable(tmp_path) -> None:
     assert client.get("/api/scenarios/research").json()["assessment"]["metrics"]["minimum_k"] == 1
     assert client.get("/api/scenarios/control").json()["assessment"]["metrics"] is None
     assert client.get("/api/scenarios/missing").status_code == 404
-    assert client.get("/api/scan").json()["assets_screened"] == 4
+    scan = client.get("/api/scan").json()
+    assert scan["assets_screened"] == 4
+    assert scan["cross_asset_candidates"] >= 1
 
 
 @pytest.mark.parametrize(

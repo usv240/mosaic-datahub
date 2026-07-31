@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+from collections import defaultdict
 from typing import Any
 
+from mosaic.compositional_join import AssetProfile, detect_cross_asset_risks
 from mosaic.models import Verdict
-from mosaic.scenario_registry import assess_scenario, list_scenarios
+from mosaic.scenario_registry import ScenarioSpec, assess_scenario, list_scenarios
 
 SEVERITY = {
     Verdict.VALIDATED_CRITICAL.value: 4,
@@ -14,9 +16,31 @@ SEVERITY = {
 }
 
 
+def _source_profiles(specs: list[ScenarioSpec]) -> tuple[AssetProfile, ...]:
+    """Build joinable upstream profiles only from explicit lineage and join-key metadata."""
+    collected: dict[str, dict[str, set[str]]] = defaultdict(
+        lambda: {"join_keys": set(), "families": set()}
+    )
+    for spec in specs:
+        for family, path in zip(spec.families, spec.lineage_paths, strict=True):
+            source = path[0].split(".", 1)[0]
+            urn = f"urn:li:dataset:(urn:li:dataPlatform:mosaic,{source},PROD)"
+            collected[urn]["join_keys"].update(spec.join_keys)
+            collected[urn]["families"].add(family)
+    return tuple(
+        AssetProfile(
+            urn=urn,
+            join_keys=tuple(sorted(profile["join_keys"])),
+            families=tuple(sorted(profile["families"])),
+        )
+        for urn, profile in sorted(collected.items())
+    )
+
+
 def scan_estate() -> dict[str, Any]:
+    specs = list_scenarios()
     findings = []
-    for spec in list_scenarios():
+    for spec in specs:
         report = assess_scenario(spec.slug)
         assessment = report["assessment"]
         metrics = assessment["metrics"] or {}
@@ -41,14 +65,35 @@ def scan_estate() -> dict[str, Any]:
             item["scenario"],
         )
     )
+    cross_asset = [
+        {
+            "left_asset_urn": finding.left_urn,
+            "right_asset_urn": finding.right_urn,
+            "shared_join_keys": list(finding.shared_keys),
+            "combined_families": list(finding.combined_families),
+            "decision_reason": (
+                "Each asset contributes distinct quasi-identifier context and DataHub metadata "
+                "shows a shared join key; the combination requires aggregate validation."
+            ),
+            "status": "screening_candidate",
+        }
+        for finding in detect_cross_asset_risks(_source_profiles(specs))
+    ]
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "status": "passed",
         "assets_screened": len(findings),
         "validated_findings": sum(item["verdict"].startswith("validated_") for item in findings),
         "critical_findings": sum(
             item["verdict"] == Verdict.VALIDATED_CRITICAL.value for item in findings
         ),
+        "cross_asset_candidates": len(cross_asset),
         "raw_rows_returned": sum(item["raw_rows_returned"] for item in findings),
         "ranked_findings": findings,
+        "cross_asset_findings": cross_asset,
+        "cross_asset_safety": {
+            "verdict_scope": "metadata_screening_only",
+            "raw_rows_returned": 0,
+            "rule": "shared join key + distinct contributed families",
+        },
     }

@@ -4,8 +4,8 @@
   "track": "Metadata-Aware Code Generation & Development",
   "scenario": "audience",
   "source_asset_urn": "urn:li:dataset:(urn:li:dataPlatform:mosaic,partner_audience_export,PROD)",
-  "scenario_sha256": "6c7f996d5c12d185dcb0c3f69a23b2881997cc926401194482e7568dd44c14ab",
-  "organization_policy_sha256": "3f305ad186ec93cce4b7f47180e810f881e31a0ea7800cfd774daaa04554119d",
+  "scenario_sha256": "1cadeab1b674830f671e685d5aa52f77931b0baa9fe494bb81a44b3452e2c9de",
+  "organization_policy_sha256": "9ad1dad8362ddbb26ea89ee085ea55d52fff7a9a4fa0294f6a0cc61fe312b5e2",
   "assurance": {
     "context_policy": "structured_allowlist",
     "human_review_required": true,
@@ -50,7 +50,7 @@
     },
     {
       "path": "models/partner_audience_export_privacy_safe.yml",
-      "sha256": "4a373f1447724b464d1d2402b31b5964e469dcc0aca18820175166a40161845d"
+      "sha256": "a28ca15031d23bf1027acb5699e3a3b9f8f003f022998b851cfd96c6624b08c4"
     },
     {
       "path": "tests/assert_partner_audience_export_privacy_safe_minimum_k.sql",
@@ -58,11 +58,11 @@
     },
     {
       "path": ".mosaic/privacy-policy.yml",
-      "sha256": "c708f0265cd86d14800701554b892900cebfe15d2012a16233b5f485402c22fa"
+      "sha256": "a301c13b2d73602ff93ac8de873b79297149f8f33287e6df0ec59baee62c254f"
     },
     {
       "path": "PR_SUMMARY.md",
-      "sha256": "a2b696577cbc9b12e895d94ed8125df9bb3e3029b3bee15e693a63b7714b46ee"
+      "sha256": "4dfa0ef1149dfcb3f170d409d059b617c506b0e73ece933deebecc98d21a0112"
     }
   ]
 }

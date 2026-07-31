@@ -20,7 +20,7 @@ synthetic scenario. These thresholds are review policy, not a legal conclusion.
 ## DataHub context used
 
 - Source asset: `urn:li:dataset:(urn:li:dataPlatform:mosaic,research_export_clean,PROD)`
-- Scenario digest: `227d4f643ac5db172d815f1d2a5a88decda3f7844bffe207478b9b480880fe03`
+- Scenario digest: `4b15dd3113f16884e84612cd5f7b58532ac7732f0cc58ca9825f03622036c509`
 - Context trust: structured metadata allowlist; free-form instructions are rejected
 - Fine-grained lineage:
 - `support_contacts.zip5` -> `research_export_clean.zip5`

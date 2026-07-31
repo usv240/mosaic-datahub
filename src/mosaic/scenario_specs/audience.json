@@ -5,6 +5,9 @@
     "situation":  "A partner audience export combines neighborhood, age band, household composition, and a sensitive interest segment.",
     "asset":  "partner_audience_export",
     "asset_urn":  "urn:li:dataset:(urn:li:dataPlatform:mosaic,partner_audience_export,PROD)",
+    "join_keys":  [
+                      "customer_id"
+                  ],
     "columns":  [
                     "neighborhood",
                     "age_band",

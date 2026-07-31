@@ -276,6 +276,12 @@ def test_landing_exposes_interactive_remediation_pr_studio(tmp_path: Path) -> No
     assert 'fetch("/api/remediation-bundles/"' in script
     assert "renderNoCodegen" in script
     assert "Remediation PR generated" in script
+    assert 'id="cross-asset-evidence"' in landing
+    assert 'fetch("/api/scan")' in script
+    assert ".cross-asset-proof" in css
+    assert 'id="agent-proof-title"' in landing
+    assert 'fetch("/api/agent-receipts")' in script
+    assert ".agent-proof" in css
     assert ".codegen-workbench" in css
     assert 'a[aria-disabled="true"]' in css
 

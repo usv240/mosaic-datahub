@@ -92,6 +92,21 @@ def test_single_source_and_zero_lineage_do_not_invent_convergence() -> None:
     assert discover_from_urn(_Client(sources=0), "urn:sample") == ()
 
 
+def test_catalog_reader_excludes_jobs_and_self_edges_from_dataset_evidence() -> None:
+    target = "urn:li:dataset:(urn:li:dataPlatform:hive,target,PROD)"
+    upstream = "urn:li:dataset:(urn:li:dataPlatform:hive,source,PROD)"
+    job = "urn:li:dataJob:(urn:li:dataFlow:(spark,flow,PROD),job)"
+    client = _Client()
+    client.lineage.get_lineage = lambda **kwargs: [
+        SimpleNamespace(urn=target, column=kwargs.get("source_column")),
+        SimpleNamespace(urn=job, column=kwargs.get("source_column")),
+        SimpleNamespace(urn=upstream, column=kwargs.get("source_column")),
+    ]
+    origins = discover_from_urn(client, target)
+    assert origins
+    assert {origin.upstream_urn for origin in origins} == {upstream}
+
+
 def test_catalog_reader_propagates_not_found_and_permission_errors() -> None:
     with pytest.raises(LookupError):
         discover_from_urn(_Client(entity=False), "urn:missing")
@@ -177,6 +192,9 @@ def test_classifier_uses_ranked_catalog_evidence() -> None:
     assert tagged and (tagged.family, tagged.confidence) == ("health", 0.9)
     assert typed and typed.confidence == 0.75
     assert named and named.confidence == 0.55
+    assert classify_column("condition", "varchar") is None
+    specific_health = classify_column("medical_condition", "varchar")
+    assert specific_health and specific_health.family == "health"
 
 
 def test_organization_policy_changes_the_actual_verdict(monkeypatch, tmp_path: Path) -> None:
@@ -391,14 +409,17 @@ def test_catalog_reader_accepts_mapping_and_schema_metadata_shapes() -> None:
         }
     }
     target = "urn:target"
-    edge = {"sourceUrn": "external-urn", "field": "source_device"}
+    edge = {
+        "sourceUrn": "urn:li:dataset:(urn:li:dataPlatform:hive,external,PROD)",
+        "field": "source_device",
+    }
     client = SimpleNamespace(
         entities=SimpleNamespace(get=lambda _urn: entity),
         lineage=SimpleNamespace(get_lineage=lambda **_kwargs: [edge, {"urn": target}, {}]),
     )
     origins = discover_from_urn(client, target)
     assert len(origins) == 1
-    assert origins[0].platform == "unknown"
+    assert origins[0].platform == "hive"
     assert origins[0].upstream_field == "source_device"
     with pytest.raises(ValueError, match="max_hops"):
         discover_from_urn(client, target, 0)

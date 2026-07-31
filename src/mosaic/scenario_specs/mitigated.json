@@ -5,6 +5,9 @@
     "situation":  "A shadow release suppresses precise birth date while retaining ZIP5 and gender for analysis.",
     "asset":  "research_export_shadow",
     "asset_urn":  "urn:li:dataset:(urn:li:dataPlatform:mosaic,research_export_shadow,PROD)",
+    "join_keys":  [
+                      "member_id"
+                  ],
     "columns":  [
                     "zip5",
                     "gender_category"

@@ -52,6 +52,7 @@ The core CLI is completely offline:
 
 ```powershell
 uv run mosaic assess --scenario research
+uv run mosaic assess --agent --scenario research --agent-model mistral:latest
 uv run mosaic scan
 uv run mosaic check --fail-on critical
 uv run mosaic benchmark
@@ -76,6 +77,8 @@ uv run mosaic discover --server http://localhost:8080 --urn "<dataset-urn>" --ma
 ```
 
 The reader traverses schema plus column lineage, ranks QI evidence as glossary term > tag > type-and-name > name, and emits a convergence only when at least two families arrive from at least two upstream datasets. Empty lineage and single-source assets return no convergence rather than an invented finding.
+
+For the opt-in agent path, a local Ollama-compatible model may select an allowlisted asset, nominate schema columns, explain its reasoning, and draft review text. It cannot construct or execute SQL, calculate the verdict, generate a policy, or mutate DataHub. Mosaic compiles the aggregate query deterministically and can veto the proposal. The default CLI remains fully deterministic and offline.
 
 The organization owns `.mosaic/privacy-policy.yml`. Changing its minimum-k threshold changes the backend verdict, generated dbt test, policy snapshot, and provenance digest. The included GitHub Action runs `mosaic check --fail-on critical` as a pre-merge gate. Snowflake is supported through an optional DB-API adapter (`uv sync --extra snowflake`). Run `uv run --extra snowflake mosaic verify-snowflake` to validate a scoped, query-tagged identity; the public receipt hashes session context and never stores credential values.
 
@@ -121,11 +124,12 @@ The privacy claim remains deliberately narrower than "anonymous." [NISTIR 8053](
 | Generated remediation | 2 committed bundles; 6 artifacts each; hashes reproducible | Review-ready examples, not automatically merged code |
 | Regression benchmark | 48 cases plus a 10,000-column catalog scan; exact agreement 100% | Deliberately bounded policy and scale regression, not field accuracy |
 | DataHub recording replay | Hashes and semantic checks pass | Versioned normalized integration semantics, not a live server |
-| Official DataHub showcase catalog | 11 fields inspected; 3 fields classified across 2 families; 1 independently evidenced upstream; no convergence invented | Live quickstart receipt against a DataHub-authored pack, not production prevalence |
+| Official DataHub showcase catalog | Positive: 55 fields, 17 classified, 3 families, 10 true upstream datasets; negative: single-source asset refused | Two live quickstart receipts against a DataHub-authored pack; metadata screening, not a warehouse verdict or prevalence claim |
+| Local model boundary | 1 Mistral proposal accepted for human review; 1 under-supported proposal vetoed; 0 generated statements executed | Recorded local Ollama runs; deterministic policy owns SQL and verdict |
 | UCI Adult external proof | 32,561 rows processed in memory; k=43 to k=1 after composition; 23.786% below k=5 | Historical external mechanism check, not current prevalence |
 | Live local DataHub workflow | Schema, lineage, downstream, generated six-file remediation, SQL compile, write-back, and re-read | Environment-specific proof when the operator runs it |
 
-See [evaluations/benchmark.json](evaluations/benchmark.json), [fixtures/datahub_recording/manifest.json](fixtures/datahub_recording/manifest.json), [the live official-catalog receipt](evidence/external/datahub-showcase-ecommerce-live.json), [the Snowflake readiness receipt](evidence/external/snowflake-live.json), and [the UCI Adult proof](evidence/external/uci-adult-proof.json).
+See [evaluations/benchmark.json](evaluations/benchmark.json), [fixtures/datahub_recording/manifest.json](fixtures/datahub_recording/manifest.json), [the official-catalog positive proof](evidence/external/DATAHUB_SHOWCASE_PROOF.md), [its machine-readable receipt](evidence/external/datahub-showcase-positive-live.json), [the fail-closed negative control](evidence/external/datahub-showcase-ecommerce-live.json), [the accepted and vetoed local-model receipts](evidence/external/ollama-agent-accepted-live.json), [the Snowflake readiness receipt](evidence/external/snowflake-live.json), and [the UCI Adult proof](evidence/external/uci-adult-proof.json).
 
 ## Product tour
 
@@ -139,7 +143,7 @@ See [evaluations/benchmark.json](evaluations/benchmark.json), [fixtures/datahub_
 | **Research-backed controls** | **Audience scenario** |
 | [![Research and standards receipts](docs/screenshots/10-research-standards.png)](docs/screenshots/10-research-standards.png) | [![Audience preset](docs/screenshots/02-audience-preset.png)](docs/screenshots/02-audience-preset.png) |
 
-The repository also includes the complete [screenshot gallery](docs/screenshots/README.md), [interactive source footage](docs/demo/08-product-walkthrough.webm), and the final [2:40 narrated submission video](docs/demo/mosaic-submission-demo.mp4). The MP4 is upload-ready and verified under three minutes; a YouTube/Vimeo URL remains an external publication receipt and is not claimed until uploaded.
+The repository also includes the complete [screenshot gallery](docs/screenshots/README.md), [interactive source footage](docs/demo/08-product-walkthrough.webm), and the final [2:36 narrated submission video](docs/demo/mosaic-submission-demo.mp4). The MP4 is upload-ready and verified under three minutes; a YouTube/Vimeo URL remains an external publication receipt and is not claimed until uploaded.
 
 ## How Mosaic uses DataHub
 
@@ -194,6 +198,8 @@ The no-lineage baseline finds zero cross-source convergences. Mosaic finds the h
 
 Mosaic also contributed back to its core platform: [`datahub-project/datahub#18705`](https://github.com/datahub-project/datahub/pull/18705) was merged upstream.
 
+The new [Compositional Privacy Metadata RFC](docs/COMPOSITIONAL_PRIVACY_RFC.md) packages Mosaic's QI-family, join-key, evidence, validation, and human-review vocabulary for reuse by DataHub adopters and other agents.
+
 ## Safety boundary
 
 Mosaic is designed to measure exposure without identifying anyone:
@@ -210,8 +216,8 @@ Thresholds are demo policy, not a legal conclusion. Read [ETHICS.md](ETHICS.md) 
 
 ## Reusable interfaces
 
-- REST: `/api/scenarios`, `/api/remediation-bundles/{slug}`, `/api/remediation-bundles/{slug}/download`, `/api/scan`, `/api/runs/{id}`, `/api/proofs`, `/api/adoption`, `/api/technology`
-- CLI: `assess`, `generate-remediation`, `scan`, `benchmark`, `replay-fixture`, `serve`, `live-demo`, `verify-mcp`
+- REST: `/api/scenarios`, `/api/remediation-bundles/{slug}`, `/api/remediation-bundles/{slug}/download`, `/api/scan`, `/api/agent-receipts`, `/api/runs/{id}`, `/api/proofs`, `/api/adoption`, `/api/technology`
+- CLI: deterministic `assess`; opt-in `assess --agent`; `discover`, `generate-remediation`, `scan`, `check`, `benchmark`, `replay-fixture`, `serve`, `live-demo`, `verify-mcp`, `verify-snowflake`
 - Agent skill: [`$datahub-privacy-threat-model`](skills/datahub-privacy-threat-model/SKILL.md)
 - Operator console: `/settings` with non-mutating health probe and guarded local approval
 

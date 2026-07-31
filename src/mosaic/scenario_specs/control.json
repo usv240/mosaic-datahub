@@ -5,6 +5,9 @@
     "situation":  "A high-cardinality job execution ID has no person-joinable semantic family or cross-source convergence.",
     "asset":  "job_execution_log",
     "asset_urn":  "urn:li:dataset:(urn:li:dataPlatform:mosaic,job_execution_log,PROD)",
+    "join_keys":  [
+                      "job_execution_id"
+                  ],
     "columns":  [
                     "job_execution_id"
                 ],

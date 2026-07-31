@@ -1,2 +1,7 @@
+* text=auto eol=lf
+*.png binary
+*.mp4 binary
+*.webm binary
+*.wav binary
 fixtures/datahub_recording/**/*.json binary
 fixtures/datahub_recording/manifest.json binary

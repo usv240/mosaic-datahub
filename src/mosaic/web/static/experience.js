@@ -454,6 +454,52 @@
       .catch(function () { showToast("Using bundled deterministic evidence; the API is temporarily unavailable."); });
   }
 
+  function shortAsset(urn) {
+    var match = urn.match(/,([^,]+),PROD\)$/);
+    return match ? match[1].replace(/_/g, " ") : urn;
+  }
+
+  function hydrateCrossAssetEvidence() {
+    fetch("/api/scan")
+      .then(function (response) { if (!response.ok) throw new Error("scan unavailable"); return response.json(); })
+      .then(function (scan) {
+        var finding = scan.cross_asset_findings && scan.cross_asset_findings[0];
+        byId("cross-asset-count").textContent = scan.cross_asset_candidates || 0;
+        if (!finding) {
+          byId("cross-left").textContent = "No unsupported claim";
+          byId("cross-right").textContent = "No candidate invented";
+          byId("cross-key").textContent = "none";
+          byId("cross-reason").textContent = "No pair met the deterministic rule: shared join key plus distinct contributed families.";
+          return;
+        }
+        byId("cross-left").textContent = shortAsset(finding.left_asset_urn);
+        byId("cross-right").textContent = shortAsset(finding.right_asset_urn);
+        byId("cross-key").textContent = finding.shared_join_keys.join(", ");
+        var midpoint = Math.max(1, Math.floor(finding.combined_families.length / 2));
+        byId("cross-left-family").textContent = finding.combined_families.slice(0, midpoint).join(" + ");
+        byId("cross-right-family").textContent = finding.combined_families.slice(midpoint).join(" + ");
+        byId("cross-reason").textContent = finding.decision_reason;
+      })
+      .catch(function () { byId("cross-reason").textContent = "Estate scan unavailable. Inspect the CLI output locally with: mosaic scan"; });
+  }
+
+  function hydrateAgentReceipts() {
+    fetch("/api/agent-receipts")
+      .then(function (response) { if (!response.ok) throw new Error("receipt unavailable"); return response.json(); })
+      .then(function (payload) {
+        var accepted = payload.receipts.find(function (item) { return item.status === "accepted_for_human_review"; });
+        var vetoes = payload.receipts.filter(function (item) { return item.status === "vetoed"; });
+        byId("agent-veto-count").textContent = vetoes.length;
+        if (!accepted) throw new Error("accepted receipt unavailable");
+        byId("agent-receipt-status").textContent = "Accepted for human review";
+        byId("agent-selection").textContent = accepted.proposal.selected_scenario + " / " + accepted.proposal.nominated_columns.join(" + ");
+        byId("agent-rationale").textContent = accepted.proposal.rationale;
+        byId("agent-policy").textContent = accepted.verification.deterministic_assessment.assessment.verdict.replace(/_/g, " ");
+        byId("agent-query").textContent = accepted.verification.compiled_aggregate_query;
+      })
+      .catch(function () { byId("agent-receipt-status").textContent = "Run locally with mosaic assess --agent"; });
+  }
+
   function boot() {
     initTheme(); initTabs();
     all(".preset-card").forEach(function (card) { card.addEventListener("click", function () { selectScenario(card.dataset.scenario, true); }); });
@@ -463,6 +509,8 @@
     var requested = new URLSearchParams(location.search).get("case");
     selectScenario(scenarios[requested] ? requested : "research", false);
     hydrateLiveEvidence();
+    hydrateCrossAssetEvidence();
+    hydrateAgentReceipts();
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);

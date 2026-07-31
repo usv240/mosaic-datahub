@@ -14,6 +14,12 @@ The sponsor-technology view maps seven DataHub capabilities to their exact role,
 
 [![DataHub-backed agent architecture](08-datahub-architecture.png)](08-datahub-architecture.png)
 
+## Model proposes, policy disposes
+
+The recorded local-model view shows a real accepted proposal, a preserved veto, Mosaic-compiled SQL, deterministic verdict ownership, and zero execution or mutation.
+
+[![Recorded model proposal and deterministic policy boundary](11-agent-policy-boundary.png)](11-agent-policy-boundary.png)
+
 ## Research and standards receipts
 
 The standards view maps official DataHub, dbt, NIST, and OWASP guidance to controls visible in the generated artifacts and links to the full claim-to-control record.

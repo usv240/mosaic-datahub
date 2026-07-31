@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-import hashlib
 import json
 import random
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from mosaic.canonical import canonical_json_sha256
 from mosaic.mitigation import simulate_mitigation
 from mosaic.models import Assessment, Candidate, Verdict
 from mosaic.policy import load_policy
@@ -24,6 +24,7 @@ class ScenarioSpec:
     situation: str
     asset: str
     asset_urn: str
+    join_keys: tuple[str, ...]
     columns: tuple[str, ...]
     column_types: tuple[tuple[str, str], ...]
     families: tuple[str, ...]
@@ -46,6 +47,7 @@ def _load(path: Path) -> ScenarioSpec:
         situation=data["situation"],
         asset=data["asset"],
         asset_urn=data["asset_urn"],
+        join_keys=tuple(data.get("join_keys", ())),
         columns=tuple(data["columns"]),
         column_types=tuple(data["column_types"].items()),
         families=tuple(data["families"]),
@@ -55,7 +57,7 @@ def _load(path: Path) -> ScenarioSpec:
         candidate=bool(data["candidate"]),
         mitigation=data.get("mitigation"),
         source_systems=tuple(data["source_systems"]),
-        config_sha256=hashlib.sha256(raw).hexdigest(),
+        config_sha256=canonical_json_sha256(data),
     )
 
 

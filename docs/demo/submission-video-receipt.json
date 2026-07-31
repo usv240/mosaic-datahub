@@ -1,22 +1,22 @@
 {
-  "schema_version": 1,
-  "status": "upload_ready",
-  "path": "docs/demo/mosaic-submission-demo.mp4",
-  "duration_seconds": 160.625006,
-  "duration_limit_seconds": 180,
-  "video": {
-    "codec": "h264",
-    "width": 1280,
-    "height": 720,
-    "frames_per_second": 24
-  },
-  "audio": {
-    "codec": "aac",
-    "channels": 1,
-    "sample_rate_hz": 22050
-  },
-  "bytes": 7156977,
-  "sha256": "b86004014facfae578f1ebffe1d5d0ecd56256507e5e706f059d7247b122869a",
-  "public_url": null,
-  "public_upload_status": "pending_authenticated_youtube_or_vimeo_session"
+    "schema_version":  1,
+    "status":  "upload_ready",
+    "path":  "docs/demo/mosaic-submission-demo.mp4",
+    "duration_seconds":  155.67,
+    "duration_limit_seconds":  180,
+    "video":  {
+                  "codec":  "h264",
+                  "width":  1280,
+                  "height":  720,
+                  "frames_per_second":  24
+              },
+    "audio":  {
+                  "codec":  "aac",
+                  "channels":  1,
+                  "sample_rate_hz":  22050
+              },
+    "bytes":  5364014,
+    "sha256":  "d96d455eb636f6e99fd6e54c04bda01726e7507fb273e92f52be1220d1fe7bb4",
+    "public_url":  null,
+    "public_upload_status":  "pending_authenticated_youtube_or_vimeo_session"
 }

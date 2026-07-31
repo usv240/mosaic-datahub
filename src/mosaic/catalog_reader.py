@@ -62,6 +62,10 @@ def _urn_parts(urn: str) -> tuple[str, str]:
     return "unknown", urn
 
 
+def _is_dataset_urn(urn: str) -> bool:
+    return urn.startswith("urn:li:dataset:(")
+
+
 def _schema_fields(entity: Any) -> tuple[Any, ...]:
     fields = _value(entity, "schema", "fields", default=())
     if not fields:
@@ -141,7 +145,7 @@ def discover_from_urn(client: Any, urn: str, max_hops: int = 3) -> tuple[ColumnO
         )
         for edge in edges or ():
             upstream_urn = str(_value(edge, "urn", "source_urn", "sourceUrn", default=""))
-            if not upstream_urn or upstream_urn == urn:
+            if not upstream_urn or upstream_urn == urn or not _is_dataset_urn(upstream_urn):
                 continue
             upstream_field = str(_value(edge, "column", "field", "source_column", default=name))
             platform, dataset = _urn_parts(upstream_urn)

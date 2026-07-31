@@ -13,7 +13,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     demo.add_argument("--json", action="store_true")
     demo.add_argument("--output", type=Path)
     assess = commands.add_parser("assess", help="Assess one configuration-driven privacy scenario")
-    assess.add_argument("--scenario", default="research")
+    assess.add_argument("--scenario")
+    assess.add_argument(
+        "--agent",
+        action="store_true",
+        help="Let a model propose; deterministic policy verifies or vetoes",
+    )
+    assess.add_argument("--agent-model")
+    assess.add_argument("--agent-endpoint")
+    assess.add_argument("--agent-timeout", type=float, default=90)
     assess.add_argument("--output", type=Path)
     scan = commands.add_parser("scan", help="Screen and rank every configured estate asset")
     scan.add_argument("--output", type=Path)
@@ -60,18 +68,45 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     if args.command == "assess":
-        from mosaic.scenario_registry import assess_scenario
+        if args.agent:
+            from mosaic.agent_proposer import propose_and_verify
 
-        try:
-            report = assess_scenario(args.scenario)
-        except KeyError:
-            parser.error(f"unknown scenario: {args.scenario}")
+            try:
+                report = propose_and_verify(
+                    args.scenario,
+                    endpoint=args.agent_endpoint,
+                    model=args.agent_model,
+                    timeout=args.agent_timeout,
+                )
+            except (KeyError, RuntimeError, ValueError) as error:
+                report = {
+                    "schema_version": 1,
+                    "status": "blocked_external_model",
+                    "error": str(error),
+                    "policy_veto": True,
+                    "raw_person_rows_returned": 0,
+                    "mutation_performed": False,
+                }
+            exit_code = 0
+            if report["status"] == "accepted_for_human_review":
+                assessment = report["verification"]["deterministic_assessment"]
+                exit_code = int(assessment["exit_code"])
+            elif report["status"] != "accepted_for_human_review":
+                exit_code = 2
+        else:
+            from mosaic.scenario_registry import assess_scenario
+
+            try:
+                report = assess_scenario(args.scenario or "research")
+            except KeyError:
+                parser.error(f"unknown scenario: {args.scenario}")
+            exit_code = int(report["exit_code"])
         rendered = json.dumps(report, indent=2) + "\n"
         if args.output:
             args.output.parent.mkdir(parents=True, exist_ok=True)
             args.output.write_text(rendered, encoding="utf-8")
         print(rendered, end="")
-        return int(report["exit_code"])
+        return exit_code
     if args.command == "scan":
         from mosaic.estate_scan import scan_estate
 

@@ -16,7 +16,9 @@ _FAMILY_PATTERNS = {
     "date_of_birth": re.compile(r"(?:date.?of.?birth|birth.?date|dob)", re.I),
     "demographic": re.compile(r"(?:gender|sex|race|ethnicity|marital|household|age)", re.I),
     "occupation": re.compile(r"(?:occupation|job.?title|employer|profession)", re.I),
-    "health": re.compile(r"(?:diagnos|condition|medication|patient|health)", re.I),
+    "health": re.compile(
+        r"(?:diagnos|medical.?condition|health.?condition|medication|patient|health)", re.I
+    ),
     "financial": re.compile(r"(?:income|salary|account|credit|payment|financial)", re.I),
     "device": re.compile(r"(?:device|ip.?address|user.?agent|cookie|advertising.?id)", re.I),
     "temporal": re.compile(r"(?:timestamp|event.?time|created.?at|updated.?at|date)", re.I),
