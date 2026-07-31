@@ -1,0 +1,36 @@
+{
+  "status": "no_convergence",
+  "target_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.order_entry_db.order_entry.order_items,PROD)",
+  "schema_field_count": 11,
+  "classified_fields": [
+    {
+      "column": "dispatch_date",
+      "data_type": "unknown",
+      "family": "temporal",
+      "confidence": 0.55,
+      "evidence": "name pattern: dispatch_date"
+    },
+    {
+      "column": "return_date",
+      "data_type": "unknown",
+      "family": "temporal",
+      "confidence": 0.55,
+      "evidence": "name pattern: return_date"
+    },
+    {
+      "column": "condition",
+      "data_type": "unknown",
+      "family": "health",
+      "confidence": 0.55,
+      "evidence": "name pattern: condition"
+    }
+  ],
+  "dataset_lineage_upstreams": [
+    "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.order_entry.order_items,PROD)"
+  ],
+  "families": [],
+  "upstream_datasets": [],
+  "origins": [],
+  "decision_reason": "insufficient independently evidenced families or upstream datasets; no finding invented",
+  "raw_person_rows_returned": 0
+}

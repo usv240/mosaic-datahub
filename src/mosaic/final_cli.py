@@ -26,6 +26,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     discover.add_argument("--server", default="http://localhost:8080")
     discover.add_argument("--urn", required=True)
     discover.add_argument("--max-hops", type=int, default=3)
+    discover.add_argument("--output", type=Path)
     benchmark = commands.add_parser(
         "benchmark", help="Measure policy accuracy, safe controls, and scaling"
     )
@@ -50,6 +51,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     mcp = commands.add_parser("verify-mcp", help="Verify official DataHub MCP integration")
     mcp.add_argument("--mcp-url", default="http://127.0.0.1:8000/mcp")
     mcp.add_argument("--server", default="http://localhost:8080")
+    snowflake = commands.add_parser(
+        "verify-snowflake", help="Verify a scoped Snowflake identity without exposing values"
+    )
+    snowflake.add_argument(
+        "--output", type=Path, default=Path("evidence/external/snowflake-live.json")
+    )
     args = parser.parse_args(argv)
 
     if args.command == "assess":
@@ -95,14 +102,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(rendered, end="")
         return 3 if failures else 0
     if args.command == "discover":
-        from mosaic.catalog_reader import derive_convergence
+        from mosaic.catalog_reader import derive_convergence, inspect_catalog_asset
 
         try:
             from datahub.sdk import DataHubClient
 
             client = DataHubClient(server=args.server)
             client.test_connection()
-            convergence = derive_convergence(client, args.urn, args.max_hops)
+            inspection = inspect_catalog_asset(client, args.urn, args.max_hops)
+            convergence = derive_convergence(client, args.urn, args.max_hops, inspection=inspection)
         except (
             ImportError,
             ConnectionError,
@@ -116,6 +124,18 @@ def main(argv: Sequence[str] | None = None) -> int:
         result = {
             "status": "convergence" if convergence else "no_convergence",
             "target_urn": args.urn,
+            "schema_field_count": inspection.schema_field_count,
+            "classified_fields": [
+                {
+                    "column": field.column,
+                    "data_type": field.data_type,
+                    "family": field.classification.family,
+                    "confidence": field.classification.confidence,
+                    "evidence": field.classification.evidence,
+                }
+                for field in inspection.classified_fields
+            ],
+            "dataset_lineage_upstreams": list(inspection.dataset_upstreams),
             "families": list(convergence.families) if convergence else [],
             "upstream_datasets": list(convergence.upstream_datasets) if convergence else [],
             "origins": [
@@ -131,8 +151,18 @@ def main(argv: Sequence[str] | None = None) -> int:
                 }
                 for origin in (convergence.origins if convergence else ())
             ],
+            "decision_reason": (
+                "at least two quasi-identifier families converge from at least two upstream datasets"
+                if convergence
+                else "insufficient independently evidenced families or upstream datasets; no finding invented"
+            ),
+            "raw_person_rows_returned": 0,
         }
-        print(json.dumps(result, indent=2))
+        rendered = json.dumps(result, indent=2) + "\n"
+        if args.output:
+            args.output.parent.mkdir(parents=True, exist_ok=True)
+            args.output.write_text(rendered, encoding="utf-8")
+        print(rendered, end="")
         return 0
     if args.command == "benchmark":
         from mosaic.benchmark import run_benchmark
@@ -195,6 +225,15 @@ def main(argv: Sequence[str] | None = None) -> int:
 
         report = asyncio.run(run_probe(args.mcp_url, args.server))
         print(json.dumps(report, indent=2))
+        return 0 if report["status"] == "passed" else 2
+    if args.command == "verify-snowflake":
+        from mosaic.snowflake_receipt import verify_snowflake
+
+        report = verify_snowflake()
+        rendered = json.dumps(report, indent=2) + "\n"
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(rendered, encoding="utf-8")
+        print(rendered, end="")
         return 0 if report["status"] == "passed" else 2
 
     from mosaic.engine import run_judge_demo

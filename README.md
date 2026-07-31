@@ -72,12 +72,12 @@ A validated critical result returns exit code `3`; this is the policy outcome, n
 To inspect an existing DataHub asset that Mosaic did not seed, run:
 
 ```powershell
-uv run mosaic discover --server http://localhost:8080 --urn "<dataset-urn>" --max-hops 3
+uv run mosaic discover --server http://localhost:8080 --urn "<dataset-urn>" --max-hops 3 --output evidence/external/datahub-live.json
 ```
 
 The reader traverses schema plus column lineage, ranks QI evidence as glossary term > tag > type-and-name > name, and emits a convergence only when at least two families arrive from at least two upstream datasets. Empty lineage and single-source assets return no convergence rather than an invented finding.
 
-The organization owns `.mosaic/privacy-policy.yml`. Changing its minimum-k threshold changes the backend verdict, generated dbt test, policy snapshot, and provenance digest. The included GitHub Action runs `mosaic check --fail-on critical` as a pre-merge gate. Snowflake is supported through an optional DB-API adapter (`uv sync --extra snowflake`); credentials remain outside generated artifacts.
+The organization owns `.mosaic/privacy-policy.yml`. Changing its minimum-k threshold changes the backend verdict, generated dbt test, policy snapshot, and provenance digest. The included GitHub Action runs `mosaic check --fail-on critical` as a pre-merge gate. Snowflake is supported through an optional DB-API adapter (`uv sync --extra snowflake`). Run `uv run --extra snowflake mosaic verify-snowflake` to validate a scoped, query-tagged identity; the public receipt hashes session context and never stores credential values.
 
 ## What the agent does
 
@@ -121,10 +121,11 @@ The privacy claim remains deliberately narrower than "anonymous." [NISTIR 8053](
 | Generated remediation | 2 committed bundles; 6 artifacts each; hashes reproducible | Review-ready examples, not automatically merged code |
 | Regression benchmark | 48 cases plus a 10,000-column catalog scan; exact agreement 100% | Deliberately bounded policy and scale regression, not field accuracy |
 | DataHub recording replay | Hashes and semantic checks pass | Versioned normalized integration semantics, not a live server |
+| Official DataHub showcase catalog | 11 fields inspected; 3 fields classified across 2 families; 1 independently evidenced upstream; no convergence invented | Live quickstart receipt against a DataHub-authored pack, not production prevalence |
 | UCI Adult external proof | 32,561 rows processed in memory; k=43 to k=1 after composition; 23.786% below k=5 | Historical external mechanism check, not current prevalence |
 | Live local DataHub workflow | Schema, lineage, downstream, generated six-file remediation, SQL compile, write-back, and re-read | Environment-specific proof when the operator runs it |
 
-See [evaluations/benchmark.json](evaluations/benchmark.json), [fixtures/datahub_recording/manifest.json](fixtures/datahub_recording/manifest.json), and [evidence/external/uci-adult-proof.json](evidence/external/uci-adult-proof.json).
+See [evaluations/benchmark.json](evaluations/benchmark.json), [fixtures/datahub_recording/manifest.json](fixtures/datahub_recording/manifest.json), [the live official-catalog receipt](evidence/external/datahub-showcase-ecommerce-live.json), [the Snowflake readiness receipt](evidence/external/snowflake-live.json), and [the UCI Adult proof](evidence/external/uci-adult-proof.json).
 
 ## Product tour
 
@@ -138,7 +139,7 @@ See [evaluations/benchmark.json](evaluations/benchmark.json), [fixtures/datahub_
 | **Research-backed controls** | **Audience scenario** |
 | [![Research and standards receipts](docs/screenshots/10-research-standards.png)](docs/screenshots/10-research-standards.png) | [![Audience preset](docs/screenshots/02-audience-preset.png)](docs/screenshots/02-audience-preset.png) |
 
-The repository also includes the complete [screenshot gallery](docs/screenshots/README.md) and an [edit-ready product walkthrough](docs/demo/08-product-walkthrough.webm). The walkthrough is source footage for the required narrated public submission video; it is not presented as the final YouTube/Vimeo entry.
+The repository also includes the complete [screenshot gallery](docs/screenshots/README.md), [interactive source footage](docs/demo/08-product-walkthrough.webm), and the final [2:40 narrated submission video](docs/demo/mosaic-submission-demo.mp4). The MP4 is upload-ready and verified under three minutes; a YouTube/Vimeo URL remains an external publication receipt and is not claimed until uploaded.
 
 ## How Mosaic uses DataHub
 

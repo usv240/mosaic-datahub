@@ -1,0 +1,19 @@
+Mosaic is a metadata-aware privacy remediation agent built on DataHub. Its job is to catch a risk ordinary column scanners miss: several harmless-looking facts can become identifying only after lineage brings them together.
+
+Here is the core example. ZIP code arrives from support, birth date from membership, and gender from demographics. No field is direct P I I. DataHub tells Mosaic where each field came from, where the combined export travels, and which downstream assets inherit the exposure.
+
+The landing page teaches that idea before asking a visitor to configure anything. Four presets cover research exports, marketing activation, health analytics, and a safe engineering control. A new evaluator can run the complete investigation without credentials or setup.
+
+In the research case, Mosaic first discovers independent column-lineage paths. It then validates only aggregate group counts in an isolated environment. The result is minimum k equals one, one hundred percent of records below k five, three downstream assets exposed, and zero raw person-level rows returned.
+
+That last number is an architectural constraint. An agent may propose a query, but deterministic policy rejects identifiers, joins, filters, extra statements, and non-aggregate projection. Organization-owned thresholds decide the verdict. The model proposes; policy disposes.
+
+Mosaic does more than display a warning. Its reversible mitigation lab compares privacy improvement with retained utility. Then metadata-aware code generation creates a reviewable pull-request bundle: a dbt model, enforced typed contract, aggregate-only privacy test, policy snapshot, provenance manifest, and reviewer summary. Every artifact carries the DataHub U R N and tamper-evident digests.
+
+DataHub is not a logo on this project. Its schema, fine-grained lineage, downstream graph, Graph Q L API, M C P tools, tags, structured properties, Documents, and incidents form the context, action, and memory layers. Mosaic also contributed an upstream change that was merged into DataHub.
+
+We tested the reader against DataHub's official showcase ecommerce pack in a real quickstart catalog that Mosaic did not create. It inspected eleven fields, classified three across two families, found only one independently evidenced upstream dataset, and correctly refused to invent a convergence finding. That negative control is part of the product, not a hidden failure.
+
+For production warehouses, the Snowflake adapter uses a scoped identity and a read-only, query-tagged verification path. Credentials are never bundled, and public receipts hash identity context rather than exposing it.
+
+Mosaic is privacy risk reduction, not proof of anonymity or legal compliance. Production still needs policy owners, least-privilege DataHub and warehouse identities, S S O, R B A C, and human approval. Mosaic turns hidden graph context into evidence and code a data team can review before risk spreads.

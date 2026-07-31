@@ -8,3 +8,4 @@ evaluations/*.local.json
 evidence/*.local.json
 runs/
 artifacts/
+docs/demo/narration.wav

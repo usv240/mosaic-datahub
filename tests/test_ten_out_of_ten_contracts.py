@@ -58,9 +58,15 @@ class _Client:
         self.lineage = SimpleNamespace(get_lineage=self._lineage)
         self.sources = sources
 
-    def _lineage(self, source_column, **_kwargs):
+    def _lineage(self, source_column=None, **_kwargs):
         if self.sources == 0:
             return []
+        if source_column is None:
+            names = ["SampleHiveDataset", "SampleKafkaDataset"][: self.sources]
+            return [
+                SimpleNamespace(urn=f"urn:li:dataset:(urn:li:dataPlatform:hive,{name},PROD)")
+                for name in names
+            ]
         source = "SampleHiveDataset" if source_column == "postal_code" else "SampleKafkaDataset"
         if self.sources == 1:
             source = "SampleHiveDataset"
@@ -237,7 +243,9 @@ def test_discover_cli_handles_unreachable_datahub(monkeypatch, capsys) -> None:
     assert json.loads(capsys.readouterr().out)["status"] == "failed"
 
 
-def test_discover_cli_reports_existing_catalog_evidence(monkeypatch, capsys) -> None:
+def test_discover_cli_reports_existing_catalog_evidence(
+    monkeypatch, capsys, tmp_path: Path
+) -> None:
     import sys
     from types import ModuleType
 
@@ -250,11 +258,16 @@ def test_discover_cli_reports_existing_catalog_evidence(monkeypatch, capsys) -> 
     monkeypatch.setitem(sys.modules, "datahub", ModuleType("datahub"))
     monkeypatch.setitem(sys.modules, "datahub.sdk", sdk)
     urn = "urn:li:dataset:(urn:li:dataPlatform:hive,ExternalSample,PROD)"
-    assert main(["discover", "--urn", urn]) == 0
+    receipt = tmp_path / "external.json"
+    assert main(["discover", "--urn", urn, "--output", str(receipt)]) == 0
     report = json.loads(capsys.readouterr().out)
     assert report["status"] == "convergence"
     assert len(report["origins"]) == 2
     assert all(item["evidence"] for item in report["origins"])
+    assert report["schema_field_count"] == 2
+    assert len(report["dataset_lineage_upstreams"]) == 2
+    assert report["raw_person_rows_returned"] == 0
+    assert json.loads(receipt.read_text(encoding="utf-8")) == report
 
 
 def test_policy_rejects_unsafe_or_incomplete_configuration(tmp_path: Path) -> None:

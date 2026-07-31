@@ -1,0 +1,10 @@
+source:
+  type: demo-data
+  config:
+    pack_name: bootstrap
+    no_time_shift: true
+
+sink:
+  type: datahub-rest
+  config:
+    server: ${DATAHUB_GMS_URL}

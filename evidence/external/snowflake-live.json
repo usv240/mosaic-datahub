@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "check": "snowflake_scoped_identity",
+  "query_kind": "read_only_session_context",
+  "raw_person_rows_returned": 0,
+  "secrets_recorded": false,
+  "status": "blocked_external_credentials",
+  "missing": [
+    "SNOWFLAKE_ACCOUNT",
+    "SNOWFLAKE_USER",
+    "SNOWFLAKE_ROLE",
+    "SNOWFLAKE_WAREHOUSE",
+    "SNOWFLAKE_DATABASE",
+    "SNOWFLAKE_SCHEMA",
+    "SNOWFLAKE_PASSWORD|PRIVATE_KEY_PATH|AUTHENTICATOR"
+  ],
+  "next_command": "uv run --extra snowflake mosaic verify-snowflake --output evidence/external/snowflake-live.json"
+}
