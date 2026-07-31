@@ -1,38 +1,38 @@
 {
   "schema_version": 1,
-  "captured_at": "2026-07-31T05:36:44.465191+00:00",
-  "base_url": "http://127.0.0.1:8123",
+  "captured_at": "2026-07-31T14:41:55.445586+00:00",
+  "base_url": "http://127.0.0.1:8130",
   "purpose": "Judge screenshots and edit-ready product footage generated from the running Mosaic application.",
   "files": [
     {
       "path": "01-landing-dark.png",
-      "bytes": 1681691,
-      "sha256": "f92a95bf917ca4218dee32788f22c23aa6e0d7b1dc47c2796a8f81d96d86d237"
+      "bytes": 1720495,
+      "sha256": "2c7c2a29763f1b8aff20643294c07cd01c1a269d2b7d0c3211979c3c71b7a707"
     },
     {
       "path": "08-datahub-architecture.png",
-      "bytes": 602518,
-      "sha256": "2193eb75e89bed76c480d6960afab531834cab1e62c9cd55901f7e5b1ed501ec"
+      "bytes": 605211,
+      "sha256": "5465216454cfa114f0f76de6c0fc81d1ddb67ecfc8a3c777f4d78feb1a93db4d"
     },
     {
       "path": "10-research-standards.png",
-      "bytes": 46499,
-      "sha256": "f693924e1793e47eb24af132501a09fe854d6f3d4fe1cf63e93b597139fbca80"
+      "bytes": 71038,
+      "sha256": "0831e53dcef5a147b7cf9a9808d85eb0fea413012f97118fac771589489c62e8"
     },
     {
       "path": "11-agent-policy-boundary.png",
-      "bytes": 157790,
-      "sha256": "65ad813a6b8bc348da6a62a73d3dbc418b18101295cb9cdd0f385eecf8abffe3"
+      "bytes": 160297,
+      "sha256": "6c2165856847ac055e3ea468bd60b2d277bff66142746ac981f08319ac03c7bb"
     },
     {
       "path": "02-audience-preset.png",
-      "bytes": 1675674,
-      "sha256": "9e8b8903e73e05e1af17cca60b2ce85c79016a4d155a5281fb427f0df7668ad6"
+      "bytes": 1715775,
+      "sha256": "1e4cc26b4f03c1377c0d049cf78fd90030b6f3cdacff53247f12912b81aa9664"
     },
     {
       "path": "03-completed-investigation.png",
-      "bytes": 1773729,
-      "sha256": "5ac977785b83e47f1453085287e48916ffe66bab3b3ac33625a317d6b76127d3"
+      "bytes": 1798038,
+      "sha256": "c7f9247e4fca98af7cfb03afed203460c0ace1a6a0b66350457a13cf8673be00"
     },
     {
       "path": "09-remediation-pr.png",
@@ -46,23 +46,23 @@
     },
     {
       "path": "05-operator-safety.png",
-      "bytes": 303278,
-      "sha256": "b852ed3b1dc6e84dd267b0b56f6f246a858ea12135125c87148ae96079923e6e"
+      "bytes": 304776,
+      "sha256": "f8508c1b2f7332b183e53d7a0fcb2c9d95807f4ee4c860abedd21ebe2e3aa064"
     },
     {
       "path": "06-landing-light.png",
-      "bytes": 2273004,
-      "sha256": "d282b91c304b4622c794ca69684556d917715dd547baecdf295d73d62e561489"
+      "bytes": 2322385,
+      "sha256": "3baf5e05d292bab14cfa2672dc4a787370734e98f7346737a85a02ae5787ff84"
     },
     {
       "path": "07-mobile-landing.png",
-      "bytes": 1344232,
-      "sha256": "72a8c815e48d2b5d2651428d94bbb38459a02eb1c003589c815cb261cdb47f63"
+      "bytes": 1357086,
+      "sha256": "82e716b527b2c60d8be674f06e765602d83667c9e03e73b6e2c43045f74e52b0"
     },
     {
       "path": "08-product-walkthrough.webm",
-      "bytes": 1968247,
-      "sha256": "c47ffe5f89dc6bc54e7eb71b089c3c23f1280814c4ebd52c2018c94ca4902985"
+      "bytes": 1995397,
+      "sha256": "41aa34ef37071896357099f7f05f455cb33651d64dbac6b880dec716fae0c089"
     }
   ],
   "video_duration_limit_seconds": 180,

@@ -10,6 +10,8 @@ In the research case, Mosaic discovers independent column-lineage paths, then va
 
 The agent boundary is real. A local Mistral model selected an allowlisted asset, nominated catalog columns, explained why, and drafted review text. It never writes S Q L. Mosaic compiles the only permitted aggregate query, calculates the verdict, and can veto the proposal. Both an accepted receipt and an earlier veto are public. The model proposes; policy disposes.
 
+We also replay a prompt injection hidden in a DataHub description. It asks for member identifiers and full birth dates. Policy rejects the row-level query, records the denial, returns zero rows, and continues safely. The red-team command fails if that refusal ever disappears.
+
 Mosaic does more than warn. Its mitigation lab compares privacy improvement with retained utility. Metadata-aware code generation creates a six-file pull-request bundle: a dbt model, typed contract, aggregate-only test, policy snapshot, provenance manifest, and reviewer summary. Every artifact carries DataHub context and semantic digests stable across Windows and Linux.
 
 DataHub is the reasoning substrate, not a logo. Schema, fine-grained lineage, downstream graph, Graph Q L, M C P tools, tags, structured properties, Documents, and incidents provide context, action, and memory. Mosaic also shipped a merged DataHub change and publishes a reusable compositional-privacy metadata R F C.

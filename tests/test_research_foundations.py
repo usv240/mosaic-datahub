@@ -10,6 +10,8 @@ def test_research_foundations_map_sources_to_inspectable_controls() -> None:
         "datahub.com/resources/datahub-mcp-server-overview",
         "docs.getdbt.com/docs/mesh/govern/model-contracts",
         "docs.getdbt.com/docs/build/data-tests",
+        "kilthub.cmu.edu/articles/journal_contribution/Simple_Demographics_Often_Identify_People_Uniquely",
+        "doi.org/10.1109/SP.2008.33",
         "nist.gov/publications/de-identification-personal-information",
         "cheatsheetseries.owasp.org/cheatsheets/Secure_Coding_with_AI_Cheat_Sheet",
     ):
@@ -17,6 +19,8 @@ def test_research_foundations_map_sources_to_inspectable_controls() -> None:
     assert "claim-to-control research map" in readme
     assert "Built on standards, not vibes" in landing
     assert "None is presented as certification" in landing
+    assert "prompt injection hidden in DataHub metadata" in landing
+    assert 'href="/api/redteam"' in landing
 
 
 def test_skill_carries_codegen_trust_and_review_contract() -> None:

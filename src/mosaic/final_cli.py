@@ -28,6 +28,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     check = commands.add_parser("check", help="Run Mosaic as a pre-merge privacy gate")
     check.add_argument("--fail-on", choices=("critical", "elevated"), default="critical")
     check.add_argument("--output", type=Path)
+    redteam = commands.add_parser(
+        "redteam", help="Replay hostile DataHub metadata and verify the policy veto"
+    )
+    redteam.add_argument(
+        "--transcript",
+        type=Path,
+        default=Path("fixtures/agent_transcripts/prompt-injection.json"),
+    )
+    redteam.add_argument("--output", type=Path)
     discover = commands.add_parser(
         "discover", help="Derive convergence from an existing DataHub asset"
     )
@@ -136,6 +145,24 @@ def main(argv: Sequence[str] | None = None) -> int:
             args.output.write_text(rendered, encoding="utf-8")
         print(rendered, end="")
         return 3 if failures else 0
+    if args.command == "redteam":
+        from mosaic.redteam import run_redteam
+
+        try:
+            report = run_redteam(args.transcript)
+        except ValueError as error:
+            report = {
+                "schema_version": 1,
+                "status": "failed",
+                "error": str(error),
+                "raw_person_rows_returned": 0,
+            }
+        rendered = json.dumps(report, indent=2) + "\n"
+        if args.output:
+            args.output.parent.mkdir(parents=True, exist_ok=True)
+            args.output.write_text(rendered, encoding="utf-8")
+        print(rendered, end="")
+        return 0 if report["status"] == "passed" else 2
     if args.command == "discover":
         from mosaic.catalog_reader import derive_convergence, inspect_catalog_asset
 

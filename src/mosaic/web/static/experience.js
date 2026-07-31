@@ -500,6 +500,16 @@
       .catch(function () { byId("agent-receipt-status").textContent = "Run locally with mosaic assess --agent"; });
   }
 
+  function hydrateRedteamReceipt() {
+    fetch("/api/redteam")
+      .then(function (response) { if (!response.ok) throw new Error("red-team unavailable"); return response.json(); })
+      .then(function (payload) {
+        var refused = payload.controls && payload.controls.policy_refused_requested_sql;
+        byId("redteam-status").textContent = refused ? "Refused" : "FAILED";
+      })
+      .catch(function () { byId("redteam-status").textContent = "Run locally"; });
+  }
+
   function boot() {
     initTheme(); initTabs();
     all(".preset-card").forEach(function (card) { card.addEventListener("click", function () { selectScenario(card.dataset.scenario, true); }); });
@@ -511,6 +521,7 @@
     hydrateLiveEvidence();
     hydrateCrossAssetEvidence();
     hydrateAgentReceipts();
+    hydrateRedteamReceipt();
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);

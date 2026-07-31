@@ -321,9 +321,9 @@ GROUP BY zip5, birth_date, gender_category</code></pre>
           </div>
         </section>
         <section class="agent-proof" aria-labelledby="agent-proof-title">
-          <div class="agent-proof-head"><div><p class="eyebrow">Real local-model receipts</p><h3 id="agent-proof-title">A model can suggest. It cannot decide.</h3><p>Mistral selects an asset, nominates catalog columns, explains the choice, and drafts review text. Mosaic deterministically compiles the only permitted query, calculates the verdict, and keeps execution and mutation off.</p></div><span id="agent-receipt-status">Loading receipt...</span></div>
+          <div class="agent-proof-head"><div><p class="eyebrow">Real model + adversarial receipts</p><h3 id="agent-proof-title">A model can suggest. It cannot decide.</h3><p>Mistral nominates catalog columns and explains the choice. Mosaic owns the only permitted query and verdict. A replayed prompt injection hidden in DataHub metadata asks for raw identifiers; policy refuses it and the safe run continues.</p></div><span id="agent-receipt-status">Loading receipt...</span></div>
           <div class="agent-boundary" aria-label="Agent authority boundary"><article><small>Model proposes</small><strong id="agent-selection">Asset + columns + rationale</strong><p id="agent-rationale">Reading the recorded Ollama run.</p></article><div class="boundary-arrow">&rarr;<span>validated</span></div><article><small>Policy disposes</small><strong id="agent-policy">Deterministic verdict + SQL</strong><p id="agent-query">No model output is executed.</p></article></div>
-          <div class="agent-proof-foot"><span><b id="agent-veto-count">1</b> unsafe proposal vetoed</span><span><b>0</b> generated statements executed</span><span><b>0</b> mutations performed</span><a href="/api/agent-receipts">Inspect both receipts &rarr;</a></div>
+          <div class="agent-proof-foot"><span><b id="agent-veto-count">1</b> unsafe proposal vetoed</span><span><b id="redteam-status">...</b> metadata injection refused</span><span><b>0</b> raw rows returned</span><a href="/api/redteam">Inspect attack receipt &rarr;</a></div>
         </section>
       </div>
       <div class="technology-footer">
@@ -336,6 +336,8 @@ GROUP BY zip5, birth_date, gender_category</code></pre>
       <div class="standards-grid">
         <a href="https://datahub.com/blog/build-with-datahub-agent-hackathon/"><small>Official architecture</small><h3>DataHub context before code</h3><p>Schema, lineage, governance, examples, and validation shape the generated change.</p><span>DataHub &rarr;</span></a>
         <a href="https://docs.getdbt.com/docs/mesh/govern/model-contracts"><small>Artifact correctness</small><h3>Enforced typed contracts</h3><p>Every generated output column has a declared type and an enforced dbt contract.</p><span>dbt &rarr;</span></a>
+        <a href="https://kilthub.cmu.edu/articles/journal_contribution/Simple_Demographics_Often_Identify_People_Uniquely/6625769"><small>Canonical mechanism</small><h3>Ordinary demographics combine</h3><p>Sweeney's 1990 Census study motivates the ZIP5, gender, and birth-date convergence—not a current prevalence claim.</p><span>Sweeney &rarr;</span></a>
+        <a href="https://doi.org/10.1109/SP.2008.33"><small>Auxiliary-data threat</small><h3>Separate context can re-identify</h3><p>Narayanan and Shmatikov motivate Mosaic's cross-asset join screening and explicit validation boundary.</p><span>IEEE S&amp;P &rarr;</span></a>
         <a href="https://www.nist.gov/publications/de-identification-personal-information"><small>Privacy boundary</small><h3>Risk reduction, not absolutes</h3><p>Utility and re-identification risk stay visible; Mosaic never calls k-anonymity a legal guarantee.</p><span>NIST &rarr;</span></a>
         <a href="https://cheatsheetseries.owasp.org/cheatsheets/Secure_Coding_with_AI_Cheat_Sheet.html"><small>Generation safety</small><h3>Untrusted context, human owner</h3><p>Structured allowlists, compiled SQL, artifact hashes, and explicit review guard every bundle.</p><span>OWASP &rarr;</span></a>
       </div>

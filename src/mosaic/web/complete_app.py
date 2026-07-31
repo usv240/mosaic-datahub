@@ -191,6 +191,18 @@ def create_app(project_root: Path | None = None) -> FastAPI:
             "receipts": receipts,
         }
 
+    @app.get("/api/redteam")
+    def redteam_receipt() -> dict[str, object]:
+        from mosaic.redteam import run_redteam
+
+        transcript = root / "fixtures" / "agent_transcripts" / "prompt-injection.json"
+        try:
+            return run_redteam(transcript)
+        except ValueError as error:
+            raise HTTPException(
+                status_code=503, detail="Red-team receipt is unavailable"
+            ) from error
+
     @app.get("/api/proofs")
     def proofs() -> dict[str, object]:
         return proof_catalog(root)

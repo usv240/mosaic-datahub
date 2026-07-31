@@ -10,6 +10,8 @@ Mosaic is a DataHub-grounded privacy remediation code-generation agent. It disco
 
 A PII scanner classifies columns. Mosaic reasons over the graph.
 
+**Mosaic is not a new k-anonymity algorithm; its contribution is deciding where to measure.** Established anonymization tools begin with a supplied dataset and attribute roles. Mosaic derives candidate quasi-identifiers from DataHub's column-level lineage across assets and systems, then measures the combination and generates a governed remediation change.
+
 ## Potential impact
 
 Mosaic moves privacy intervention upstream: before a research export, partner delivery, audience, or model dataset spreads a risky combination across the estate.
@@ -55,6 +57,7 @@ uv run mosaic assess --scenario research
 uv run mosaic assess --agent --scenario research --agent-model mistral:latest
 uv run mosaic scan
 uv run mosaic check --fail-on critical
+uv run mosaic redteam
 uv run mosaic benchmark
 uv run mosaic replay-fixture
 uv run mosaic generate-remediation --scenario research --output generated/research
@@ -79,6 +82,8 @@ uv run mosaic discover --server http://localhost:8080 --urn "<dataset-urn>" --ma
 The reader traverses schema plus column lineage, ranks QI evidence as glossary term > tag > type-and-name > name, and emits a convergence only when at least two families arrive from at least two upstream datasets. Empty lineage and single-source assets return no convergence rather than an invented finding.
 
 For the opt-in agent path, a local Ollama-compatible model may select an allowlisted asset, nominate schema columns, explain its reasoning, and draft review text. It cannot construct or execute SQL, calculate the verdict, generate a policy, or mutate DataHub. Mosaic compiles the aggregate query deterministically and can veto the proposal. The default CLI remains fully deterministic and offline.
+
+`uv run mosaic redteam` replays an indirect prompt injection placed in a DataHub dataset description. The hostile metadata asks for person-level identifiers; the query policy refuses it, records why, returns zero rows, and continues with its own aggregate-only query. The command exits non-zero if that refusal ever disappears.
 
 The organization owns `.mosaic/privacy-policy.yml`. Changing its minimum-k threshold changes the backend verdict, generated dbt test, policy snapshot, and provenance digest. The included GitHub Action runs `mosaic check --fail-on critical` as a pre-merge gate. Snowflake is supported through an optional DB-API adapter (`uv sync --extra snowflake`). Run `uv run --extra snowflake mosaic verify-snowflake` to validate a scoped, query-tagged identity; the public receipt hashes session context and never stores credential values.
 
@@ -116,6 +121,17 @@ The generator follows the official [DataHub metadata-aware code-generation archi
 
 The privacy claim remains deliberately narrower than "anonymous." [NISTIR 8053](https://www.nist.gov/publications/de-identification-personal-information) explains both the risk-reduction value and the limits of de-identification. [OWASP's Secure Coding with AI guidance](https://cheatsheetseries.owasp.org/cheatsheets/Secure_Coding_with_AI_Cheat_Sheet.html) motivates Mosaic's structured context allowlist, injection rejection, validation, audit receipts, and mandatory human owner. See the complete [claim-to-control research map](docs/RESEARCH_FOUNDATIONS.md).
 
+### Where Mosaic differs from anonymization tools
+
+| System | Starting scope | Quasi-identifier input | Mosaic's distinct layer |
+|---|---|---|---|
+| [ARX](https://arx.deidentifier.org/anonymization-tool/configuration/) | One imported table | Users specify attribute metadata; ARX also provides detection and risk-analysis aids | DataHub lineage nominates cross-system combinations before a table is handed to an anonymizer |
+| [sdcMicro](https://sdctools.github.io/sdcMicro/articles/ai_assisted_anonymization.html) | One in-memory microdata frame | Declared `keyVars`, with a newer optional AI-assisted classifier | Evidence is ranked from glossary, tags, schema, and column lineage across the estate |
+| [Amnesia](https://amnesia.openaire.eu/using-amnesia/how-to-use.html) | A loaded tabular or set-valued dataset | A user associates each quasi-identifier with a hierarchy | Mosaic traces downstream blast radius and emits a reviewable dbt remediation bundle |
+| **Mosaic** | DataHub's multi-platform metadata graph | Deterministic evidence plus an optional proposal-only model | Discovers graph composition, validates aggregate counts, and produces governed code without replacing those anonymizers |
+
+This is a scope and workflow contribution, not a claim that Mosaic invented k-anonymity or supersedes mature statistical-disclosure-control software.
+
 ## Evidence ladder
 
 | Proof | Result | Honest scope |
@@ -126,10 +142,11 @@ The privacy claim remains deliberately narrower than "anonymous." [NISTIR 8053](
 | DataHub recording replay | Hashes and semantic checks pass | Versioned normalized integration semantics, not a live server |
 | Official DataHub showcase catalog | Positive: 55 fields, 17 classified, 3 families, 10 true upstream datasets; negative: single-source asset refused | Two live quickstart receipts against a DataHub-authored pack; metadata screening, not a warehouse verdict or prevalence claim |
 | Local model boundary | 1 Mistral proposal accepted for human review; 1 under-supported proposal vetoed; 0 generated statements executed | Recorded local Ollama runs; deterministic policy owns SQL and verdict |
+| Metadata prompt-injection replay | Hostile DataHub description refused; safe run continued; 0 raw rows | Deterministic transcript and acceptance gate; not a claim that every possible injection is solved |
 | UCI Adult external proof | 32,561 rows processed in memory; k=43 to k=1 after composition; 23.786% below k=5 | Historical external mechanism check, not current prevalence |
 | Live local DataHub workflow | Schema, lineage, downstream, generated six-file remediation, SQL compile, write-back, and re-read | Environment-specific proof when the operator runs it |
 
-See [evaluations/benchmark.json](evaluations/benchmark.json), [fixtures/datahub_recording/manifest.json](fixtures/datahub_recording/manifest.json), [the official-catalog positive proof](evidence/external/DATAHUB_SHOWCASE_PROOF.md), [its machine-readable receipt](evidence/external/datahub-showcase-positive-live.json), [the fail-closed negative control](evidence/external/datahub-showcase-ecommerce-live.json), [the accepted and vetoed local-model receipts](evidence/external/ollama-agent-accepted-live.json), [the Snowflake readiness receipt](evidence/external/snowflake-live.json), and [the UCI Adult proof](evidence/external/uci-adult-proof.json).
+See [evaluations/benchmark.json](evaluations/benchmark.json), [fixtures/datahub_recording/manifest.json](fixtures/datahub_recording/manifest.json), [the prompt-injection transcript](fixtures/agent_transcripts/prompt-injection.json), [the official-catalog positive proof](evidence/external/DATAHUB_SHOWCASE_PROOF.md), [its machine-readable receipt](evidence/external/datahub-showcase-positive-live.json), [the fail-closed negative control](evidence/external/datahub-showcase-ecommerce-live.json), [the accepted and vetoed local-model receipts](evidence/external/ollama-agent-accepted-live.json), [the Snowflake readiness receipt](evidence/external/snowflake-live.json), and [the UCI Adult proof](evidence/external/uci-adult-proof.json).
 
 ## Product tour
 
@@ -143,7 +160,7 @@ See [evaluations/benchmark.json](evaluations/benchmark.json), [fixtures/datahub_
 | **Research-backed controls** | **Audience scenario** |
 | [![Research and standards receipts](docs/screenshots/10-research-standards.png)](docs/screenshots/10-research-standards.png) | [![Audience preset](docs/screenshots/02-audience-preset.png)](docs/screenshots/02-audience-preset.png) |
 
-The repository also includes the complete [screenshot gallery](docs/screenshots/README.md), [interactive source footage](docs/demo/08-product-walkthrough.webm), and the final [2:36 narrated submission video](docs/demo/mosaic-submission-demo.mp4). The MP4 is upload-ready and verified under three minutes; a YouTube/Vimeo URL remains an external publication receipt and is not claimed until uploaded.
+The repository also includes the complete [screenshot gallery](docs/screenshots/README.md), [interactive source footage](docs/demo/08-product-walkthrough.webm), and the final [2:50 narrated submission video](docs/demo/mosaic-submission-demo.mp4). The MP4 is upload-ready and verified under three minutes; a YouTube/Vimeo URL remains an external publication receipt and is not claimed until uploaded.
 
 ## How Mosaic uses DataHub
 
@@ -216,8 +233,8 @@ Thresholds are demo policy, not a legal conclusion. Read [ETHICS.md](ETHICS.md) 
 
 ## Reusable interfaces
 
-- REST: `/api/scenarios`, `/api/remediation-bundles/{slug}`, `/api/remediation-bundles/{slug}/download`, `/api/scan`, `/api/agent-receipts`, `/api/runs/{id}`, `/api/proofs`, `/api/adoption`, `/api/technology`
-- CLI: deterministic `assess`; opt-in `assess --agent`; `discover`, `generate-remediation`, `scan`, `check`, `benchmark`, `replay-fixture`, `serve`, `live-demo`, `verify-mcp`, `verify-snowflake`
+- REST: `/api/scenarios`, `/api/remediation-bundles/{slug}`, `/api/remediation-bundles/{slug}/download`, `/api/scan`, `/api/agent-receipts`, `/api/redteam`, `/api/runs/{id}`, `/api/proofs`, `/api/adoption`, `/api/technology`
+- CLI: deterministic `assess`; opt-in `assess --agent`; `discover`, `generate-remediation`, `scan`, `check`, `redteam`, `benchmark`, `replay-fixture`, `serve`, `live-demo`, `verify-mcp`, `verify-snowflake`
 - Agent skill: [`$datahub-privacy-threat-model`](skills/datahub-privacy-threat-model/SKILL.md)
 - Operator console: `/settings` with non-mutating health probe and guarded local approval
 
