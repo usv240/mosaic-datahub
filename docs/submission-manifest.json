@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "track": "Metadata-Aware Code Generation & Development",
+  "license": "Apache-2.0",
+  "repository_url": "https://github.com/usv240/mosaic-datahub",
+  "live_demo_url": "https://mosaic-datahub-production.up.railway.app",
+  "video_receipt": "docs/demo/submission-video-receipt.json",
+  "contribution": {
+    "status": "merged",
+    "url": "https://github.com/datahub-project/datahub/pull/18705"
+  }
+}

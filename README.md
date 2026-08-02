@@ -284,3 +284,5 @@ The first command stays dry-run. The approved command creates uniquely named syn
 Mosaic has a merged upstream DataHub contribution: [datahub-project/datahub#18705](https://github.com/datahub-project/datahub/pull/18705). The primary product works offline and the recorded integration is reproducible. Mosaic now accepts organization-owned thresholds, includes a Snowflake adapter boundary, and ships a pre-merge gate. Production deployment still requires real warehouse credentials, asset allowlists, SSO/RBAC, policy owners, and a fresh compatibility run against the target DataHub and warehouse.
 
 Apache-2.0 licensed. See [docs/ADOPTION_GUIDE.md](docs/ADOPTION_GUIDE.md) for the path from zero-setup exploration to production controls, [SUBMISSION.md](SUBMISSION.md) for the concise judge narrative, and [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md) for the under-three-minute demo.
+
+Before publication, run `uv run python scripts/final_submission_audit.py --online`. The audit fails closed unless the public video receipt exists and both GitHub and Railway serve the current commit. For local review before authenticated video upload, add `--allow-pending-video`.

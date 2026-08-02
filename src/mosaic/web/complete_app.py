@@ -62,6 +62,17 @@ def create_app(project_root: Path | None = None) -> FastAPI:
     def health() -> dict[str, str]:
         return {"status": "ok"}
 
+    @app.get("/api/deployment")
+    def deployment() -> dict[str, str]:
+        return {
+            "status": "ok",
+            "commit_sha": os.getenv(
+                "RAILWAY_GIT_COMMIT_SHA",
+                os.getenv("MOSAIC_BUILD_SHA", "development"),
+            ),
+            "environment": os.getenv("RAILWAY_ENVIRONMENT_NAME", "local"),
+        }
+
     @app.get("/api/health/datahub")
     def datahub_health(probe: bool = False) -> dict[str, object]:
         server = os.getenv("MOSAIC_DATAHUB_URL", "http://localhost:8080")
