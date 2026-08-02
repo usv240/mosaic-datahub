@@ -267,6 +267,9 @@ def test_landing_exposes_interactive_remediation_pr_studio(tmp_path: Path) -> No
     assert "The graph finds the risk" in landing
     assert 'id="tab-codegen"' in landing
     assert "Metadata-aware code generation" in landing
+    assert "Metadata graph + agent context" in landing
+    assert "Why Mosaic needs DataHub" in landing
+    assert "Hackathon sponsor technology" not in landing
     assert 'id="standards-title"' in landing
     assert "Built on standards, not vibes" in landing
     assert "docs.getdbt.com/docs/mesh/govern/model-contracts" in landing
