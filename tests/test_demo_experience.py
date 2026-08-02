@@ -102,3 +102,48 @@ def test_default_landing_does_not_rewrite_itself_to_workspace_deep_link(tmp_path
     assert '"?case=" + name + "#workspace"' not in normalized
     accessibility = Path("scripts/check_accessibility.py").read_text(encoding="utf-8")
     assert "landing did not open cleanly at top" in accessibility
+
+
+def test_visual_demo_contracts_keep_proofs_readable(tmp_path) -> None:
+    client = TestClient(create_app(tmp_path))
+    css = client.get("/static/experience.css").text
+    script = client.get("/static/experience.js").text
+    capture = Path("scripts/capture_submission_media.py").read_text(encoding="utf-8")
+    assert (
+        ".extraordinary-block>.cross-asset-proof,.extraordinary-block>.agent-proof{grid-column:1/-1}"
+        in css
+    )
+    assert ".hero::before{width:100%;left:0}" in css
+    assert ".evidence-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))" in css
+    assert "var delay = reduceMotion ? 25 : (tourRunning ? 900 : 1450)" in script
+    assert "12-attack-refusal.png" in capture
+
+
+def test_presenter_tour_proves_all_scenarios_and_adoption(tmp_path) -> None:
+    client = TestClient(create_app(tmp_path))
+    landing = client.get("/").text
+    script = client.get("/static/experience.js").text
+    for token in (
+        'id="run-all-scenarios"',
+        'id="tour-controller"',
+        'data-tour-scenario="research"',
+        'data-tour-scenario="mitigated"',
+        'data-tour-scenario="control"',
+        'data-tour-scenario="audience"',
+        'id="tour-summary"',
+        'aria-live="polite"',
+        'tabindex="-1"',
+        'href="/settings#readiness"',
+        'href="/runs"',
+    ):
+        assert token in landing
+    assert 'var tourOrder = ["research", "mitigated", "control", "audience"]' in script
+    assert 'byId("hero-run").addEventListener("click", beginTour)' in script
+    assert 'byId("tour-summary").focus({ preventScroll: true })' in script
+    assert "Verified clear / no data query" in script
+    assert "Read the original and shadow lineage" in script
+    assert "Read lineage across a second business domain" in script
+    accessibility = Path("scripts/check_accessibility.py").read_text(encoding="utf-8")
+    capture = Path("scripts/capture_submission_media.py").read_text(encoding="utf-8")
+    assert "verified_cases != 4" in accessibility
+    assert "13-four-case-scorecard.png" in capture

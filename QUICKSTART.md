@@ -7,7 +7,7 @@ uv sync --locked --extra dev
 uv run mosaic serve
 ```
 
-Open `http://127.0.0.1:8123`, select a preset, and choose **Run guided analysis**. No network, LLM, warehouse, Docker, or DataHub instance is required.
+Open `http://127.0.0.1:8123` and choose **Watch all 4 decisions (30 sec)**. The tour ends on a four-case scorecard with the evidence and adoption paths visible. For a slower technical review, select a preset and choose **Run investigation**. No network, LLM, warehouse, Docker, or DataHub instance is required.
 
 ## Verify the central claims
 

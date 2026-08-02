@@ -1,32 +1,50 @@
-# Mosaic demo — 2:50 target
+﻿# Mosaic narrated demo — 2:49
 
-## 0:00–0:20 — The claim
+The committed MP4 is generated from these eleven tested 16:9 scenes and the exact voice-over in [`narration.txt`](demo/narration.txt). Rebuild it with `uv run --with imageio-ffmpeg python scripts/build_submission_video.py` after capturing media.
 
-Open at the top of the landing page: “Three ordinary columns, three systems, one export. No field is direct PII. DataHub’s graph shows why the combination matters.” Define minimum k in one sentence: the size of the smallest crowd a record blends into; k=1 is unique.
+## 0:00–0:10 — The claim
 
-## 0:20–0:48 — Challenge a catalog Mosaic did not create
+Show the first viewport: Mosaic finds privacy risk that appears only when individually harmless columns combine across pipelines, then generates a review-ready fix grounded in DataHub context.
 
-Run `mosaic discover` against DataHub's official showcase `order_details` asset. Point to 55 inspected fields, three classified families, 10 true upstream datasets, dataset-only column origins, and zero raw rows. Then show the single-source `order_items` control returning `no_convergence`. Say: “Same reader, opposite result. Mosaic excludes job nodes and refuses to invent a graph finding.”
+## 0:10–0:23 — The core lineage example
 
-## 0:48–1:15 — The model proposes; policy disposes
+Show ZIP code, birth date, and demographic category arriving through independent column-lineage paths. Point out that the fields are not direct identifiers and that DataHub reveals both their origins and downstream exposure.
 
-Open `/api/agent-receipts`. Show the real local Mistral proposal that nominated an asset and columns, followed by Mosaic's deterministic query and critical verdict. Then open `/api/redteam`: a hostile DataHub description requests raw identifiers, policy refuses it, records the reason, and the safe run continues with zero raw rows. Say: “The model writes rationale, never SQL. Untrusted catalog text never owns a data path.”
+## 0:23–0:36 — Four decisions, not one rehearsed answer
 
-## 1:15–1:35 — Measured evidence
+Show the presenter scorecard: two critical findings, one verified mitigation, and one negative control that produces no query or code. State that all four cases return zero person-level rows.
 
-Run the research investigation. Show k=1, 100% below k=5, zero raw person-level rows, and three downstream assets. Open the false-positive rebuttal: ordinary fields and high cardinality alone are insufficient; independent lineage convergence plus measured small classes earns the critical verdict.
+## 0:36–0:51 — Cross-asset composition
 
-## 1:35–2:08 — Generated PR bundle
+Show the join detector. Two assets can look ordinary alone while a shared entity key makes their combined context risky. Keep the boundary explicit: metadata screens candidates; only aggregate validation earns a verdict.
 
-Open Remediation PR and click the six files: dbt model, enforced typed contract, aggregate-only test, organization-policy snapshot, provenance manifest, and PR summary. Show DataHub URN, policy/scenario digests, Snowflake-ready adapter boundary, and human-review gate. Download the reproducible ZIP.
+## 0:51–1:03 — Measured evidence
 
-## 2:08–2:35 — Write back, then re-read
+Show the research result: smallest group of one, every group below the five-person demo target, three downstream assets, and zero raw rows. Explain that the graph selects where to measure.
 
-Show the DataHub proposal. Approve only in disposable local DataHub. Re-read the field tag, structured property, threat-model Document, and active incident. State: “The decision survives for the next human or agent.” Mention the merged upstream DataHub contribution.
+## 1:03–1:22 — Model proposes, policy disposes
 
-## 2:35–2:50 — Limits and close
+Show the recorded local-model proposal and deterministic policy boundary. The model may select an allowlisted asset, nominate columns, and draft rationale; it cannot write SQL, calculate the verdict, or mutate DataHub. Mosaic can veto it.
 
-Say this out loud: “This is privacy risk reduction, not proof of anonymity or legal compliance. Production needs organization policy owners, scoped DataHub and warehouse identities, SSO/RBAC, and compatibility validation.” Close: “Mosaic turns hidden graph context into code a data team can review before risk spreads.”
+## 1:22–1:36 — Prompt-injection refusal
+
+Show hostile instructions embedded in DataHub metadata requesting identifiers and full birth dates. The query policy refuses the request, records the reason, returns zero rows, and continues safely.
+
+## 1:36–1:52 — Merge-ready remediation
+
+Show the six-file bundle: dbt model, enforced schema contract, aggregate test, policy snapshot, provenance manifest, and PR summary. Every artifact retains DataHub context and human review.
+
+## 1:52–2:08 — DataHub is the substrate
+
+Show the seven DataHub surfaces: schema, fine-grained lineage, downstream impact, SDK, GraphQL, MCP, Skill, and governed write-back. Mention that reviewed decisions are re-read and preserved for the next human or agent.
+
+## 2:08–2:28 — Positive and negative external proof
+
+Show the evidence catalog. The official DataHub showcase asset produces a multi-source convergence while the single-source control correctly produces no finding. Mention the merged upstream DataHub contribution.
+
+## 2:28–2:50 — Production boundary and close
+
+Show readiness requirements and the honest Snowflake credential block. Close with: Mosaic is privacy-risk reduction, not proof of anonymity or legal compliance; production still requires organization policy, least-privilege identities, SSO/RBAC, compatibility validation, and human approval.
 
 ## Backup judge commands
 

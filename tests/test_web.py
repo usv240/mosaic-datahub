@@ -10,7 +10,10 @@ def test_landing_page_leads_with_plain_language_problem() -> None:
     assert "DataHub" in text
     assert 'id="theme-toggle"' in text
     assert 'id="lineage-stage"' in text
-    assert "Generate the remediation PR" in text
+    assert "Watch all 4 decisions (30 sec)" in text
+    assert "DataHub-native" in text
+    assert "Smallest group" in text
+    assert "1 person" in text
 
 
 def test_evidence_api_is_complete_and_safe() -> None:

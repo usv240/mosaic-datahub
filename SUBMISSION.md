@@ -8,6 +8,7 @@ Mosaic is a DataHub-grounded privacy remediation code-generation agent. It finds
 
 - Live read-only demo: https://mosaic-datahub-production.up.railway.app
 - Public repository: https://github.com/usv240/mosaic-datahub
+- Narrated demo: [`docs/demo/mosaic-submission-demo.mp4`](docs/demo/mosaic-submission-demo.mp4) (2:49, upload-ready; public YouTube/Vimeo URL remains the sole external publication step)
 - Merged DataHub contribution: https://github.com/datahub-project/datahub/pull/18705
 - Official external dataset: https://archive.ics.uci.edu/dataset/2/adult
 
@@ -21,7 +22,7 @@ A PII scanner asks whether one column is sensitive. Mosaic asks whether several 
 
 ## Judge path
 
-The hosted product teaches the problem in plain language, then offers four working backend scenarios: a critical research export, a successfully mitigated shadow export, a safe operational control, and a second-domain audience export. Every preset loads configuration-backed results from the API rather than swapping client-only labels.
+The hosted product teaches the problem in plain language, then launches all four working backend scenarios from the first viewport: a critical research export, a successfully mitigated shadow export, a safe operational control, and a second-domain audience export. The 30-second presenter run automatically reveals a comparison scorecard; every preset loads configuration-backed results from the API rather than swapping client-only labels.
 
 The main critical fixture has 120 synthetic records, minimum k=1, 100% below k=5, three downstream assets, and zero raw rows returned. The selected mitigation reaches minimum k=20 in shadow mode. Mosaic then generates six deterministic, hash-verified PR artifacts; judges can review them in the product, download a ZIP, run the CLI, or inspect two committed examples.
 

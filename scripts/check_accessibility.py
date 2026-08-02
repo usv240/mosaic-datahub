@@ -60,6 +60,19 @@ def main() -> int:
         journey = browser.new_page(viewport={"width": 1440, "height": 1000})
         journey.emulate_media(reduced_motion="reduce")
         journey.goto(BASE, wait_until="networkidle")
+        disclosure_state = journey.evaluate(
+            """() => ({
+                deepOpen: document.querySelectorAll('.depth-disclosure[open]').length,
+                evidenceOpen: document.querySelectorAll('.evidence-disclosure[open]').length,
+                evidenceRows: document.querySelectorAll('.evidence-disclosure').length
+            })"""
+        )
+        if disclosure_state != {"deepOpen": 0, "evidenceOpen": 0, "evidenceRows": 4}:
+            findings.append(f"landing disclosure hierarchy regressed: {disclosure_state}")
+        journey.locator(".depth-disclosure > summary").click()
+        if not journey.locator(".depth-disclosure .capability-grid").is_visible():
+            findings.append("DataHub deep dive did not reveal its evidence")
+        journey.locator(".depth-disclosure > summary").click()
         journey.locator("#run-demo").click()
         start_scroll = journey.evaluate("window.scrollY")
         journey.locator("#narrator.is-complete").wait_for(timeout=5_000)
@@ -84,7 +97,55 @@ def main() -> int:
         )
         if deep_link != {"scrollY": 0, "search": "?case=research", "hash": ""}:
             findings.append(f"scenario reload did not return to the top: {deep_link}")
+        journey.goto(BASE, wait_until="networkidle")
+        journey.locator("#hero-run").click()
+        journey.locator("#tour-summary").wait_for(state="visible", timeout=10_000)
+        journey.wait_for_timeout(500)
+        summary_box = journey.locator("#tour-summary").bounding_box()
+        summary_top = summary_box["y"] if summary_box else None
+        if summary_top is None or summary_top < -5 or summary_top > 120:
+            findings.append(f"all-scenarios payoff was not brought into view: top={summary_top}")
+        verified_cases = journey.locator("[data-tour-result].is-verified").count()
+        if verified_cases != 4:
+            findings.append(f"all-scenarios tour verified {verified_cases} cases instead of 4")
+        if (
+            journey.locator("[data-tour-result='control'] small").inner_text()
+            != "Verified clear / no data query"
+        ):
+            findings.append("all-scenarios tour did not preserve the negative-control refusal")
+        if not journey.locator("#review-tour").is_visible():
+            findings.append("all-scenarios tour did not expose its comparison action")
+        if journey.locator("#tour-summary .tour-adopt a").count() != 3:
+            findings.append("all-scenarios tour did not expose all adoption paths")
         journey.close()
+
+        mobile = browser.new_page(viewport={"width": 390, "height": 844})
+        mobile.goto(BASE, wait_until="networkidle")
+        mobile_metrics = mobile.evaluate(
+            """() => ({
+                clientWidth: document.documentElement.clientWidth,
+                scrollWidth: document.documentElement.scrollWidth,
+                presetCount: document.querySelectorAll('.compact-presets .preset-card').length,
+                horizontalScroll: (() => { window.scrollTo(999, 0); const x = window.scrollX; window.scrollTo(0, 0); return x; })()
+            })"""
+        )
+        if mobile_metrics["horizontalScroll"] > 1:
+            overflow_sources = mobile.evaluate(
+                """() => [...document.querySelectorAll('*')].filter(element => {
+                    const rect = element.getBoundingClientRect();
+                    if (rect.right <= document.documentElement.clientWidth + 1) return false;
+                    for (let parent = element.parentElement; parent && parent !== document.body; parent = parent.parentElement) {
+                        if (/(auto|hidden|scroll)/.test(getComputedStyle(parent).overflowX)) return false;
+                    }
+                    return true;
+                }).slice(0, 8).map(element => ({tag: element.tagName, id: element.id, className: String(element.className).slice(0, 60), right: Math.round(element.getBoundingClientRect().right)}))"""
+            )
+            findings.append(
+                f"mobile landing has horizontal overflow: {mobile_metrics}; sources={overflow_sources}"
+            )
+        if mobile_metrics["presetCount"] != 4:
+            findings.append(f"mobile case picker is incomplete: {mobile_metrics}")
+        mobile.close()
         browser.close()
     if findings:
         print("\n".join(findings))

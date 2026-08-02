@@ -10,7 +10,7 @@ The full-page capture leads from the core risk and potential impact through stak
 
 ## DataHub architecture
 
-The sponsor-technology view maps seven DataHub capabilities to their exact role, code receipt, reproducible proof, and the four innovations Mosaic adds.
+The DataHub technology view maps seven platform capabilities to their exact role, code receipt, reproducible proof, and the four innovations Mosaic adds.
 
 [![DataHub-backed agent architecture](08-datahub-architecture.png)](08-datahub-architecture.png)
 
@@ -33,13 +33,21 @@ The generated-code workbench exposes all six artifacts, validation receipts, Dat
 
 ## Four preset investigations
 
-The audience preset proves that the fourth backend scenario is a complete interactive client experience, not an API-only fixture.
+Presenter mode runs all four backend scenarios and ends with a decision scorecard: two detected risks, one verified mitigation, and one refused false positive.
+
+[![Four-case presenter scorecard](12-four-case-scorecard.png)](12-four-case-scorecard.png)
+
+The audience preset also proves that the fourth scenario is a complete interactive client experience, not an API-only fixture.
 
 [![Audience preset](02-audience-preset.png)](02-audience-preset.png)
 
 ## Completed guided investigation
 
 [![Completed investigation with mitigation evidence](03-completed-investigation.png)](03-completed-investigation.png)
+
+## Prompt-injection refusal
+
+[![Metadata prompt injection refused with zero raw rows](13-attack-refusal.png)](13-attack-refusal.png)
 
 ## Reproducible evidence catalog
 

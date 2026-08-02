@@ -7,7 +7,7 @@ uv sync --locked --extra dev
 uv run mosaic serve
 ```
 
-Open `http://127.0.0.1:8123`. Start with the four preset cases, then run the narrated research analysis. The console includes plain-English orientation, light/dark themes, an interactive lineage path, exact aggregate metrics, safe query text, downstream blast radius, mitigation comparison, DataHub proposal, proof ladder, retained run history, printable integrity-verified evidence, and guarded local operator settings.
+Open `http://127.0.0.1:8123` and choose **Watch all 4 decisions (30 sec)**. The presenter run proves two detected risks, one verified mitigation, one refused false positive, and zero person-level rows, then brings its comparison scorecard into view automatically. For a technical deep dive, select Research export and inspect Finding, Validation query, Attack lab, Mitigation lab, Remediation PR, and DataHub proposal in order. Light/dark themes, retained run history, printable integrity-verified evidence, and guarded operator settings are also included.
 
 ## Offline proof commands
 

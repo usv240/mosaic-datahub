@@ -105,6 +105,10 @@
   var runTimers = [];
   var startedAt = 0;
   var clockTimer = null;
+  var tourOrder = ["research", "mitigated", "control", "audience"];
+  var tourRunning = false;
+  var tourIndex = 0;
+  var tourTimer = null;
 
   function byId(id) { return document.getElementById(id); }
   function all(selector) { return Array.prototype.slice.call(document.querySelectorAll(selector)); }
@@ -200,7 +204,26 @@
       ];
       item = control[index];
     }
-    byId("narrator").classList.remove("is-complete");
+    if (selected === "mitigated") {
+      item = [
+        { kicker: "Step 1 - Discover", title: "Read the original and shadow lineage.", body: "DataHub connects the precise export to a reversible candidate that suppresses birth date.", why: "The source remains unchanged while Mosaic evaluates a safer release." },
+        { kicker: "Step 2 - Compare", title: "Hold the useful context constant.", body: "The candidate keeps ZIP5 and demographic category while removing the most precise date field.", why: "A mitigation should reduce risk without destroying analytical value." },
+        { kicker: "Step 3 - Validate", title: "Measure whether the candidate actually works.", body: "Aggregate counts show minimum anonymity improving from k=1 to k=20.", why: "Mosaic verifies the outcome instead of treating a transformation name as proof." },
+        { kicker: "Step 4 - Defend", title: "Keep the same safety boundary.", body: "Hostile metadata still cannot request raw identifiers from the safer candidate.", why: "Mitigation never relaxes the deterministic query policy." },
+        { kicker: "Step 5 - Preserve utility", title: "Choose the smallest effective change.", body: "Suppression clears the visible threshold while retaining 76% analytical utility.", why: "Teams receive a usable release, not a blanket denial." },
+        { kicker: "Step 6 - Generate", title: "Generate the verified safer model.", body: "Mosaic emits the dbt transformation, aggregate test, policy, manifest, and review summary.", why: "The measured mitigation becomes a reviewable engineering change." }
+      ][index];
+    }
+    if (selected === "audience") {
+      item = [
+        { kicker: "Step 1 - Discover", title: "Read lineage across a second business domain.", body: "DataHub maps CRM geography and household context to product age and device cohorts.", why: "The same privacy mechanism can exist outside a research export." },
+        { kicker: "Step 2 - Converge", title: "See four audience attributes meet.", body: "Geography, age band, household segment, and device cohort converge before partner delivery.", why: "Neither source exposes the complete identifying combination alone." },
+        { kicker: "Step 3 - Validate", title: "Prove the audience contains small groups.", body: "Aggregate validation finds k=1 and 44.444% of records below k=5.", why: "The verdict comes from measured groups, not a marketing-data stereotype." },
+        { kicker: "Step 4 - Defend", title: "Reject row-level extraction again.", body: "Adversarial catalog text cannot turn the audience investigation into an identity export.", why: "The safety boundary generalizes with the detection mechanism." },
+        { kicker: "Step 5 - Mitigate", title: "Compare reversible audience reductions.", body: "Mosaic evaluates which precise segment can be suppressed or generalized before delivery.", why: "The response can preserve campaign utility while reducing exposure." },
+        { kicker: "Step 6 - Generate", title: "Turn the audience proof into reviewed code.", body: "The generated bundle carries the DataHub URN, aggregate test, policy, and provenance.", why: "A second domain produces the same auditable engineering workflow." }
+      ][index];
+    }    byId("narrator").classList.remove("is-complete");
     byId("narrator-step").textContent = "Step " + (index + 1) + " of 6";
     byId("narrator-kicker").textContent = item.kicker;
     byId("narrator-title").textContent = item.title;
@@ -226,6 +249,7 @@
     byId("narrator-body").textContent = "Press Start guided demo. We will explain each catalog read, calculation, safety guardrail, and proposed action as it happens.";
     byId("narrator-why").textContent = "The agent receives metadata and group counts - never a person-level row.";
     byId("narrator-actions").hidden = true;
+    byId("review-tour").hidden = true;
   }
   function setProgress(index) {
     all(".run-progress li").forEach(function (item, itemIndex) {
@@ -302,7 +326,104 @@
       });
   }
 
-  function runDemo() {
+  function setTourControls(disabled) {
+    all(".preset-card").forEach(function (card) { card.disabled = disabled; });
+    byId("run-all-scenarios").disabled = disabled;
+  }
+
+  function resetTourUI() {
+    all("[data-tour-scenario]").forEach(function (item) {
+      item.classList.remove("is-active", "is-done");
+      item.querySelector("small").textContent = "Waiting";
+    });
+    all("[data-tour-result]").forEach(function (card) {
+      card.classList.remove("is-verified");
+      card.querySelector("small").textContent = "Waiting to run";
+    });
+    byId("tour-summary").hidden = true;
+    byId("review-tour").hidden = true;
+  }
+
+  function beginTour() {
+    if (running || tourRunning) {
+      showToast("Finish or reset the current investigation before starting the four-case tour.");
+      return;
+    }
+    tourRunning = true;
+    tourIndex = 0;
+    resetTourUI();
+    setTourControls(true);
+    byId("tour-controller").hidden = false;
+    byId("tour-title").textContent = "Four cases. Four decisions. One evidence chain.";
+    byId("tour-copy").textContent = "Mosaic will run each case end to end and build a comparison you can inspect afterward.";
+    byId("workspace").scrollIntoView({ behavior: "smooth", block: "start" });
+    tourTimer = setTimeout(runTourScenario, 450);
+  }
+
+  function runTourScenario() {
+    if (!tourRunning) return;
+    var name = tourOrder[tourIndex];
+    var item = document.querySelector('[data-tour-scenario="' + name + '"]');
+    item.classList.add("is-active");
+    item.querySelector("small").textContent = "Running";
+    byId("tour-title").textContent = "Case " + (tourIndex + 1) + " of 4: " + scenarios[name].title;
+    byId("tour-copy").textContent = scenarios[name].subtitle;
+    selectScenario(name, false);
+    byId("run-demo").disabled = true;
+    tourTimer = setTimeout(function () {
+      if (tourRunning) runDemo(function () { completeTourScenario(name); });
+    }, 350);
+  }
+
+  function completeTourScenario(name) {
+    if (!tourRunning) return;
+    var scenario = scenarios[name];
+    var item = document.querySelector('[data-tour-scenario="' + name + '"]');
+    var result = document.querySelector('[data-tour-result="' + name + '"]');
+    item.classList.remove("is-active");
+    item.classList.add("is-done");
+    item.querySelector("small").textContent = scenario.verdict;
+    result.classList.add("is-verified");
+    result.querySelector("small").textContent = scenario.k === "N/A" ? "Verified clear / no data query" : "Verified " + scenario.verdict + " / k=" + scenario.k;
+    tourIndex += 1;
+    if (tourIndex < tourOrder.length) {
+      byId("narrator-actions").hidden = true;
+      byId("run-demo").disabled = true;
+      byId("tour-title").textContent = tourIndex + " of 4 complete. Preparing the next independent decision.";
+      byId("tour-copy").textContent = "The scorecard preserves each result while Mosaic resets the workspace for the next case.";
+      tourTimer = setTimeout(runTourScenario, 800);
+      return;
+    }
+    tourRunning = false;
+    setTourControls(false);
+    byId("tour-title").textContent = "All four cases verified.";
+    byId("tour-copy").textContent = "Two real risks detected, one mitigation validated, one false positive refused, and zero person-level rows returned.";
+    byId("tour-summary").hidden = false;
+    byId("tour-summary").focus({ preventScroll: true });
+    requestAnimationFrame(function () {
+      var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      byId("tour-summary").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+    });
+    byId("review-tour").hidden = false;
+    byId("narrator-actions").hidden = false;
+    byId("narrator-kicker").textContent = "Four-case proof complete";
+    byId("narrator-title").textContent = "Mosaic knows when to alert, when to approve, and when to stop.";
+    byId("narrator-body").textContent = "Review the comparison to see what each case proves and how to connect Mosaic to another DataHub catalog.";
+    byId("run-all-scenarios").textContent = "Run all 4 again";
+    showToast("All four scenarios complete. The comparison scorecard is ready.");
+  }
+
+  function cancelTour(showMessage) {
+    if (!tourRunning) return;
+    tourRunning = false;
+    if (tourTimer) clearTimeout(tourTimer);
+    setTourControls(false);
+    resetDemo(false);
+    byId("tour-title").textContent = "Tour stopped. Completed results remain visible above.";
+    byId("tour-copy").textContent = "Choose any case to continue individually, or restart the complete four-case proof.";
+    if (showMessage) showToast("Four-case tour stopped.");
+  }
+  function runDemo(onComplete) {
     if (running) return;
     resetDemo(false);
     running = true;
@@ -313,7 +434,7 @@
     button.querySelector(".run-label").textContent = "Investigating...";
     clockTimer = setInterval(updateClock, 100);
     var reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var delay = reduceMotion ? 25 : 620;
+    var delay = reduceMotion ? 25 : (tourRunning ? 900 : 1450);
     var messages = selected === "control" ? [
       "Read field semantics and column lineage from DataHub.",
       "No multi-family person-joinable convergence found.",
@@ -328,6 +449,22 @@
       "Replayed hostile DataHub description; policy refused raw identifiers.",
       selected === "mitigated" ? "Confirmed suppression lifts minimum anonymity to k=20." : "Compared 3 reversible mitigations; suppression retains 76% utility.",
       "Generated 6 merge-ready artifacts; awaiting reviewer approval."
+    ];
+    if (selected === "mitigated") messages = [
+      "Read original and shadow-model lineage from DataHub.",
+      "Held ZIP5 and demographic context constant; suppressed precise birth date.",
+      "Executed allowlisted GROUP BY; verified k improves from 1 to 20.",
+      "Replayed hostile metadata; row-level request refused.",
+      "Confirmed 76% utility retained after the smallest effective change.",
+      "Generated the verified safer model and aggregate regression test."
+    ];
+    if (selected === "audience") messages = [
+      "Read CRM and product-analytics column lineage from DataHub.",
+      "Mapped geography, age, household, and device families before partner delivery.",
+      "Executed allowlisted GROUP BY; found k=1 with 44.444% below k=5.",
+      "Replayed hostile metadata; identity-export request refused.",
+      "Compared reversible audience suppression and generalization options.",
+      "Generated a DataHub-grounded audience remediation bundle."
     ];
     messages.forEach(function (message, index) {
       runTimers.push(setTimeout(function () {
@@ -351,6 +488,7 @@
           } else {
             showToast("Safe control complete. Mosaic correctly generated no remediation code.");
           }
+          if (typeof onComplete === "function") onComplete();
         }
       }, delay * (index + 1)));
     });
@@ -563,12 +701,15 @@
   function boot() {
     initTheme(); initTabs();
     all(".preset-card").forEach(function (card) { card.addEventListener("click", function () { selectScenario(card.dataset.scenario, true); }); });
+    byId("run-all-scenarios").addEventListener("click", beginTour);
+    byId("cancel-tour").addEventListener("click", function () { cancelTour(true); });
     byId("run-demo").addEventListener("click", runDemo);
     byId("run-attack").addEventListener("click", function () { runAttackLab(false); });
     byId("review-attack").addEventListener("click", function () { runAttackLab(true); });
     byId("review-pr").addEventListener("click", function () { byId("tab-button-codegen").click(); byId("tab-codegen").scrollIntoView({ behavior: "smooth", block: "start" }); });
-    byId("reset-demo").addEventListener("click", function () { resetDemo(true); });
-    byId("hero-run").addEventListener("click", function () { selectScenario("research", true); setTimeout(runDemo, 550); });
+    byId("review-tour").addEventListener("click", function () { byId("tour-summary").scrollIntoView({ behavior: "smooth", block: "start" }); });
+    byId("reset-demo").addEventListener("click", function () { if (tourRunning) cancelTour(true); else resetDemo(true); });
+    byId("hero-run").addEventListener("click", beginTour);
     var requested = new URLSearchParams(location.search).get("case");
     selectScenario(scenarios[requested] ? requested : "research", false);
     hydrateLiveEvidence();

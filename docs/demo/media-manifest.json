@@ -1,43 +1,48 @@
 {
   "schema_version": 1,
-  "captured_at": "2026-07-31T14:41:55.445586+00:00",
-  "base_url": "http://127.0.0.1:8130",
+  "captured_at": "2026-08-02T18:21:10.909325+00:00",
+  "base_url": "http://127.0.0.1:8123",
   "purpose": "Judge screenshots and edit-ready product footage generated from the running Mosaic application.",
   "files": [
     {
       "path": "01-landing-dark.png",
-      "bytes": 1720495,
-      "sha256": "2c7c2a29763f1b8aff20643294c07cd01c1a269d2b7d0c3211979c3c71b7a707"
+      "bytes": 808182,
+      "sha256": "01cb01303279c0c65813522faca824ea42435bef1d65045358ec2afedb614347"
     },
     {
       "path": "08-datahub-architecture.png",
-      "bytes": 605211,
-      "sha256": "5465216454cfa114f0f76de6c0fc81d1ddb67ecfc8a3c777f4d78feb1a93db4d"
+      "bytes": 118653,
+      "sha256": "2428a7296b415c9610c96712fba2b4924bc5f1dc30447889b676f2d8234f80c1"
     },
     {
       "path": "10-research-standards.png",
-      "bytes": 71038,
-      "sha256": "0831e53dcef5a147b7cf9a9808d85eb0fea413012f97118fac771589489c62e8"
+      "bytes": 60099,
+      "sha256": "b9716fda43e850b5e54bff4daa6f954a4103131342b91810db7d0bc4ddb4559c"
     },
     {
       "path": "11-agent-policy-boundary.png",
-      "bytes": 160297,
-      "sha256": "6c2165856847ac055e3ea468bd60b2d277bff66142746ac981f08319ac03c7bb"
+      "bytes": 235869,
+      "sha256": "214cbaf8f8ae49d9c5f0a3e111a91e933259a9e07d6cd11b2d89f0780486a3a8"
     },
     {
       "path": "02-audience-preset.png",
-      "bytes": 1715775,
-      "sha256": "1e4cc26b4f03c1377c0d049cf78fd90030b6f3cdacff53247f12912b81aa9664"
+      "bytes": 1599537,
+      "sha256": "0555fe5bdaf7a8b433267737b9c05f513f094409c1680ed6765bec2da1e671bf"
+    },
+    {
+      "path": "12-attack-refusal.png",
+      "bytes": 36191,
+      "sha256": "3f67f8935c9c5b4824e6e28ecc903c3b8aa98ced3a78d05848ecb753e0b83dde"
     },
     {
       "path": "03-completed-investigation.png",
-      "bytes": 1798038,
-      "sha256": "c7f9247e4fca98af7cfb03afed203460c0ace1a6a0b66350457a13cf8673be00"
+      "bytes": 1689910,
+      "sha256": "7bbd3f06d180887540cb4ad04ea51376b5e7af43fa127600c05955ac24c6d23f"
     },
     {
       "path": "09-remediation-pr.png",
-      "bytes": 66551,
-      "sha256": "41c394d2db20e85f8df54c3393a31b7e417ed58581583320dca9a191dfc3840e"
+      "bytes": 94896,
+      "sha256": "404a545e79a20510a01f6667fa64ab5c27450d52e173018b7227b99ffca8fe44"
     },
     {
       "path": "04-evidence-catalog.png",
@@ -50,19 +55,79 @@
       "sha256": "f8508c1b2f7332b183e53d7a0fcb2c9d95807f4ee4c860abedd21ebe2e3aa064"
     },
     {
+      "path": "13-four-case-scorecard.png",
+      "bytes": 149822,
+      "sha256": "e739912df4f4d9b014df5ee4abc61c94ca452284a7111697e5f5cbcb379d7b16"
+    },
+    {
       "path": "06-landing-light.png",
-      "bytes": 2322385,
-      "sha256": "3baf5e05d292bab14cfa2672dc4a787370734e98f7346737a85a02ae5787ff84"
+      "bytes": 932617,
+      "sha256": "5d1d624bbe425186fb5664b448eadc00241353984af5f57646b7d8a1d8a6ed0f"
     },
     {
       "path": "07-mobile-landing.png",
-      "bytes": 1357086,
-      "sha256": "82e716b527b2c60d8be674f06e765602d83667c9e03e73b6e2c43045f74e52b0"
+      "bytes": 585601,
+      "sha256": "6b2941cc2147c8ac32788fe78bfb584a3e0d02a347c64afea8f797fed60e8334"
+    },
+    {
+      "path": "video-01-hero.png",
+      "bytes": 165181,
+      "sha256": "244d871b41e48ac614c64c3cf967ce6a9cf987a88aabc045803c394ecb40d00b"
+    },
+    {
+      "path": "video-02-lineage.png",
+      "bytes": 155630,
+      "sha256": "b4802dae84ea46cac888e0a3ce396b578a666476c5e4e372d5c2359004cf34b3"
+    },
+    {
+      "path": "video-03-four-decisions.png",
+      "bytes": 142875,
+      "sha256": "09279446c603efcc880964cdef41885fc6eb9126bc18927fe3181b9e885fb091"
+    },
+    {
+      "path": "video-04-cross-asset.png",
+      "bytes": 310836,
+      "sha256": "595c1e5fd55625995d2a1617f59466bd8d0d12b70ed164ce3f06a42c16ed0a80"
+    },
+    {
+      "path": "video-05-measured-result.png",
+      "bytes": 155630,
+      "sha256": "b4802dae84ea46cac888e0a3ce396b578a666476c5e4e372d5c2359004cf34b3"
+    },
+    {
+      "path": "video-06-agent-boundary.png",
+      "bytes": 310815,
+      "sha256": "89e8ce40aa992813ff65948c81ce010550c6e99a760f3704534b5b44601bbcb7"
+    },
+    {
+      "path": "video-07-attack-refusal.png",
+      "bytes": 77403,
+      "sha256": "c3c9195bb3112214053f5f894a8fcd7d05360363ba16bda2a0449048169ce764"
+    },
+    {
+      "path": "video-08-generated-pr.png",
+      "bytes": 100384,
+      "sha256": "60d7c7a65913b512db6e36754ee28ed2161b2415abe0ab4b4aa03561c450744d"
+    },
+    {
+      "path": "video-09-datahub-stack.png",
+      "bytes": 70594,
+      "sha256": "da86fbacc00e882bbf7ad758a6b83478e0a6c56a46dbbf291f65714113783dc9"
+    },
+    {
+      "path": "video-10-external-evidence.png",
+      "bytes": 76368,
+      "sha256": "3bd05e86d578eda477d29c68097f39b8ff426532395ee735d02d8ea4ab53bb3c"
+    },
+    {
+      "path": "video-11-production-readiness.png",
+      "bytes": 81757,
+      "sha256": "9ee418207881ab4cead0ae209ff19a60a144a343b95b33a6fe5e786909352f13"
     },
     {
       "path": "08-product-walkthrough.webm",
-      "bytes": 1995397,
-      "sha256": "41aa34ef37071896357099f7f05f455cb33651d64dbac6b880dec716fae0c089"
+      "bytes": 1820681,
+      "sha256": "4368f16b36bce5e5d5de2c60b65a7ff359fb5e475864b985c2c32b44d90fb231"
     }
   ],
   "video_duration_limit_seconds": 180,

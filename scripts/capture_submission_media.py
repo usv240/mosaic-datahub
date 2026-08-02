@@ -44,12 +44,18 @@ def main() -> int:
         architecture_path = OUTPUT / "08-datahub-architecture.png"
         architecture.screenshot(path=architecture_path)
         files.append(architecture_path)
+        desktop.locator(".standards-section").evaluate(
+            "element => { element.closest('details').open = true; }"
+        )
         standards = desktop.locator(".standards-section")
         standards.scroll_into_view_if_needed()
         desktop.wait_for_timeout(500)
         standards_path = OUTPUT / "10-research-standards.png"
         standards.screenshot(path=standards_path)
         files.append(standards_path)
+        desktop.locator(".agent-proof").evaluate(
+            "element => { element.closest('details').open = true; }"
+        )
         agent_proof = desktop.locator(".agent-proof")
         agent_proof.scroll_into_view_if_needed()
         desktop.wait_for_timeout(500)
@@ -60,7 +66,12 @@ def main() -> int:
         desktop.wait_for_timeout(600)
         files.append(_screenshot(desktop, "02-audience-preset.png"))
         desktop.locator("#run-demo").click()
-        desktop.wait_for_timeout(3_800)
+        desktop.wait_for_timeout(8_000)
+        desktop.locator('[data-tab="attack"]').click()
+        desktop.locator("#attack-verdict").filter(has_text="REFUSED").wait_for()
+        attack_path = OUTPUT / "12-attack-refusal.png"
+        desktop.locator("#tab-attack").screenshot(path=attack_path)
+        files.append(attack_path)
         desktop.locator('[data-tab="mitigation"]').click()
         files.append(_screenshot(desktop, "03-completed-investigation.png"))
         desktop.locator('[data-tab="codegen"]').click()
@@ -75,6 +86,16 @@ def main() -> int:
         files.append(_screenshot(desktop, "05-operator-safety.png"))
         desktop.close()
 
+        tour = browser.new_page(viewport={"width": 1440, "height": 1000})
+        tour.emulate_media(reduced_motion="reduce")
+        _ready(tour)
+        tour.locator("#run-all-scenarios").click()
+        tour.locator("#tour-summary").wait_for(state="visible", timeout=10_000)
+        tour_path = OUTPUT / "13-four-case-scorecard.png"
+        tour.locator("#tour-summary").screenshot(path=tour_path)
+        files.append(tour_path)
+        tour.close()
+
         light = browser.new_page(viewport={"width": 1440, "height": 1000})
         _ready(light)
         light.evaluate("localStorage.setItem('mosaic-theme', 'light')")
@@ -86,6 +107,72 @@ def main() -> int:
         _ready(mobile)
         files.append(_screenshot(mobile, "07-mobile-landing.png"))
         mobile.close()
+
+        # Narrated-video scenes are viewport captures, not unreadable full-page thumbnails.
+        scenes = browser.new_page(viewport={"width": 1280, "height": 720})
+        scenes.emulate_media(reduced_motion="reduce")
+
+        def capture_scene(name: str) -> None:
+            path = OUTPUT / name
+            scenes.wait_for_timeout(250)
+            scenes.screenshot(path=path)
+            files.append(path)
+
+        _ready(scenes)
+        capture_scene("video-01-hero.png")
+
+        scenes.locator('[data-scenario="research"]').click()
+        scenes.locator("#run-demo").click()
+        scenes.locator("#narrator.is-complete").wait_for(timeout=5_000)
+        scenes.locator("#workspace").scroll_into_view_if_needed()
+        capture_scene("video-02-lineage.png")
+
+        _ready(scenes)
+        scenes.locator("#hero-run").click()
+        scenes.locator("#tour-summary").wait_for(state="visible", timeout=10_000)
+        capture_scene("video-03-four-decisions.png")
+
+        _ready(scenes)
+        scenes.locator("#cross-asset-title").evaluate(
+            "element => { element.closest('details').open = true; }"
+        )
+        scenes.locator(".cross-asset-proof").scroll_into_view_if_needed()
+        capture_scene("video-04-cross-asset.png")
+
+        scenes.locator('[data-scenario="research"]').click()
+        scenes.locator("#run-demo").click()
+        scenes.locator("#narrator.is-complete").wait_for(timeout=5_000)
+        scenes.locator("#workspace").scroll_into_view_if_needed()
+        capture_scene("video-05-measured-result.png")
+
+        scenes.locator(".agent-proof").evaluate(
+            "element => { element.closest('details').open = true; }"
+        )
+        scenes.locator(".agent-proof").scroll_into_view_if_needed()
+        capture_scene("video-06-agent-boundary.png")
+
+        scenes.locator("#review-attack").click()
+        scenes.locator("#attack-verdict").filter(has_text="REFUSED").wait_for(timeout=5_000)
+        scenes.locator("#tab-attack").scroll_into_view_if_needed()
+        capture_scene("video-07-attack-refusal.png")
+
+        scenes.locator("#tab-button-codegen").click()
+        scenes.locator("#generated-file-list .generated-file").first.wait_for()
+        scenes.locator("#tab-codegen").scroll_into_view_if_needed()
+        capture_scene("video-08-generated-pr.png")
+
+        _ready(scenes)
+        scenes.locator("#datahub-stack").scroll_into_view_if_needed()
+        capture_scene("video-09-datahub-stack.png")
+
+        _ready(scenes, "/runs")
+        scenes.locator("#proof-catalog").scroll_into_view_if_needed()
+        capture_scene("video-10-external-evidence.png")
+
+        _ready(scenes, "/settings#readiness")
+        scenes.locator("#connector-matrix").scroll_into_view_if_needed()
+        capture_scene("video-11-production-readiness.png")
+        scenes.close()
 
         context = browser.new_context(
             viewport={"width": 1440, "height": 900},
@@ -105,6 +192,9 @@ def main() -> int:
         for tab in ("query", "mitigation", "codegen", "writeback"):
             walkthrough.locator(f'[data-tab="{tab}"]').click()
             walkthrough.wait_for_timeout(1_000)
+        walkthrough.locator("#cross-asset-title").evaluate(
+            "element => { element.closest('details').open = true; }"
+        )
         walkthrough.locator("#cross-asset-title").scroll_into_view_if_needed()
         walkthrough.wait_for_timeout(1_200)
         walkthrough.locator("#agent-proof-title").scroll_into_view_if_needed()
