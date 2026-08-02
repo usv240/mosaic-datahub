@@ -275,7 +275,12 @@ def test_landing_exposes_interactive_remediation_pr_studio(tmp_path: Path) -> No
     assert "generated-file" in landing
     assert 'fetch("/api/remediation-bundles/"' in script
     assert "renderNoCodegen" in script
-    assert "Remediation PR generated" in script
+    assert "Investigation complete. Choose what to inspect next." in script
+    assert 'id="tab-attack"' in landing
+    assert 'id="run-attack"' in landing
+    assert 'id="codegen-impact"' in landing
+    assert "preferredIndex" in script
+    assert 'byId("tab-codegen").scrollIntoView' in script
     assert 'id="cross-asset-evidence"' in landing
     assert 'fetch("/api/scan")' in script
     assert ".cross-asset-proof" in css

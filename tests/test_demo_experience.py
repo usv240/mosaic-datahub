@@ -95,8 +95,10 @@ def test_default_landing_does_not_rewrite_itself_to_workspace_deep_link(tmp_path
     script = TestClient(create_app(tmp_path)).get("/static/experience.js").text
     guarded_url_update = (
         "if (shouldScroll) {\n"
-        '      if (history.replaceState) history.replaceState(null, "", "?case=" + name + "#workspace");'
+        '      if (history.replaceState) history.replaceState(null, "", "?case=" + name);'
     )
-    assert guarded_url_update in script.replace("\r\n", "\n")
+    normalized = script.replace("\r\n", "\n")
+    assert guarded_url_update in normalized
+    assert '"?case=" + name + "#workspace"' not in normalized
     accessibility = Path("scripts/check_accessibility.py").read_text(encoding="utf-8")
     assert "landing did not open cleanly at top" in accessibility

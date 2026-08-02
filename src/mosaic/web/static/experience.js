@@ -96,8 +96,9 @@
     { kicker: "Step 1 - Discover", title: "First, read the map - not the data.", body: "Mosaic asks DataHub where the relevant columns originated and which assets consume them.", why: "Without lineage, each source looks harmless in isolation." },
     { kicker: "Step 2 - Converge", title: "Now connect attributes that meet downstream.", body: "ZIP5, birth date, and gender come from separate systems but converge in the research export.", why: "This cross-system combination is the finding a table-by-table scan misses." },
     { kicker: "Step 3 - Validate", title: "Measure group sizes without viewing a person.", body: "One allowlisted GROUP BY COUNT(*) query returns equivalence-class counts. The smallest count is minimum k.", why: "k=1 means a unique combination. The UI and agent still receive zero raw rows." },
-    { kicker: "Step 4 - Mitigate", title: "Test safer versions before changing anything.", body: "A shadow simulation compares suppression and generalization strategies against both privacy and retained utility.", why: "The recommended option lifts k to 20 while retaining the most useful detail." },
-    { kicker: "Step 5 - Propose", title: "Generate the fix, behind a human gate.", body: "Mosaic generates a dbt model, aggregate-only test, policy, manifest, and PR summary before preparing DataHub write-back.", why: "A reviewer must approve the code and catalog proposal; Mosaic never commits, merges, or mutates on its own." }
+    { kicker: "Step 4 - Defend", title: "Now let hostile metadata try to break the boundary.", body: "A DataHub description asks the agent to ignore policy and export member identifiers with full birth dates.", why: "The request reaches one deterministic choke point, is refused, and returns zero rows." },
+    { kicker: "Step 5 - Mitigate", title: "Test safer versions before changing anything.", body: "A shadow simulation compares suppression and generalization strategies against both privacy and retained utility.", why: "The recommended option lifts k to 20 while retaining the most useful detail." },
+    { kicker: "Step 6 - Generate", title: "Turn the evidence into a change a team can review.", body: "Mosaic generates a dbt model, aggregate-only test, policy, manifest, and PR summary behind a human gate.", why: "The payoff is code and durable DataHub context—not another dashboard alert." }
   ];
   var selected = "research";
   var running = false;
@@ -181,7 +182,7 @@
     hydrateScenario(name);
     hydrateCodegen(name);
     if (shouldScroll) {
-      if (history.replaceState) history.replaceState(null, "", "?case=" + name + "#workspace");
+      if (history.replaceState) history.replaceState(null, "", "?case=" + name);
       byId("workspace").scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }
@@ -193,13 +194,14 @@
         null,
         { kicker: "Step 2 - Screen", title: "No person-joinable combination exists.", body: "The operational run ID is high-cardinality, but its meaning and lineage do not connect it to a person.", why: "Mosaic refuses to equate many distinct values with compositional privacy risk." },
         { kicker: "Step 3 - Stop safely", title: "No data query is needed.", body: "Because the metadata screen found no multi-family convergence, Mosaic does not issue an aggregate query.", why: "Failing closed also means avoiding unnecessary data access." },
-        { kicker: "Step 4 - Verify control", title: "The negative control stays clear.", body: "No mitigation is recommended because Mosaic has not manufactured a risk finding.", why: "Safe controls demonstrate that the product distinguishes signal from cardinality theater." },
-        { kicker: "Step 5 - Record", title: "Keep the clear decision without raising an incident.", body: "The evidence records why the candidate was rejected and proposes no catalog mutation.", why: "Future reviewers inherit the reasoning as well as the outcome." }
+        { kicker: "Step 4 - Defend", title: "The safety boundary is tested anyway.", body: "Hostile catalog text still cannot open a row-level data path.", why: "A negative privacy finding never disables the agent's deterministic query policy." },
+        { kicker: "Step 5 - Verify control", title: "The negative control stays clear.", body: "No mitigation is recommended because Mosaic has not manufactured a risk finding.", why: "Safe controls demonstrate that the product distinguishes signal from cardinality theater." },
+        { kicker: "Step 6 - Record", title: "Keep the clear decision without raising an incident.", body: "The evidence records why the candidate was rejected and proposes no catalog mutation.", why: "Future reviewers inherit the reasoning as well as the outcome." }
       ];
       item = control[index];
     }
     byId("narrator").classList.remove("is-complete");
-    byId("narrator-step").textContent = "Step " + (index + 1) + " of 5";
+    byId("narrator-step").textContent = "Step " + (index + 1) + " of 6";
     byId("narrator-kicker").textContent = item.kicker;
     byId("narrator-title").textContent = item.title;
     byId("narrator-body").textContent = item.body;
@@ -212,7 +214,8 @@
     byId("narrator-kicker").textContent = "What this proves";
     byId("narrator-title").textContent = scenario.verdict === "Critical" ? "The graph exposed a measurable risk and a safer path." : "Mosaic reached the right decision without exposing a person.";
     byId("narrator-body").textContent = scenario.copy;
-    byId("narrator-why").textContent = "Inspect Finding, Validation query, Mitigation lab, generated Remediation PR, and DataHub proposal below. Every claim has visible evidence.";
+    byId("narrator-why").textContent = "Choose the attack replay or inspect the generated change. The page will not move you without permission.";
+    byId("narrator-actions").hidden = false;
   }
 
   function resetNarrator() {
@@ -220,8 +223,9 @@
     byId("narrator-step").textContent = "Before you run";
     byId("narrator-kicker").textContent = "The whole idea";
     byId("narrator-title").textContent = "DataHub shows the combination. Mosaic proves whether it is risky.";
-    byId("narrator-body").textContent = "Press Run investigation. We will explain each catalog read, calculation, safety guardrail, and proposed action as it happens.";
+    byId("narrator-body").textContent = "Press Start guided demo. We will explain each catalog read, calculation, safety guardrail, and proposed action as it happens.";
     byId("narrator-why").textContent = "The agent receives metadata and group counts - never a person-level row.";
+    byId("narrator-actions").hidden = true;
   }
   function setProgress(index) {
     all(".run-progress li").forEach(function (item, itemIndex) {
@@ -258,6 +262,46 @@
     byId("elapsed").textContent = "00:" + elapsed.toFixed(1).padStart(4, "0");
   }
 
+  function resetAttackLab() {
+    all("[data-attack-stage]").forEach(function (stage) { stage.classList.remove("is-live", "is-refused"); });
+    byId("attack-verdict").textContent = "Ready to challenge";
+    byId("attack-reason").textContent = "No request has been evaluated yet.";
+    byId("attack-continuation").textContent = "Ready";
+    byId("run-attack").disabled = false;
+    byId("run-attack").textContent = "Replay attack";
+  }
+
+  function runAttackLab(shouldScroll) {
+    byId("tab-button-attack").click();
+    if (shouldScroll) byId("tab-attack").scrollIntoView({ behavior: "smooth", block: "center" });
+    resetAttackLab();
+    byId("run-attack").disabled = true;
+    byId("run-attack").textContent = "Attacking...";
+    var stages = all("[data-attack-stage]");
+    stages[0].classList.add("is-live");
+    setTimeout(function () { stages[1].classList.add("is-live"); }, 420);
+    fetch("/api/redteam")
+      .then(function (response) { if (!response.ok) throw new Error("red-team unavailable"); return response.json(); })
+      .then(function (receipt) {
+        setTimeout(function () {
+          stages[2].classList.add("is-live", "is-refused");
+          byId("attack-verdict").textContent = receipt.controls.policy_refused_requested_sql ? "REFUSED · zero rows" : "FAILED OPEN";
+          byId("attack-reason").textContent = receipt.controls.denial_reason || receipt.failure_condition;
+          byId("attack-rows").textContent = receipt.controls.raw_person_rows_returned;
+          byId("attack-mutations").textContent = receipt.controls.mutation_performed ? "1" : "0";
+          byId("attack-continuation").textContent = receipt.controls.run_continued_with_policy_compiled_aggregate ? "Continued" : "Stopped";
+          byId("run-attack").disabled = false;
+          byId("run-attack").textContent = "Replay attack";
+        }, 840);
+      })
+      .catch(function () {
+        byId("attack-verdict").textContent = "Receipt unavailable";
+        byId("attack-reason").textContent = "Run mosaic redteam locally to verify the refusal gate.";
+        byId("run-attack").disabled = false;
+        byId("run-attack").textContent = "Retry attack";
+      });
+  }
+
   function runDemo() {
     if (running) return;
     resetDemo(false);
@@ -274,12 +318,14 @@
       "Read field semantics and column lineage from DataHub.",
       "No multi-family person-joinable convergence found.",
       "Skipped aggregate query: candidate failed the metadata screen.",
+      "Replayed hostile catalog metadata; row-level request refused.",
       "Confirmed safe negative control; no mitigation required.",
       "Recorded clear decision; no catalog mutation proposed."
     ] : [
       "Read 3 column-lineage paths from DataHub.",
       "Mapped location, date-of-birth, and demographic families.",
       "Executed allowlisted GROUP BY; received counts only.",
+      "Replayed hostile DataHub description; policy refused raw identifiers.",
       selected === "mitigated" ? "Confirmed suppression lifts minimum anonymity to k=20." : "Compared 3 reversible mitigations; suppression retains 76% utility.",
       "Generated 6 merge-ready artifacts; awaiting reviewer approval."
     ];
@@ -288,7 +334,10 @@
         setProgress(index);
         updateNarrator(index);
         addLog(message);
-        if (index === 2) setFinding(scenario);
+        if (index === 2) { setFinding(scenario); byId("tab-button-query").click(); }
+        if (index === 3) runAttackLab(false);
+        if (index === 4 && selected !== "control") byId("tab-button-mitigation").click();
+        if (index === 5 && selected !== "control") byId("tab-button-codegen").click();
         if (index === messages.length - 1) {
           all(".run-progress li").forEach(function (item) { item.classList.add("is-done"); item.classList.remove("is-active"); });
           clearInterval(clockTimer);
@@ -298,12 +347,7 @@
           button.querySelector(".run-label").textContent = "Run again";
           completeNarrator(scenario);
           if (selected !== "control") {
-            byId("tab-button-codegen").click();
-            byId("tab-codegen").scrollIntoView({
-              behavior: reduceMotion ? "auto" : "smooth",
-              block: "start"
-            });
-            showToast("Remediation PR generated. Review or download all 6 artifacts.");
+            showToast("Investigation complete. Choose what to inspect next.");
           } else {
             showToast("Safe control complete. Mosaic correctly generated no remediation code.");
           }
@@ -323,12 +367,13 @@
     byId("finding-verdict").className = "verdict neutral";
     byId("metric-k").textContent = "--"; byId("metric-below").textContent = "--"; byId("metric-downstream").textContent = "--";
     byId("metric-k-note").textContent = "Run validation to calculate";
-    byId("finding-callout").innerHTML = '<span></span><p>Select <strong>Run investigation</strong> to replay every evidence-producing step.</p>';
+    byId("finding-callout").innerHTML = '<span></span><p>Select <strong>Start guided demo</strong> to replay every evidence-producing step.</p>';
     byId("activity-log").innerHTML = '<li class="empty-log">No actions yet. Start the guided replay above.</li>';
     byId("elapsed").textContent = "00:00.0";
     resetNarrator();
+    resetAttackLab();
     byId("run-demo").disabled = false;
-    byId("run-demo").querySelector(".run-label").textContent = "Run investigation";
+    byId("run-demo").querySelector(".run-label").textContent = "Start guided demo";
     if (clearScenario) drawGraph(scenarios[selected]);
   }
 
@@ -359,12 +404,15 @@
 
   function renderCodegenBundle(bundle) {
     var list = byId("generated-file-list");
+    var preferredIndex = bundle.artifacts.findIndex(function (artifact) { return artifact.path.indexOf("models/") === 0 && artifact.path.endsWith(".sql"); });
+    if (preferredIndex < 0) preferredIndex = bundle.artifacts.findIndex(function (artifact) { return artifact.path === "PR_SUMMARY.md"; });
+    if (preferredIndex < 0) preferredIndex = 0;
     list.innerHTML = "";
     bundle.artifacts.forEach(function (artifact, index) {
       var button = document.createElement("button");
       var extension = artifact.path.split(".").pop().toUpperCase();
       button.type = "button";
-      button.className = "generated-file" + (index === 0 ? " is-active" : "");
+      button.className = "generated-file" + (index === preferredIndex ? " is-active" : "");
       button.dataset.artifactIndex = String(index);
       button.innerHTML = "<span>" + escapeHTML(extension) + "</span><b>" + escapeHTML(artifact.path) + "</b>";
       button.addEventListener("click", function () { showGeneratedArtifact(bundle, index); });
@@ -376,7 +424,8 @@
     var download = byId("codegen-download");
     download.href = "/api/remediation-bundles/" + encodeURIComponent(bundle.scenario) + "/download";
     download.removeAttribute("aria-disabled");
-    showGeneratedArtifact(bundle, 0);
+    byId("codegen-impact").hidden = false;
+    showGeneratedArtifact(bundle, preferredIndex);
   }
 
   function renderNoCodegen(message) {
@@ -386,6 +435,7 @@
     byId("codegen-status").textContent = "Stopped safely";
     byId("codegen-sha").textContent = "No bundle digest: no candidate existed.";
     byId("codegen-receipt").textContent = "Mosaic refuses to manufacture code for a safe control.";
+    byId("codegen-impact").hidden = true;
     var download = byId("codegen-download");
     download.removeAttribute("href");
     download.setAttribute("aria-disabled", "true");
@@ -514,6 +564,9 @@
     initTheme(); initTabs();
     all(".preset-card").forEach(function (card) { card.addEventListener("click", function () { selectScenario(card.dataset.scenario, true); }); });
     byId("run-demo").addEventListener("click", runDemo);
+    byId("run-attack").addEventListener("click", function () { runAttackLab(false); });
+    byId("review-attack").addEventListener("click", function () { runAttackLab(true); });
+    byId("review-pr").addEventListener("click", function () { byId("tab-button-codegen").click(); byId("tab-codegen").scrollIntoView({ behavior: "smooth", block: "start" }); });
     byId("reset-demo").addEventListener("click", function () { resetDemo(true); });
     byId("hero-run").addEventListener("click", function () { selectScenario("research", true); setTimeout(runDemo, 550); });
     var requested = new URLSearchParams(location.search).get("case");

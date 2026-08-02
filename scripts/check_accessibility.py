@@ -56,6 +56,35 @@ def main() -> int:
                 for issue in page.evaluate(CONTRAST_JS) + page.evaluate(SEMANTICS_JS):
                     findings.append(f"{theme} {route}: {issue}")
             page.close()
+
+        journey = browser.new_page(viewport={"width": 1440, "height": 1000})
+        journey.emulate_media(reduced_motion="reduce")
+        journey.goto(BASE, wait_until="networkidle")
+        journey.locator("#run-demo").click()
+        start_scroll = journey.evaluate("window.scrollY")
+        journey.locator("#narrator.is-complete").wait_for(timeout=5_000)
+        completed_scroll = journey.evaluate("window.scrollY")
+        if abs(completed_scroll - start_scroll) > 20:
+            findings.append(
+                f"guided demo moved the page without consent: {start_scroll} -> {completed_scroll}"
+            )
+        if not journey.locator("#narrator-actions").is_visible():
+            findings.append("guided demo did not expose completion choices")
+        journey.locator("#review-attack").click()
+        journey.locator("#attack-verdict").filter(has_text="REFUSED").wait_for(timeout=5_000)
+        if journey.locator("#attack-rows").inner_text() != "0":
+            findings.append("attack replay did not preserve the zero-row boundary")
+        journey.locator("#review-pr").click()
+        generated_path = journey.locator("#generated-path").inner_text()
+        if not generated_path.startswith("models/") or not generated_path.endswith(".sql"):
+            findings.append(f"generated-code payoff did not open on model SQL: {generated_path}")
+        journey.goto(BASE + "/?case=research", wait_until="networkidle")
+        deep_link = journey.evaluate(
+            "() => ({scrollY: window.scrollY, search: location.search, hash: location.hash})"
+        )
+        if deep_link != {"scrollY": 0, "search": "?case=research", "hash": ""}:
+            findings.append(f"scenario reload did not return to the top: {deep_link}")
+        journey.close()
         browser.close()
     if findings:
         print("\n".join(findings))

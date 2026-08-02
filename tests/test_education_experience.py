@@ -43,13 +43,14 @@ def test_each_agent_step_explains_action_and_significance(tmp_path) -> None:
         "Step 1 - Discover",
         "Step 2 - Converge",
         "Step 3 - Validate",
-        "Step 4 - Mitigate",
-        "Step 5 - Propose",
+        "Step 4 - Defend",
+        "Step 5 - Mitigate",
+        "Step 6 - Generate",
     ):
         assert step in script
     assert script.count("why:") >= 9
     assert "What this proves" in script
-    assert "Every claim has visible evidence" in script
+    assert "The page will not move you without permission" in script
 
 
 def test_negative_control_receives_its_own_educational_story(tmp_path) -> None:
