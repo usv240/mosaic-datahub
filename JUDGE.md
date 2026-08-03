@@ -7,7 +7,7 @@ uv sync --locked --extra dev
 uv run mosaic serve
 ```
 
-Open `http://127.0.0.1:8123` and choose **Watch all 4 decisions (30 sec)**. The presenter run proves two detected risks, one verified mitigation, one refused false positive, and zero person-level rows, then brings its comparison scorecard into view automatically. For a technical deep dive, select Research export and inspect Finding, Validation query, Attack lab, Mitigation lab, Remediation PR, and DataHub proposal in order. Light/dark themes, retained run history, printable integrity-verified evidence, and guarded operator settings are also included.
+Open `http://127.0.0.1:8123` and choose **Choose one of 4 demos**. Open the case explorer, select a case, and press **Start selected case**. Step 1 appears; each press of **Continue** reveals exactly one later evidence step. Waiting does nothing. Use **Next case** and **Compare results** only when ready. The four cases prove two detected risks, one verified mitigation, one refused false positive, and zero person-level rows. For a technical deep dive, inspect Finding, Validation query, Attack lab, Mitigation lab, Remediation PR, and DataHub proposal before moving next. Light/dark themes, retained run history, printable integrity-verified evidence, and guarded operator settings are also included.
 
 ## Offline proof commands
 

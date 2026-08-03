@@ -24,6 +24,29 @@ def _screenshot(page: Page, name: str, *, full_page: bool = True) -> Path:
     return path
 
 
+def _finish_selected_case(page: Page, start_selector: str, *, pause_ms: int = 75) -> None:
+    page.locator(start_selector).click()
+    for _ in range(5):
+        if pause_ms:
+            page.wait_for_timeout(pause_ms)
+        page.locator("#advance-demo-step").click(timeout=5_000)
+    page.locator("#narrator.is-complete").wait_for(timeout=5_000)
+
+
+def _complete_case_explorer(page: Page) -> None:
+    page.locator("#run-all-scenarios").click()
+    for index, name in enumerate(("research", "mitigated", "control", "audience")):
+        if index:
+            page.locator("#next-tour-case").click()
+        _finish_selected_case(page, "#run-tour-case")
+        page.wait_for_timeout(100)
+        result_class = page.locator(f"[data-tour-result='{name}']").get_attribute("class")
+        if not result_class or "is-verified" not in result_class:
+            raise RuntimeError(f"{name} did not reach verified state")
+    page.locator("#compare-tour").click()
+    page.locator("#tour-summary").wait_for(state="visible", timeout=5_000)
+
+
 def main() -> int:
     started = time.monotonic()
     OUTPUT.mkdir(parents=True, exist_ok=True)
@@ -65,8 +88,7 @@ def main() -> int:
         desktop.locator('[data-scenario="audience"]').click()
         desktop.wait_for_timeout(600)
         files.append(_screenshot(desktop, "02-audience-preset.png"))
-        desktop.locator("#run-demo").click()
-        desktop.wait_for_timeout(8_000)
+        _finish_selected_case(desktop, "#run-demo")
         desktop.locator('[data-tab="attack"]').click()
         desktop.locator("#attack-verdict").filter(has_text="REFUSED").wait_for()
         attack_path = OUTPUT / "12-attack-refusal.png"
@@ -89,8 +111,7 @@ def main() -> int:
         tour = browser.new_page(viewport={"width": 1440, "height": 1000})
         tour.emulate_media(reduced_motion="reduce")
         _ready(tour)
-        tour.locator("#run-all-scenarios").click()
-        tour.locator("#tour-summary").wait_for(state="visible", timeout=10_000)
+        _complete_case_explorer(tour)
         tour_path = OUTPUT / "13-four-case-scorecard.png"
         tour.locator("#tour-summary").screenshot(path=tour_path)
         files.append(tour_path)
@@ -122,14 +143,12 @@ def main() -> int:
         capture_scene("video-01-hero.png")
 
         scenes.locator('[data-scenario="research"]').click()
-        scenes.locator("#run-demo").click()
-        scenes.locator("#narrator.is-complete").wait_for(timeout=5_000)
+        _finish_selected_case(scenes, "#run-demo")
         scenes.locator("#workspace").scroll_into_view_if_needed()
         capture_scene("video-02-lineage.png")
 
         _ready(scenes)
-        scenes.locator("#hero-run").click()
-        scenes.locator("#tour-summary").wait_for(state="visible", timeout=10_000)
+        _complete_case_explorer(scenes)
         capture_scene("video-03-four-decisions.png")
 
         _ready(scenes)
@@ -140,8 +159,7 @@ def main() -> int:
         capture_scene("video-04-cross-asset.png")
 
         scenes.locator('[data-scenario="research"]').click()
-        scenes.locator("#run-demo").click()
-        scenes.locator("#narrator.is-complete").wait_for(timeout=5_000)
+        _finish_selected_case(scenes, "#run-demo")
         scenes.locator("#workspace").scroll_into_view_if_needed()
         capture_scene("video-05-measured-result.png")
 
@@ -187,8 +205,7 @@ def main() -> int:
         walkthrough.wait_for_timeout(1_000)
         walkthrough.locator('[data-scenario="research"]').click()
         walkthrough.wait_for_timeout(800)
-        walkthrough.locator("#run-demo").click()
-        walkthrough.wait_for_timeout(4_000)
+        _finish_selected_case(walkthrough, "#run-demo", pause_ms=650)
         for tab in ("query", "mitigation", "codegen", "writeback"):
             walkthrough.locator(f'[data-tab="{tab}"]').click()
             walkthrough.wait_for_timeout(1_000)

@@ -1,48 +1,48 @@
 {
   "schema_version": 1,
-  "captured_at": "2026-08-02T18:21:10.909325+00:00",
+  "captured_at": "2026-08-03T04:51:04.219839+00:00",
   "base_url": "http://127.0.0.1:8123",
   "purpose": "Judge screenshots and edit-ready product footage generated from the running Mosaic application.",
   "files": [
     {
       "path": "01-landing-dark.png",
-      "bytes": 808182,
-      "sha256": "01cb01303279c0c65813522faca824ea42435bef1d65045358ec2afedb614347"
+      "bytes": 791883,
+      "sha256": "9a41edd9017a4e520c2de961a5bc153157e7281c9b117d76ebc7a5b5b9ee499e"
     },
     {
       "path": "08-datahub-architecture.png",
-      "bytes": 118653,
-      "sha256": "2428a7296b415c9610c96712fba2b4924bc5f1dc30447889b676f2d8234f80c1"
+      "bytes": 124436,
+      "sha256": "1ccfc950c447add877c9d44672bc13ea21494edacb3e1e423ce3ea65c6631819"
     },
     {
       "path": "10-research-standards.png",
-      "bytes": 60099,
-      "sha256": "b9716fda43e850b5e54bff4daa6f954a4103131342b91810db7d0bc4ddb4559c"
+      "bytes": 60142,
+      "sha256": "8738e61e195ea6bfc8cd10126612d8c728a0f332d74c7736a98d8d04ea797c55"
     },
     {
       "path": "11-agent-policy-boundary.png",
-      "bytes": 235869,
-      "sha256": "214cbaf8f8ae49d9c5f0a3e111a91e933259a9e07d6cd11b2d89f0780486a3a8"
+      "bytes": 235278,
+      "sha256": "4020d1dead11aa880e3457c7175649dcfdb1976afe3fd16f4e3091097547b3b0"
     },
     {
       "path": "02-audience-preset.png",
-      "bytes": 1599537,
-      "sha256": "0555fe5bdaf7a8b433267737b9c05f513f094409c1680ed6765bec2da1e671bf"
+      "bytes": 1603842,
+      "sha256": "ef4c07460584ac3a19f28da4118f6ac427f6119cf208f41036c7c4df35422f82"
     },
     {
       "path": "12-attack-refusal.png",
-      "bytes": 36191,
-      "sha256": "3f67f8935c9c5b4824e6e28ecc903c3b8aa98ced3a78d05848ecb753e0b83dde"
+      "bytes": 37386,
+      "sha256": "1565755d845a79583f5491fb9099973fd484e96c322a59b286ec8dfac2ec12d9"
     },
     {
       "path": "03-completed-investigation.png",
-      "bytes": 1689910,
-      "sha256": "7bbd3f06d180887540cb4ad04ea51376b5e7af43fa127600c05955ac24c6d23f"
+      "bytes": 1714201,
+      "sha256": "6e1835002d0a77c829129d16c9998998366711274066a666c92eb35669c79b80"
     },
     {
       "path": "09-remediation-pr.png",
-      "bytes": 94896,
-      "sha256": "404a545e79a20510a01f6667fa64ab5c27450d52e173018b7227b99ffca8fe44"
+      "bytes": 94050,
+      "sha256": "62ec74b792583e416888f8ce716b08c1defe3155b9344ac81595bbed9e8eb81b"
     },
     {
       "path": "04-evidence-catalog.png",
@@ -56,63 +56,63 @@
     },
     {
       "path": "13-four-case-scorecard.png",
-      "bytes": 149822,
-      "sha256": "e739912df4f4d9b014df5ee4abc61c94ca452284a7111697e5f5cbcb379d7b16"
+      "bytes": 138579,
+      "sha256": "869844546b51577bb259affdd394db35494b8ace46b0c1d8ab41363fd304fc9f"
     },
     {
       "path": "06-landing-light.png",
-      "bytes": 932617,
-      "sha256": "5d1d624bbe425186fb5664b448eadc00241353984af5f57646b7d8a1d8a6ed0f"
+      "bytes": 911001,
+      "sha256": "9727fca1b0913b5f314af2674e0da93b1fce51860632eb50a3db638a2d856da7"
     },
     {
       "path": "07-mobile-landing.png",
-      "bytes": 585601,
-      "sha256": "6b2941cc2147c8ac32788fe78bfb584a3e0d02a347c64afea8f797fed60e8334"
+      "bytes": 590990,
+      "sha256": "3920462dbb5e55b3973d511ca0bc0c60774b23736027580de5e6f0dc2bdc5516"
     },
     {
       "path": "video-01-hero.png",
-      "bytes": 165181,
-      "sha256": "244d871b41e48ac614c64c3cf967ce6a9cf987a88aabc045803c394ecb40d00b"
+      "bytes": 164443,
+      "sha256": "5638dde2f61b5d6571357dd131d3d23e0dff1164a30cf51190eff491048dd97d"
     },
     {
       "path": "video-02-lineage.png",
-      "bytes": 155630,
-      "sha256": "b4802dae84ea46cac888e0a3ce396b578a666476c5e4e372d5c2359004cf34b3"
+      "bytes": 193926,
+      "sha256": "c0003ec81f60917f31490186d145e12aab2a54127cd0d0faa91c8fe861929714"
     },
     {
       "path": "video-03-four-decisions.png",
-      "bytes": 142875,
-      "sha256": "09279446c603efcc880964cdef41885fc6eb9126bc18927fe3181b9e885fb091"
+      "bytes": 144322,
+      "sha256": "4e30612f9af6a02915975fd9464a1eca5e949bf3704e228b1a0ac96639cb4cab"
     },
     {
       "path": "video-04-cross-asset.png",
-      "bytes": 310836,
-      "sha256": "595c1e5fd55625995d2a1617f59466bd8d0d12b70ed164ce3f06a42c16ed0a80"
+      "bytes": 310889,
+      "sha256": "a5dcd5629aa7335a2b429bb31d0f46eedafeb423db0cd3404b7b4c65be808c7b"
     },
     {
       "path": "video-05-measured-result.png",
-      "bytes": 155630,
-      "sha256": "b4802dae84ea46cac888e0a3ce396b578a666476c5e4e372d5c2359004cf34b3"
+      "bytes": 193926,
+      "sha256": "c0003ec81f60917f31490186d145e12aab2a54127cd0d0faa91c8fe861929714"
     },
     {
       "path": "video-06-agent-boundary.png",
-      "bytes": 310815,
-      "sha256": "89e8ce40aa992813ff65948c81ce010550c6e99a760f3704534b5b44601bbcb7"
+      "bytes": 309994,
+      "sha256": "499fe4ac80ba2d81e594e2f065fdad506af13703077ec772bb368a92f123995a"
     },
     {
       "path": "video-07-attack-refusal.png",
-      "bytes": 77403,
-      "sha256": "c3c9195bb3112214053f5f894a8fcd7d05360363ba16bda2a0449048169ce764"
+      "bytes": 76972,
+      "sha256": "0093760d4e151726fa7ee485e277d53f0591da0d14263f1728e882404b63242a"
     },
     {
       "path": "video-08-generated-pr.png",
-      "bytes": 100384,
-      "sha256": "60d7c7a65913b512db6e36754ee28ed2161b2415abe0ab4b4aa03561c450744d"
+      "bytes": 101119,
+      "sha256": "ae0304e4e90be2cc8f6da3bccfb8bd532016c552bb54f60cd1a2dd93070b5b1f"
     },
     {
       "path": "video-09-datahub-stack.png",
-      "bytes": 70594,
-      "sha256": "da86fbacc00e882bbf7ad758a6b83478e0a6c56a46dbbf291f65714113783dc9"
+      "bytes": 70726,
+      "sha256": "070f9f04f14a58069c575a15de34848224de60aa97ccfc35d04c6529ba01eda4"
     },
     {
       "path": "video-10-external-evidence.png",
@@ -126,8 +126,8 @@
     },
     {
       "path": "08-product-walkthrough.webm",
-      "bytes": 1820681,
-      "sha256": "4368f16b36bce5e5d5de2c60b65a7ff359fb5e475864b985c2c32b44d90fb231"
+      "bytes": 1850482,
+      "sha256": "43666778208af9c8fecd79a0086534d541972a6f79fdb36444f8282a2038ad19"
     }
   ],
   "video_duration_limit_seconds": 180,

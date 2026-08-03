@@ -55,7 +55,7 @@
         <div class="hero-actions">
           <button class="primary-button" id="hero-run" type="button">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 7 8 5-8 5Z"/></svg>
-            Watch all 4 decisions (30 sec)
+            Choose one of 4 demos
           </button>
           <a class="secondary-button" href="#impact">Understand it first</a>
         </div>
@@ -110,7 +110,7 @@
         <p><span>0</span> person-level rows exposed</p>
       </div>
       <div class="case-picker" id="presets">
-        <div class="case-picker-heading"><div><p class="eyebrow">Choose a guided case</p><h3>Four cases. One honest decision system.</h3></div><p>Start with the critical research export, or test whether Mosaic recognizes a mitigation and refuses a false positive.</p></div>
+        <div class="case-picker-heading"><div><p class="eyebrow">Choose one demo at a time</p><h3>Four cases. You control the pace.</h3></div><p>Select any case, reveal one evidence step at a time, and move on only when you are ready.</p></div>
         <div class="preset-grid compact-presets">
           <button class="preset-card is-selected" type="button" data-scenario="research" aria-pressed="true"><span class="case-icon research">R</span><span><small>Critical</small><strong>Research export</strong><em>Risk created by convergence</em></span><b>&rarr;</b></button>
           <button class="preset-card" type="button" data-scenario="mitigated" aria-pressed="false"><span class="case-icon mitigated">M</span><span><small>Safe</small><strong>Mitigated export</strong><em>Suppression lifts k to 20</em></span><b>&rarr;</b></button>
@@ -118,21 +118,26 @@
           <button class="preset-card" type="button" data-scenario="audience" aria-pressed="false"><span class="case-icon audience">A</span><span><small>Critical</small><strong>Audience delivery</strong><em>Segments identify together</em></span><b>&rarr;</b></button>
         </div>
         <div class="case-tour-launch">
-          <div><small>Presenter mode</small><strong>Prove all four behaviors in one guided run.</strong><span>About 30 seconds: two risks, one successful mitigation, and one honest negative control.</span></div>
-          <button class="primary-button" id="run-all-scenarios" type="button">Demo all 4 cases</button>
+          <div><small>Manual four-case review</small><strong>Start when ready, then advance one step per click.</strong><span>Select a case, start it, inspect each step, then choose what comes next.</span></div>
+          <button class="primary-button" id="run-all-scenarios" type="button">Open case explorer</button>
         </div>      </div>
       <p class="quickstart-audience"><strong>Built for every team around governed data:</strong> privacy gets evidence, data gets exact lineage, governance gets durable review state, and security gets a prioritized blast radius. <span>no privacy background needed.</span></p>
     </section>
     <section class="workspace-wrap" id="workspace" aria-labelledby="workspace-title">
       <section class="tour-controller" id="tour-controller" aria-labelledby="tour-title" hidden>
-        <div><p class="eyebrow">All-scenarios tour</p><h2 id="tour-title">Preparing four independent decisions.</h2><p id="tour-copy">Watch Mosaic detect, validate, refuse, and generalize without exposing a person-level row.</p></div>
-        <ol class="tour-progress" aria-label="All-scenarios progress">
-          <li data-tour-scenario="research"><span>1</span><div><strong>Research risk</strong><small>Waiting</small></div></li>
-          <li data-tour-scenario="mitigated"><span>2</span><div><strong>Mitigation</strong><small>Waiting</small></div></li>
-          <li data-tour-scenario="control"><span>3</span><div><strong>Negative control</strong><small>Waiting</small></div></li>
-          <li data-tour-scenario="audience"><span>4</span><div><strong>Audience risk</strong><small>Waiting</small></div></li>
-        </ol>
-        <button class="ghost-button" id="cancel-tour" type="button">Stop tour</button>
+        <div><p class="eyebrow">Manual case explorer</p><h2 id="tour-title">Choose a case to inspect.</h2><p id="tour-copy">Start reveals step 1. Each later step waits for Continue. You decide when to move next or compare.</p></div>
+        <div class="tour-progress" role="group" aria-label="Choose a scenario demo">
+          <button type="button" data-tour-scenario="research" aria-pressed="false"><span>1</span><div><strong>Research risk</strong><small>Waiting</small></div></button>
+          <button type="button" data-tour-scenario="mitigated" aria-pressed="false"><span>2</span><div><strong>Mitigation</strong><small>Waiting</small></div></button>
+          <button type="button" data-tour-scenario="control" aria-pressed="false"><span>3</span><div><strong>Negative control</strong><small>Waiting</small></div></button>
+          <button type="button" data-tour-scenario="audience" aria-pressed="false"><span>4</span><div><strong>Audience risk</strong><small>Waiting</small></div></button>
+        </div>
+        <div class="tour-actions">
+          <button class="primary-button compact" id="run-tour-case" type="button">Start selected case</button>
+          <button class="ghost-button" id="next-tour-case" type="button" disabled>Next case</button>
+          <button class="ghost-button" id="compare-tour" type="button" hidden>Compare results</button>
+          <button class="text-button" id="cancel-tour" type="button">Exit explorer</button>
+        </div>
       </section>
       <div class="workspace-shell">
         <header class="workspace-header">
@@ -143,7 +148,7 @@
           </div>
           <div class="workspace-actions">
             <button class="ghost-button" id="reset-demo" type="button">Reset</button>
-            <button class="primary-button compact" id="run-demo" type="button"><span class="run-label">Start guided demo</span></button>
+            <button class="primary-button compact" id="run-demo" type="button"><span class="run-label">Start selected demo</span></button>
           </div>
         </header>
 
@@ -157,11 +162,11 @@
         </ol>
 
 
-        <section class="narrator" id="narrator" aria-live="polite" aria-atomic="true">
+        <section class="narrator" id="narrator" tabindex="-1" aria-live="polite" aria-atomic="true">
           <span class="narrator-step" id="narrator-step">Before you run</span>
-          <div class="narrator-copy"><small id="narrator-kicker">The whole idea</small><h3 id="narrator-title">DataHub shows the combination. Mosaic proves whether it is risky.</h3><p id="narrator-body">Press Start guided demo. We will explain each catalog read, calculation, safety guardrail, and proposed action as it happens.</p></div>
+          <div class="narrator-copy"><small id="narrator-kicker">The whole idea</small><h3 id="narrator-title">DataHub shows the combination. Mosaic proves whether it is risky.</h3><p id="narrator-body">Press Start selected demo to reveal step 1. We will explain each catalog read, calculation, safety guardrail, and proposed action, one evidence step per click.</p></div>
           <div class="narrator-why"><small>What to watch for</small><p id="narrator-why">The agent receives metadata and group counts - never a person-level row.</p></div>
-          <div class="narrator-actions" id="narrator-actions" hidden><button type="button" id="review-attack">Replay attack</button><button type="button" id="review-pr">Review generated change</button><button type="button" id="review-tour" hidden>Compare all 4 cases</button></div>
+          <div class="narrator-actions" id="narrator-actions" hidden><button class="advance-demo-step" type="button" id="advance-demo-step" hidden>Continue to step 2 of 6</button><button type="button" id="review-attack" hidden>Replay attack</button><button type="button" id="review-pr" hidden>Review generated change</button><button type="button" id="review-tour" hidden>Compare completed cases</button></div>
         </section>        <div class="workspace-grid">
           <section class="graph-panel panel" aria-labelledby="graph-title">
             <div class="panel-head">
@@ -177,12 +182,12 @@
           <aside class="finding-panel panel" aria-labelledby="finding-title">
             <div class="panel-head"><div><p class="panel-kicker">Assessment</p><h3 id="finding-title">Waiting to run</h3></div><span class="verdict neutral" id="finding-verdict">Ready</span></div>
             <div class="metric-stack">
-              <article><span>Minimum anonymity set <button class="help" type="button" data-tip="k is the number of records sharing the same quasi-identifier combination." aria-label="Explain minimum anonymity set">?</button></span><strong id="metric-k">--</strong><small id="metric-k-note">Run validation to calculate</small></article>
+              <article><span class="metric-label">Minimum anonymity set <span class="help-wrap"><button class="help" type="button" aria-label="Explain minimum anonymity set" aria-describedby="metric-k-help" aria-controls="metric-k-help" aria-expanded="false">?</button><span class="help-tooltip" id="metric-k-help" role="tooltip">Minimum anonymity set (k) is the smallest group sharing the same quasi-identifier values. k=1 means one unique combination; higher k means lower singling-out risk in this demo.</span></span></span><strong id="metric-k">--</strong><small id="metric-k-note">Run validation to calculate</small></article>
               <article><span>Records below k=5</span><strong id="metric-below">--</strong><small>Calculated from group counts</small></article>
               <article class="zero-metric"><span>Raw person-level rows returned</span><strong id="metric-raw">0</strong><small>Enforced by query policy</small></article>
               <article><span>Downstream assets exposed</span><strong id="metric-downstream">--</strong><small>From DataHub blast radius</small></article>
             </div>
-            <div class="finding-callout" id="finding-callout"><span></span><p>Select <strong>Start guided demo</strong> to replay every evidence-producing step.</p></div>
+            <div class="finding-callout" id="finding-callout"><span></span><p>Select <strong>Start selected demo</strong> to reveal the first evidence step.</p></div>
           </aside>
         </div>
 
@@ -246,7 +251,7 @@ GROUP BY zip5, birth_date, gender_category</code></pre>
 
         <section class="activity-panel panel" aria-labelledby="activity-title">
           <div class="panel-head"><div><p class="panel-kicker">Agent activity</p><h3 id="activity-title">Evidence-producing steps</h3></div><span class="elapsed" id="elapsed">00:00.0</span></div>
-          <ol class="activity-log" id="activity-log"><li class="empty-log">No actions yet. Start the guided replay above.</li></ol>
+          <ol class="activity-log" id="activity-log"><li class="empty-log">No actions yet. Start the selected demo above.</li></ol>
         </section>
       </div>
       <section class="tour-scorecard" id="tour-summary" aria-labelledby="tour-summary-title" aria-live="polite" tabindex="-1" hidden>

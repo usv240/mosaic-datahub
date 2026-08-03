@@ -33,9 +33,9 @@ The generated-code workbench exposes all six artifacts, validation receipts, Dat
 
 ## Four preset investigations
 
-Presenter mode runs all four backend scenarios and ends with a decision scorecard: two detected risks, one verified mitigation, and one refused false positive.
+The manual case explorer starts only after an explicit click, reveals each of six evidence steps only when Continue is pressed, and opens the decision scorecard on demand: two detected risks, one verified mitigation, and one refused false positive.
 
-[![Four-case presenter scorecard](12-four-case-scorecard.png)](12-four-case-scorecard.png)
+[![Manually verified four-case scorecard](12-four-case-scorecard.png)](12-four-case-scorecard.png)
 
 The audience preset also proves that the fourth scenario is a complete interactive client experience, not an API-only fixture.
 

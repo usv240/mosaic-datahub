@@ -43,9 +43,9 @@ uv run mosaic serve
 ```
 
 Open `http://127.0.0.1:8123`. The console includes light and dark modes, a narrated attack path, four backend scenarios, safe controls, exact metrics, a mitigation lab, retained evidence history, printable run reports, operator settings, and plain-English definitions.
-### Best first demo: prove all four decisions
+### Best first demo: inspect all four decisions at your pace
 
-On the landing page, choose **Demo all 4 cases**. Presenter mode runs the complete decision range and ends with a comparison scorecard:
+On the landing page, choose **Open case explorer**. Select a case and press **Start selected case**. Step 1 opens immediately; after reading it, press **Continue to step N of 6** five times. Waiting never advances the evidence. Choose **Next case** and **Compare results** only when you are ready:
 
 | Case | Expected decision | What it proves |
 |---|---|---|
@@ -54,7 +54,7 @@ On the landing page, choose **Demo all 4 cases**. Presenter mode runs the comple
 | Negative control | Clear; no warehouse query and no generated code | Mosaic refuses to invent a finding or access data without sufficient metadata evidence |
 | Audience delivery | Critical, `k=1`, two downstream assets | The mechanism generalizes to a second business domain rather than one memorized fixture |
 
-The tour returns zero person-level rows. After the scorecard, use **Run locally** for the reproducible CLI, **Plan adoption** for connector and control requirements, or **Inspect evidence** for retained receipts. For a slower technical review, select any case manually and inspect Finding, Validation query, Mitigation lab, Remediation PR, and DataHub proposal in order.
+Every case returns zero person-level rows. No case, evidence step, next-case transition, comparison, or page scroll advances on a timer. After the scorecard, use **Run locally** for the reproducible CLI, **Plan adoption** for connector and control requirements, or **Inspect evidence** for retained receipts. For a technical review, inspect Finding, Validation query, Attack lab, Mitigation lab, Remediation PR, and DataHub proposal before moving next.
 
 Or start the safe, read-only container path:
 
@@ -162,9 +162,9 @@ See [evaluations/benchmark.json](evaluations/benchmark.json), [fixtures/datahub_
 
 ## Product tour
 
-**Start here: all four decisions in one presenter run**
+**Start here: four decisions in a manual case explorer**
 
-[![Mosaic four-case presenter scorecard](docs/screenshots/12-four-case-scorecard.png)](docs/screenshots/12-four-case-scorecard.png)
+[![Mosaic manually verified four-case scorecard](docs/screenshots/12-four-case-scorecard.png)](docs/screenshots/12-four-case-scorecard.png)
 | First-visit education | Guided investigation |
 |---|---|
 | [![Mosaic landing page in dark mode](docs/screenshots/01-landing-dark.png)](docs/screenshots/01-landing-dark.png) | [![Completed privacy investigation](docs/screenshots/03-completed-investigation.png)](docs/screenshots/03-completed-investigation.png) |

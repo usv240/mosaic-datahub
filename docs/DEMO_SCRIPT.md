@@ -1,4 +1,4 @@
-﻿# Mosaic narrated demo — 2:49
+# Mosaic narrated demo — 2:49
 
 The committed MP4 is generated from these eleven tested 16:9 scenes and the exact voice-over in [`narration.txt`](demo/narration.txt). Rebuild it with `uv run --with imageio-ffmpeg python scripts/build_submission_video.py` after capturing media.
 
@@ -12,7 +12,7 @@ Show ZIP code, birth date, and demographic category arriving through independent
 
 ## 0:23–0:36 — Four decisions, not one rehearsed answer
 
-Show the presenter scorecard: two critical findings, one verified mitigation, and one negative control that produces no query or code. State that all four cases return zero person-level rows.
+Open the manual case explorer. Select a case, press Start, and reveal each later evidence step with Continue. Pause after every result; then choose Compare results. Show two critical findings, one verified mitigation, and one negative control that produces no query or code. State that all four cases return zero person-level rows.
 
 ## 0:36–0:51 — Cross-asset composition
 

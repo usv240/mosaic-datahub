@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "status": "upload_ready",
-  "built_at": "2026-08-02T18:23:46.085039+00:00",
+  "built_at": "2026-08-03T04:51:43.454042+00:00",
   "path": "docs/demo/mosaic-submission-demo.mp4",
   "duration_seconds": 169.88,
   "duration_limit_seconds": 180,
@@ -17,8 +17,8 @@
     "sample_rate_hz": 22050
   },
   "scene_count": 11,
-  "bytes": 5641215,
-  "sha256": "099920ad27f464237ada92194294bc63401f90510fc1a18f8963371e4c2e34d0",
+  "bytes": 5754857,
+  "sha256": "2ade71720a8867ce37470d33cd4881253e177b69b7f7e416f99a7f9c91dee7b8",
   "public_url": null,
   "public_upload_status": "pending_authenticated_youtube_or_vimeo_session"
 }

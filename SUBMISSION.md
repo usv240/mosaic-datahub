@@ -22,7 +22,7 @@ A PII scanner asks whether one column is sensitive. Mosaic asks whether several 
 
 ## Judge path
 
-The hosted product teaches the problem in plain language, then launches all four working backend scenarios from the first viewport: a critical research export, a successfully mitigated shadow export, a safe operational control, and a second-domain audience export. The 30-second presenter run automatically reveals a comparison scorecard; every preset loads configuration-backed results from the API rather than swapping client-only labels.
+The hosted product teaches the problem in plain language, then lets a judge choose among four working backend scenarios: a critical research export, a successfully mitigated shadow export, a safe operational control, and a second-domain audience export. The manual case explorer never auto-runs, advances an evidence step, moves to another case, scrolls, or opens comparison on a timer: judges start a case, reveal each of six steps by click, inspect, move next, and compare on demand. Every preset loads configuration-backed results from the API rather than swapping client-only labels.
 
 The main critical fixture has 120 synthetic records, minimum k=1, 100% below k=5, three downstream assets, and zero raw rows returned. The selected mitigation reaches minimum k=20 in shadow mode. Mosaic then generates six deterministic, hash-verified PR artifacts; judges can review them in the product, download a ZIP, run the CLI, or inspect two committed examples.
 

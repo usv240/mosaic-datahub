@@ -7,7 +7,7 @@ uv sync --locked --extra dev
 uv run mosaic serve
 ```
 
-Open `http://127.0.0.1:8123` and choose **Watch all 4 decisions (30 sec)**. The tour ends on a four-case scorecard with the evidence and adoption paths visible. For a slower technical review, select a preset and choose **Run investigation**. No network, LLM, warehouse, Docker, or DataHub instance is required.
+Open `http://127.0.0.1:8123` and choose **Choose one of 4 demos**. Select any case, press **Start selected case**, then reveal the remaining five evidence steps with **Continue**. Waiting does nothing. Use **Next case** and **Compare results** only when ready. No network, LLM, warehouse, Docker, or DataHub instance is required.
 
 ## Verify the central claims
 

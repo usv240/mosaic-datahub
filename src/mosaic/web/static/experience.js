@@ -102,13 +102,17 @@
   ];
   var selected = "research";
   var running = false;
-  var runTimers = [];
+  var runMessages = [];
+  var runStep = -1;
+  var runScenario = null;
+  var runCompletion = null;
   var startedAt = 0;
-  var clockTimer = null;
+  var attackRequestId = 0;
+  var attackController = null;
+  var codegenRequestId = 0;
   var tourOrder = ["research", "mitigated", "control", "audience"];
   var tourRunning = false;
   var tourIndex = 0;
-  var tourTimer = null;
 
   function byId(id) { return document.getElementById(id); }
   function all(selector) { return Array.prototype.slice.call(document.querySelectorAll(selector)); }
@@ -136,6 +140,38 @@
     sync();
   }
 
+  function initHelpTips() {
+    var wraps = all(".help-wrap");
+    function closeHelpTips() {
+      wraps.forEach(function (wrap) {
+        var button = wrap.querySelector(".help");
+        wrap.classList.remove("is-open");
+        button.setAttribute("aria-expanded", "false");
+        if (document.activeElement === button) wrap.classList.add("is-dismissed");
+      });
+    }
+    wraps.forEach(function (wrap) {
+      var button = wrap.querySelector(".help");
+      button.addEventListener("click", function (event) {
+        event.stopPropagation();
+        var shouldOpen = !wrap.classList.contains("is-open");
+        closeHelpTips();
+        if (shouldOpen) {
+          wrap.classList.remove("is-dismissed");
+          wrap.classList.add("is-open");
+          button.setAttribute("aria-expanded", "true");
+        }
+      });
+      button.addEventListener("keydown", function (event) {
+        if (event.key !== "Escape") return;
+        event.preventDefault();
+        closeHelpTips();
+      });
+      button.addEventListener("blur", function () { wrap.classList.remove("is-dismissed"); });
+      wrap.addEventListener("pointerleave", function () { wrap.classList.remove("is-dismissed"); });
+    });
+    document.addEventListener("click", closeHelpTips);
+  }
   function nodeCenter(node) {
     return { x: node.x + 9, y: node.y + 8 };
   }
@@ -239,16 +275,23 @@
     byId("narrator-body").textContent = scenario.copy;
     byId("narrator-why").textContent = "Choose the attack replay or inspect the generated change. The page will not move you without permission.";
     byId("narrator-actions").hidden = false;
+    byId("advance-demo-step").hidden = true;
+    byId("review-attack").hidden = false;
+    byId("review-pr").hidden = scenario.verdict === "Clear";
+    byId("review-tour").hidden = !tourRunning;
+    byId("narrator").focus({ preventScroll: true });
   }
-
   function resetNarrator() {
     byId("narrator").classList.remove("is-complete");
     byId("narrator-step").textContent = "Before you run";
     byId("narrator-kicker").textContent = "The whole idea";
     byId("narrator-title").textContent = "DataHub shows the combination. Mosaic proves whether it is risky.";
-    byId("narrator-body").textContent = "Press Start guided demo. We will explain each catalog read, calculation, safety guardrail, and proposed action as it happens.";
+    byId("narrator-body").textContent = "Press Start selected demo to reveal step 1. We will explain each catalog read, calculation, safety guardrail, and proposed action, one evidence step per click.";
     byId("narrator-why").textContent = "The agent receives metadata and group counts - never a person-level row.";
     byId("narrator-actions").hidden = true;
+    byId("advance-demo-step").hidden = true;
+    byId("review-attack").hidden = true;
+    byId("review-pr").hidden = true;
     byId("review-tour").hidden = true;
   }
   function setProgress(index) {
@@ -296,45 +339,59 @@
   }
 
   function runAttackLab(shouldScroll) {
+    if (attackController) attackController.abort();
+    var requestId = ++attackRequestId;
+    var controller = new AbortController();
+    attackController = controller;
+    var timeoutId = setTimeout(function () { controller.abort(); }, 4_000);
     byId("tab-button-attack").click();
     if (shouldScroll) byId("tab-attack").scrollIntoView({ behavior: "smooth", block: "center" });
     resetAttackLab();
     byId("run-attack").disabled = true;
-    byId("run-attack").textContent = "Attacking...";
+    byId("run-attack").textContent = "Checking policy...";
     var stages = all("[data-attack-stage]");
     stages[0].classList.add("is-live");
-    setTimeout(function () { stages[1].classList.add("is-live"); }, 420);
-    fetch("/api/redteam")
+    stages[1].classList.add("is-live");
+    byId("advance-demo-step").disabled = true;
+    return fetch("/api/redteam", { signal: controller.signal })
       .then(function (response) { if (!response.ok) throw new Error("red-team unavailable"); return response.json(); })
       .then(function (receipt) {
-        setTimeout(function () {
-          stages[2].classList.add("is-live", "is-refused");
-          byId("attack-verdict").textContent = receipt.controls.policy_refused_requested_sql ? "REFUSED · zero rows" : "FAILED OPEN";
-          byId("attack-reason").textContent = receipt.controls.denial_reason || receipt.failure_condition;
-          byId("attack-rows").textContent = receipt.controls.raw_person_rows_returned;
-          byId("attack-mutations").textContent = receipt.controls.mutation_performed ? "1" : "0";
-          byId("attack-continuation").textContent = receipt.controls.run_continued_with_policy_compiled_aggregate ? "Continued" : "Stopped";
-          byId("run-attack").disabled = false;
-          byId("run-attack").textContent = "Replay attack";
-        }, 840);
+        clearTimeout(timeoutId);
+        if (requestId !== attackRequestId) return;
+        if (attackController === controller) attackController = null;
+        stages[2].classList.add("is-live", "is-refused");
+        byId("attack-verdict").textContent = receipt.controls.policy_refused_requested_sql ? "REFUSED · zero rows" : "FAILED OPEN";
+        byId("attack-reason").textContent = receipt.controls.denial_reason || receipt.failure_condition;
+        byId("attack-rows").textContent = receipt.controls.raw_person_rows_returned;
+        byId("attack-mutations").textContent = receipt.controls.mutation_performed ? "1" : "0";
+        byId("attack-continuation").textContent = receipt.controls.run_continued_with_policy_compiled_aggregate ? "Continued" : "Stopped";
+        byId("run-attack").disabled = false;
+        byId("run-attack").textContent = "Replay attack";
+        byId("advance-demo-step").disabled = false;
       })
-      .catch(function () {
-        byId("attack-verdict").textContent = "Receipt unavailable";
-        byId("attack-reason").textContent = "Run mosaic redteam locally to verify the refusal gate.";
+      .catch(function (error) {
+        clearTimeout(timeoutId);
+        if (requestId !== attackRequestId) return;
+        if (attackController === controller) attackController = null;
+        byId("attack-verdict").textContent = error.name === "AbortError" ? "Timed out safely" : "Receipt unavailable";
+        byId("attack-reason").textContent = "The receipt could not be loaded. The demo stayed aggregate-only and did not advance.";
         byId("run-attack").disabled = false;
         byId("run-attack").textContent = "Retry attack";
+        byId("advance-demo-step").disabled = false;
       });
   }
-
-  function setTourControls(disabled) {
-    all(".preset-card").forEach(function (card) { card.disabled = disabled; });
-    byId("run-all-scenarios").disabled = disabled;
+  function setCaseNavigationDisabled(disabled) {
+    all(".preset-card, [data-tour-scenario]").forEach(function (button) {
+      button.disabled = disabled;
+    });
+    byId("next-tour-case").disabled = disabled || byId("next-tour-case").dataset.ready !== "true";
   }
 
   function resetTourUI() {
-    all("[data-tour-scenario]").forEach(function (item) {
-      item.classList.remove("is-active", "is-done");
-      item.querySelector("small").textContent = "Waiting";
+    all("[data-tour-scenario]").forEach(function (button) {
+      button.classList.remove("is-active", "is-done");
+      button.setAttribute("aria-pressed", "false");
+      button.querySelector("small").textContent = "Waiting";
     });
     all("[data-tour-result]").forEach(function (card) {
       card.classList.remove("is-verified");
@@ -342,39 +399,72 @@
     });
     byId("tour-summary").hidden = true;
     byId("review-tour").hidden = true;
+    byId("compare-tour").hidden = true;
+    byId("next-tour-case").disabled = true;
+    byId("next-tour-case").dataset.ready = "false";
+    byId("next-tour-case").textContent = "Next case";
+  }
+
+  function chooseTourScenario(name, shouldScroll) {
+    if (!scenarios[name]) return;
+    if (running) {
+      showToast("Let this case finish or reset it before choosing another.");
+      return;
+    }
+    tourIndex = tourOrder.indexOf(name);
+    selectScenario(name, false);
+    all("[data-tour-scenario]").forEach(function (button) {
+      var active = button.dataset.tourScenario === name;
+      button.classList.toggle("is-active", active);
+      button.setAttribute("aria-pressed", String(active));
+      if (active && !button.classList.contains("is-done")) {
+        button.querySelector("small").textContent = "Selected";
+      } else if (!active && !button.classList.contains("is-done")) {
+        button.querySelector("small").textContent = "Waiting";
+      }
+    });
+    byId("tour-title").textContent = "Case " + (tourIndex + 1) + " of 4: " + scenarios[name].title;
+    byId("tour-copy").textContent = scenarios[name].subtitle + " Nothing runs until you press Start selected case.";
+    byId("run-tour-case").disabled = false;
+    byId("run-tour-case").textContent = document.querySelector('[data-tour-result="' + name + '"]').classList.contains("is-verified") ? "Run this case again" : "Start selected case";
+    var alreadyRun = document.querySelector('[data-tour-result="' + name + '"]').classList.contains("is-verified");
+    byId("next-tour-case").dataset.ready = String(alreadyRun);
+    byId("next-tour-case").disabled = !alreadyRun;
+    if (shouldScroll) byId("workspace").scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function beginTour() {
-    if (running || tourRunning) {
-      showToast("Finish or reset the current investigation before starting the four-case tour.");
+    if (running) {
+      showToast("Finish or reset the current investigation before opening the case explorer.");
       return;
     }
     tourRunning = true;
-    tourIndex = 0;
     resetTourUI();
-    setTourControls(true);
     byId("tour-controller").hidden = false;
-    byId("tour-title").textContent = "Four cases. Four decisions. One evidence chain.";
-    byId("tour-copy").textContent = "Mosaic will run each case end to end and build a comparison you can inspect afterward.";
+    byId("run-all-scenarios").textContent = "Restart case explorer";
+    chooseTourScenario(selected, false);
     byId("workspace").scrollIntoView({ behavior: "smooth", block: "start" });
-    tourTimer = setTimeout(runTourScenario, 450);
   }
 
-  function runTourScenario() {
-    if (!tourRunning) return;
-    var name = tourOrder[tourIndex];
+  function runSelectedTourCase() {
+    if (running) {
+      showToast("Use Continue below to reveal the next evidence step.");
+      return;
+    }
+    if (!tourRunning) {
+      setCaseNavigationDisabled(true);
+      runDemo(function () { setCaseNavigationDisabled(false); });
+      return;
+    }
+    var name = selected;
     var item = document.querySelector('[data-tour-scenario="' + name + '"]');
     item.classList.add("is-active");
     item.querySelector("small").textContent = "Running";
-    byId("tour-title").textContent = "Case " + (tourIndex + 1) + " of 4: " + scenarios[name].title;
-    byId("tour-copy").textContent = scenarios[name].subtitle;
-    selectScenario(name, false);
-    byId("run-demo").disabled = true;
-    tourTimer = setTimeout(function () {
-      if (tourRunning) runDemo(function () { completeTourScenario(name); });
-    }, 350);
+    byId("tour-title").textContent = "Running case " + (tourIndex + 1) + " of 4: " + scenarios[name].title;
+    byId("tour-copy").textContent = "Step 1 appears now. Every later evidence step waits for your click.";
+    setCaseNavigationDisabled(true);
+    runDemo(function () { completeTourScenario(name); });
   }
-
   function completeTourScenario(name) {
     if (!tourRunning) return;
     var scenario = scenarios[name];
@@ -382,75 +472,92 @@
     var result = document.querySelector('[data-tour-result="' + name + '"]');
     item.classList.remove("is-active");
     item.classList.add("is-done");
+    item.setAttribute("aria-pressed", "true");
     item.querySelector("small").textContent = scenario.verdict;
     result.classList.add("is-verified");
     result.querySelector("small").textContent = scenario.k === "N/A" ? "Verified clear / no data query" : "Verified " + scenario.verdict + " / k=" + scenario.k;
-    tourIndex += 1;
-    if (tourIndex < tourOrder.length) {
-      byId("narrator-actions").hidden = true;
-      byId("run-demo").disabled = true;
-      byId("tour-title").textContent = tourIndex + " of 4 complete. Preparing the next independent decision.";
-      byId("tour-copy").textContent = "The scorecard preserves each result while Mosaic resets the workspace for the next case.";
-      tourTimer = setTimeout(runTourScenario, 800);
+    setCaseNavigationDisabled(false);
+    byId("run-tour-case").disabled = false;
+    byId("run-tour-case").textContent = "Run this case again";
+    byId("next-tour-case").dataset.ready = "true";
+    byId("next-tour-case").disabled = false;
+    byId("compare-tour").hidden = false;
+    byId("review-tour").hidden = false;
+    var completed = all("[data-tour-result].is-verified").length;
+    byId("tour-title").textContent = scenario.title + " complete. Pause and inspect the evidence.";
+    byId("tour-copy").textContent = completed + " of 4 cases verified. Move next only when you are ready.";
+    if (completed === tourOrder.length) {
+      byId("tour-title").textContent = "All four cases verified - on your schedule.";
+      byId("tour-copy").textContent = "Two risks detected, one mitigation validated, one false positive refused, and zero person-level rows returned.";
+      byId("next-tour-case").disabled = true;
+      byId("next-tour-case").dataset.ready = "false";
+      byId("run-all-scenarios").textContent = "Review all 4 again";
+      showToast("All four cases are complete. Compare them whenever you are ready.");
+    } else {
+      showToast("Case complete. Inspect it, choose another case, or compare completed results.");
+    }
+  }
+
+  function nextTourScenario() {
+    if (running) return;
+    var nextName = null;
+    for (var offset = 1; offset <= tourOrder.length; offset += 1) {
+      var candidate = tourOrder[(tourIndex + offset) % tourOrder.length];
+      if (!document.querySelector('[data-tour-result="' + candidate + '"]').classList.contains("is-verified")) {
+        nextName = candidate;
+        break;
+      }
+    }
+    if (!nextName) {
+      showTourSummary();
       return;
     }
-    tourRunning = false;
-    setTourControls(false);
-    byId("tour-title").textContent = "All four cases verified.";
-    byId("tour-copy").textContent = "Two real risks detected, one mitigation validated, one false positive refused, and zero person-level rows returned.";
+    chooseTourScenario(nextName, false);
+  }
+
+  function showTourSummary() {
+    var completed = all("[data-tour-result].is-verified").length;
+    if (!completed) {
+      showToast("Run at least one case before comparing results.");
+      return;
+    }
     byId("tour-summary").hidden = false;
+    byId("tour-summary-title").textContent = completed === 4 ? "Four cases. Four evidence-based decisions." : completed + " of 4 cases compared so far.";
     byId("tour-summary").focus({ preventScroll: true });
-    requestAnimationFrame(function () {
-      var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-      byId("tour-summary").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
-    });
-    byId("review-tour").hidden = false;
-    byId("narrator-actions").hidden = false;
-    byId("narrator-kicker").textContent = "Four-case proof complete";
-    byId("narrator-title").textContent = "Mosaic knows when to alert, when to approve, and when to stop.";
-    byId("narrator-body").textContent = "Review the comparison to see what each case proves and how to connect Mosaic to another DataHub catalog.";
-    byId("run-all-scenarios").textContent = "Run all 4 again";
-    showToast("All four scenarios complete. The comparison scorecard is ready.");
+    var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    byId("tour-summary").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
   }
 
   function cancelTour(showMessage) {
     if (!tourRunning) return;
     tourRunning = false;
-    if (tourTimer) clearTimeout(tourTimer);
-    setTourControls(false);
     resetDemo(false);
-    byId("tour-title").textContent = "Tour stopped. Completed results remain visible above.";
-    byId("tour-copy").textContent = "Choose any case to continue individually, or restart the complete four-case proof.";
-    if (showMessage) showToast("Four-case tour stopped.");
+    setCaseNavigationDisabled(false);
+    byId("tour-controller").hidden = true;
+    if (showMessage) showToast("Case explorer closed. Choose any case to continue individually.");
   }
-  function runDemo(onComplete) {
-    if (running) return;
-    resetDemo(false);
-    running = true;
-    startedAt = performance.now();
-    var scenario = scenarios[selected];
-    var button = byId("run-demo");
-    button.disabled = true;
-    button.querySelector(".run-label").textContent = "Investigating...";
-    clockTimer = setInterval(updateClock, 100);
-    var reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var delay = reduceMotion ? 25 : (tourRunning ? 900 : 1450);
-    var messages = selected === "control" ? [
+
+  function openCasePicker() {
+    byId("presets").scrollIntoView({ behavior: "smooth", block: "start" });
+    var active = document.querySelector(".preset-card.is-selected") || document.querySelector(".preset-card");
+    if (active) active.focus({ preventScroll: true });
+  }
+
+  function resetSelectedCase() {
+    resetDemo(true);
+    setCaseNavigationDisabled(false);
+    if (tourRunning) chooseTourScenario(selected, false);
+  }
+  function messagesForScenario(name) {
+    if (name === "control") return [
       "Read field semantics and column lineage from DataHub.",
       "No multi-family person-joinable convergence found.",
       "Skipped aggregate query: candidate failed the metadata screen.",
       "Replayed hostile catalog metadata; row-level request refused.",
       "Confirmed safe negative control; no mitigation required.",
       "Recorded clear decision; no catalog mutation proposed."
-    ] : [
-      "Read 3 column-lineage paths from DataHub.",
-      "Mapped location, date-of-birth, and demographic families.",
-      "Executed allowlisted GROUP BY; received counts only.",
-      "Replayed hostile DataHub description; policy refused raw identifiers.",
-      selected === "mitigated" ? "Confirmed suppression lifts minimum anonymity to k=20." : "Compared 3 reversible mitigations; suppression retains 76% utility.",
-      "Generated 6 merge-ready artifacts; awaiting reviewer approval."
     ];
-    if (selected === "mitigated") messages = [
+    if (name === "mitigated") return [
       "Read original and shadow-model lineage from DataHub.",
       "Held ZIP5 and demographic context constant; suppressed precise birth date.",
       "Executed allowlisted GROUP BY; verified k improves from 1 to 20.",
@@ -458,7 +565,7 @@
       "Confirmed 76% utility retained after the smallest effective change.",
       "Generated the verified safer model and aggregate regression test."
     ];
-    if (selected === "audience") messages = [
+    if (name === "audience") return [
       "Read CRM and product-analytics column lineage from DataHub.",
       "Mapped geography, age, household, and device families before partner delivery.",
       "Executed allowlisted GROUP BY; found k=1 with 44.444% below k=5.",
@@ -466,37 +573,97 @@
       "Compared reversible audience suppression and generalization options.",
       "Generated a DataHub-grounded audience remediation bundle."
     ];
-    messages.forEach(function (message, index) {
-      runTimers.push(setTimeout(function () {
-        setProgress(index);
-        updateNarrator(index);
-        addLog(message);
-        if (index === 2) { setFinding(scenario); byId("tab-button-query").click(); }
-        if (index === 3) runAttackLab(false);
-        if (index === 4 && selected !== "control") byId("tab-button-mitigation").click();
-        if (index === 5 && selected !== "control") byId("tab-button-codegen").click();
-        if (index === messages.length - 1) {
-          all(".run-progress li").forEach(function (item) { item.classList.add("is-done"); item.classList.remove("is-active"); });
-          clearInterval(clockTimer);
-          updateClock();
-          running = false;
-          button.disabled = false;
-          button.querySelector(".run-label").textContent = "Run again";
-          completeNarrator(scenario);
-          if (selected !== "control") {
-            showToast("Investigation complete. Choose what to inspect next.");
-          } else {
-            showToast("Safe control complete. Mosaic correctly generated no remediation code.");
-          }
-          if (typeof onComplete === "function") onComplete();
-        }
-      }, delay * (index + 1)));
-    });
+    return [
+      "Read 3 column-lineage paths from DataHub.",
+      "Mapped location, date-of-birth, and demographic families.",
+      "Executed allowlisted GROUP BY; received counts only.",
+      "Replayed hostile DataHub description; policy refused raw identifiers.",
+      "Compared 3 reversible mitigations; suppression retains 76% utility.",
+      "Generated 6 merge-ready artifacts; awaiting reviewer approval."
+    ];
   }
 
+  function setStepControlLabel(label) {
+    byId("narrator-actions").hidden = false;
+    byId("advance-demo-step").hidden = false;
+    byId("advance-demo-step").disabled = false;
+    byId("advance-demo-step").textContent = label;
+  }
+
+  function finishDemo() {
+    var scenario = runScenario;
+    all(".run-progress li").forEach(function (item) {
+      item.classList.add("is-done");
+      item.classList.remove("is-active");
+    });
+    updateClock();
+    running = false;
+    byId("run-demo").disabled = false;
+    byId("run-demo").querySelector(".run-label").textContent = "Run again";
+    completeNarrator(scenario);
+    if (selected !== "control") {
+      showToast("Investigation complete. Choose what to inspect next.");
+    } else {
+      showToast("Safe control complete. Mosaic correctly generated no remediation code.");
+    }
+    var completion = runCompletion;
+    runMessages = [];
+    runStep = -1;
+    runScenario = null;
+    runCompletion = null;
+    if (typeof completion === "function") completion();
+  }
+
+  function advanceDemoStep() {
+    if (!running || !runScenario || byId("advance-demo-step").disabled) return;
+    runStep += 1;
+    var index = runStep;
+    var message = runMessages[index];
+    setProgress(index);
+    updateNarrator(index);
+    addLog(message);
+    updateClock();
+    if (index === 2) {
+      setFinding(runScenario);
+      byId("tab-button-query").click();
+    }
+    if (index === 4 && selected !== "control") byId("tab-button-mitigation").click();
+    if (index === 5 && selected !== "control") byId("tab-button-codegen").click();
+
+    if (index < runMessages.length - 1) {
+      var nextStep = index + 2;
+      setStepControlLabel("Continue to step " + nextStep + " of " + runMessages.length);
+      if (tourRunning) {
+        byId("tour-copy").textContent = "Step " + (index + 1) + " of 6 is open. Nothing else happens until you press Continue.";
+      }
+      if (index === 3) runAttackLab(false);
+      return;
+    }
+    finishDemo();
+  }
+
+  function runDemo(onComplete) {
+    resetDemo(false);
+    running = true;
+    startedAt = performance.now();
+    runScenario = scenarios[selected];
+    runMessages = messagesForScenario(selected);
+    runStep = -1;
+    runCompletion = onComplete;
+    byId("run-demo").disabled = true;
+    byId("run-demo").querySelector(".run-label").textContent = "Case in progress";
+    byId("run-tour-case").disabled = true;
+    if (tourRunning) byId("run-tour-case").textContent = "Case in progress";
+    advanceDemoStep();
+  }
   function resetDemo(clearScenario) {
-    runTimers.forEach(clearTimeout); runTimers = [];
-    if (clockTimer) clearInterval(clockTimer);
+    runMessages = [];
+    runStep = -1;
+    runScenario = null;
+    runCompletion = null;
+    if (attackController) attackController.abort();
+    attackController = null;
+    attackRequestId += 1;
     running = false;
     all(".run-progress li").forEach(function (item) { item.classList.remove("is-active", "is-done"); });
     all(".edge").forEach(function (edge) { edge.classList.remove("is-lit"); });
@@ -505,16 +672,19 @@
     byId("finding-verdict").className = "verdict neutral";
     byId("metric-k").textContent = "--"; byId("metric-below").textContent = "--"; byId("metric-downstream").textContent = "--";
     byId("metric-k-note").textContent = "Run validation to calculate";
-    byId("finding-callout").innerHTML = '<span></span><p>Select <strong>Start guided demo</strong> to replay every evidence-producing step.</p>';
-    byId("activity-log").innerHTML = '<li class="empty-log">No actions yet. Start the guided replay above.</li>';
+    byId("finding-callout").innerHTML = '<span></span><p>Select <strong>Start selected demo</strong> to reveal the first evidence step.</p>';
+    byId("activity-log").innerHTML = '<li class="empty-log">No actions yet. Start the selected demo above.</li>';
     byId("elapsed").textContent = "00:00.0";
     resetNarrator();
     resetAttackLab();
+    byId("run-demo").hidden = tourRunning;
     byId("run-demo").disabled = false;
-    byId("run-demo").querySelector(".run-label").textContent = "Start guided demo";
+    byId("run-demo").querySelector(".run-label").textContent = "Start selected demo";
+    byId("run-tour-case").disabled = false;
+    byId("run-tour-case").textContent = "Start selected case";
+    byId("advance-demo-step").disabled = false;
     if (clearScenario) drawGraph(scenarios[selected]);
   }
-
   function showToast(message) {
     var toast = byId("toast");
     toast.textContent = message; toast.hidden = false;
@@ -580,6 +750,7 @@
   }
 
   function hydrateCodegen(name) {
+    var requestId = ++codegenRequestId;
     if (name === "control") {
       renderNoCodegen("Metadata screening found no compositional privacy risk. No remediation is necessary, so Mosaic generated no code.");
       return;
@@ -591,10 +762,12 @@
         return response.json();
       })
       .then(function (bundle) {
-        if (selected === name) renderCodegenBundle(bundle);
+        if (requestId === codegenRequestId && selected === name) renderCodegenBundle(bundle);
       })
       .catch(function () {
-        renderNoCodegen("The generator API is temporarily unavailable. Use the committed examples or run the CLI locally.");
+        if (requestId === codegenRequestId && selected === name) {
+          renderNoCodegen("The generator API is temporarily unavailable. Use the committed examples or run the CLI locally.");
+        }
       });
   }
   function hydrateScenario(name) {
@@ -637,7 +810,10 @@
         scenarios.research.query = assessment.aggregate_query.replace(" FROM ", "\nFROM ").replace(" GROUP BY ", "\nGROUP BY ");
         var recommendation = reports[1].recommended;
         if (recommendation) scenarios.mitigated.k = recommendation.minimum_k;
-        if (selected === "research") selectScenario("research", false);
+        if (selected === "research") {
+          byId("query-code").textContent = scenarios.research.query;
+          byId("proposal-k").textContent = scenarios.research.k;
+        }
       })
       .catch(function () { showToast("Using bundled deterministic evidence; the API is temporarily unavailable."); });
   }
@@ -699,17 +875,29 @@
   }
 
   function boot() {
-    initTheme(); initTabs();
-    all(".preset-card").forEach(function (card) { card.addEventListener("click", function () { selectScenario(card.dataset.scenario, true); }); });
+    initTheme(); initTabs(); initHelpTips();
+    all(".preset-card").forEach(function (card) {
+      card.addEventListener("click", function () {
+        if (tourRunning) chooseTourScenario(card.dataset.scenario, true);
+        else selectScenario(card.dataset.scenario, true);
+      });
+    });
+    all("[data-tour-scenario]").forEach(function (button) {
+      button.addEventListener("click", function () { chooseTourScenario(button.dataset.tourScenario, false); });
+    });
     byId("run-all-scenarios").addEventListener("click", beginTour);
+    byId("run-tour-case").addEventListener("click", runSelectedTourCase);
+    byId("advance-demo-step").addEventListener("click", advanceDemoStep);
+    byId("next-tour-case").addEventListener("click", nextTourScenario);
+    byId("compare-tour").addEventListener("click", showTourSummary);
     byId("cancel-tour").addEventListener("click", function () { cancelTour(true); });
-    byId("run-demo").addEventListener("click", runDemo);
+    byId("run-demo").addEventListener("click", runSelectedTourCase);
     byId("run-attack").addEventListener("click", function () { runAttackLab(false); });
     byId("review-attack").addEventListener("click", function () { runAttackLab(true); });
     byId("review-pr").addEventListener("click", function () { byId("tab-button-codegen").click(); byId("tab-codegen").scrollIntoView({ behavior: "smooth", block: "start" }); });
-    byId("review-tour").addEventListener("click", function () { byId("tour-summary").scrollIntoView({ behavior: "smooth", block: "start" }); });
-    byId("reset-demo").addEventListener("click", function () { if (tourRunning) cancelTour(true); else resetDemo(true); });
-    byId("hero-run").addEventListener("click", beginTour);
+    byId("review-tour").addEventListener("click", showTourSummary);
+    byId("reset-demo").addEventListener("click", resetSelectedCase);
+    byId("hero-run").addEventListener("click", openCasePicker);
     var requested = new URLSearchParams(location.search).get("case");
     selectScenario(scenarios[requested] ? requested : "research", false);
     hydrateLiveEvidence();
