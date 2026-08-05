@@ -1,0 +1,17 @@
+{
+  "captured_from": "evidence/external/ollama-agent-veto-live.json",
+  "expected_status": "vetoed",
+  "expected_veto_reasons": [
+    "at least two string quasi-identifier columns must be nominated"
+  ],
+  "provider": "ollama-compatible",
+  "response": {
+    "done": true,
+    "eval_count": 190,
+    "model": "mistral:latest",
+    "prompt_eval_count": 261,
+    "response": "{\"nominated_columns\":[\"zip5\"],\"pr_narrative\":\"Proposal to enhance the privacy of the 'research_export_clean' dataset by introducing an aggregate query on the quasi-identifier column 'zip5'. This change will help maintain privacy while providing valuable insights for research purposes. The proposed query is: SELECT zip5, COUNT(*) AS equivalence_class_size FROM research_export_clean GROUP BY zip5.\",\"proposed_query\":\"SELECT zip5, COUNT(*) AS equivalence_class_size FROM research_export_clean GROUP BY zip5\",\"rationale\":\"The 'zip5' column is a quasi-identifier and its usage in an aggregate query can help maintain privacy while providing valuable insights for research purposes.\",\"selected_scenario\":\"research\"}"
+  },
+  "response_sha256": "f9bc991ce7eefa76b2304eb445b5f571ed1546cfd8732d74a219b25137b77faa",
+  "schema_version": 1
+}

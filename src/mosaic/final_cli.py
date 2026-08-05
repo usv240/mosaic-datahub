@@ -22,6 +22,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     assess.add_argument("--agent-model")
     assess.add_argument("--agent-endpoint")
     assess.add_argument("--agent-timeout", type=float, default=90)
+    assess.add_argument(
+        "--replay",
+        type=Path,
+        nargs="?",
+        const=Path("fixtures/agent_transcripts/accepted.json"),
+        help="Replay a recorded agent proposal instead of calling a local model",
+    )
     assess.add_argument("--output", type=Path)
     scan = commands.add_parser("scan", help="Screen and rank every configured estate asset")
     scan.add_argument("--output", type=Path)
@@ -86,6 +93,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     endpoint=args.agent_endpoint,
                     model=args.agent_model,
                     timeout=args.agent_timeout,
+                    replay=args.replay,
                 )
             except (KeyError, RuntimeError, ValueError) as error:
                 report = {

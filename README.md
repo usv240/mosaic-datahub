@@ -66,13 +66,20 @@ The core CLI is completely offline:
 
 ```powershell
 uv run mosaic assess --scenario research
-uv run mosaic assess --agent --scenario research --agent-model mistral:latest
+uv run mosaic assess --agent --replay --scenario research
+uv run mosaic assess --agent --replay fixtures/agent_transcripts/vetoed.json --scenario research
 uv run mosaic scan
 uv run mosaic check --fail-on critical
 uv run mosaic redteam
 uv run mosaic benchmark
 uv run mosaic replay-fixture
 uv run mosaic generate-remediation --scenario research --output generated/research
+```
+
+The two `--replay` commands need no model runtime. They return a digest-verified recording of a real local-model proposal — one the policy accepted for human review, one the policy vetoed — and run the identical parsing, verification, and veto path as a live call. Only the network request is substituted. To drive a live model instead, start Ollama and drop `--replay`:
+
+```powershell
+uv run mosaic assess --agent --scenario research --agent-model mistral:latest
 ```
 
 With local DataHub Core running, execute the strongest end-to-end proof:
@@ -249,7 +256,7 @@ Thresholds are demo policy, not a legal conclusion. Read [ETHICS.md](ETHICS.md) 
 ## Reusable interfaces
 
 - REST: `/api/scenarios`, `/api/remediation-bundles/{slug}`, `/api/remediation-bundles/{slug}/download`, `/api/scan`, `/api/agent-receipts`, `/api/redteam`, `/api/runs/{id}`, `/api/proofs`, `/api/adoption`, `/api/technology`
-- CLI: deterministic `assess`; opt-in `assess --agent`; `discover`, `generate-remediation`, `scan`, `check`, `redteam`, `benchmark`, `replay-fixture`, `serve`, `live-demo`, `verify-mcp`, `verify-snowflake`
+- CLI: deterministic `assess`; zero-setup `assess --agent --replay`; live `assess --agent`; `discover`, `generate-remediation`, `scan`, `check`, `redteam`, `benchmark`, `replay-fixture`, `serve`, `live-demo`, `verify-mcp`, `verify-snowflake`
 - Agent skill: [`$datahub-privacy-threat-model`](skills/datahub-privacy-threat-model/SKILL.md)
 - Operator console: `/settings` with non-mutating health probe and guarded local approval
 

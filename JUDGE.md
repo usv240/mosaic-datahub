@@ -13,12 +13,16 @@ Open `http://127.0.0.1:8123` and choose **Choose one of 4 demos**. Open the case
 
 ```powershell
 uv run mosaic assess --scenario research
+uv run mosaic assess --agent --replay --scenario research
+uv run mosaic assess --agent --replay fixtures/agent_transcripts/vetoed.json --scenario research
 uv run mosaic scan
 uv run mosaic benchmark
 uv run mosaic replay-fixture
 ```
 
 Critical policy results exit 3. The benchmark and replay exit zero only when their checks pass.
+
+The two `--replay` commands need no model runtime, API key, or network access. Each returns a digest-verified recording of a real local-model proposal — the first was accepted for human review, the second was vetoed by policy for nominating a single quasi-identifier — and both run the same parsing, verification, and veto code as a live call. If a transcript is edited, the digest check fails closed rather than replaying altered content.
 
 ## Strongest local integration proof
 

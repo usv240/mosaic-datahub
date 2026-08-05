@@ -1,15 +1,19 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import urllib.error
 import urllib.parse
 import urllib.request
 from collections.abc import Callable, Sequence
+from pathlib import Path
 from typing import Any
 
 from mosaic.query_policy import aggregate_query, validate_aggregate_query
 from mosaic.scenario_registry import ScenarioSpec, assess_scenario, get_scenario, list_scenarios
+
+DEFAULT_REPLAY = Path("fixtures/agent_transcripts/accepted.json")
 
 PROPOSAL_SCHEMA: dict[str, Any] = {
     "type": "object",
@@ -46,6 +50,31 @@ def _ollama_transport(endpoint: str, payload: dict[str, Any], timeout: float) ->
             return json.loads(response.read())
     except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as error:
         raise RuntimeError(f"agent model unavailable: {error}") from error
+
+
+def replay_transport(path: Path) -> Transport:
+    """Replay a recorded provider envelope so judges need no local model runtime.
+
+    The transcript is digest-checked and returned unchanged, so parsing, verification,
+    and the policy veto run exactly as they do live; only the network call is replaced.
+    """
+    try:
+        transcript = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise ValueError(f"invalid agent transcript: {error}") from error
+    if not isinstance(transcript, dict) or transcript.get("schema_version") != 1:
+        raise ValueError("unsupported agent transcript schema")
+    envelope = transcript.get("response")
+    if not isinstance(envelope, dict) or not isinstance(envelope.get("response"), str):
+        raise ValueError("agent transcript is missing a recorded provider envelope")
+    recorded = hashlib.sha256(envelope["response"].encode("utf-8")).hexdigest()
+    if recorded != transcript.get("response_sha256"):
+        raise ValueError("agent transcript digest does not match the recorded response")
+
+    def transport(_endpoint: str, _payload: dict[str, Any], _timeout: float) -> dict[str, Any]:
+        return envelope
+
+    return transport
 
 
 def _candidate_context(specs: Sequence[ScenarioSpec]) -> list[dict[str, Any]]:
@@ -166,12 +195,15 @@ def propose_and_verify(
     model: str | None = None,
     timeout: float = 90,
     transport: Transport | None = None,
+    replay: Path | None = None,
 ) -> dict[str, Any]:
     specs = [get_scenario(scenario)] if scenario else list_scenarios()
     selected_endpoint = endpoint or os.environ.get(
         "MOSAIC_AGENT_ENDPOINT", "http://127.0.0.1:11434/api/generate"
     )
     selected_model = model or os.environ.get("MOSAIC_AGENT_MODEL", "mistral:latest")
+    if replay is not None and transport is None:
+        transport = replay_transport(replay)
     proposal, telemetry = request_proposal(
         specs,
         endpoint=selected_endpoint,
@@ -179,6 +211,9 @@ def propose_and_verify(
         timeout=timeout,
         transport=transport,
     )
+    if replay is not None:
+        telemetry["execution"] = "replayed_recorded_response"
+        telemetry["replayed_from"] = replay.as_posix()
     verification = verify_proposal(proposal, specs)
     return {
         "schema_version": 1,

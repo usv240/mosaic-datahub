@@ -183,6 +183,74 @@ def test_agent_receipt_api_fails_closed_when_missing_or_malformed(tmp_path: Path
     assert TestClient(create_app(tmp_path)).get("/api/agent-receipts").status_code == 503
 
 
+def test_recorded_proposal_replays_without_a_local_model_runtime() -> None:
+    report = propose_and_verify("research", replay=Path("fixtures/agent_transcripts/accepted.json"))
+    assert report["status"] == "accepted_for_human_review"
+    assert report["model"]["execution"] == "replayed_recorded_response"
+    assert report["model"]["replayed_from"] == "fixtures/agent_transcripts/accepted.json"
+    verification = report["verification"]
+    assert verification["policy_veto"] is False
+    assert verification["raw_person_rows_returned"] == 0
+    assert verification["generated_code_executed"] is False
+    assert verification["mutation_performed"] is False
+
+
+def test_recorded_veto_replays_with_its_original_policy_reason() -> None:
+    report = propose_and_verify("research", replay=Path("fixtures/agent_transcripts/vetoed.json"))
+    assert report["status"] == "vetoed"
+    assert report["verification"]["policy_veto"] is True
+    assert any("at least two" in reason for reason in report["verification"]["veto_reasons"])
+    assert report["verification"]["compiled_aggregate_query"] is None
+
+
+def test_committed_transcripts_match_their_recorded_receipt_status() -> None:
+    for name in ("accepted", "vetoed"):
+        path = Path("fixtures/agent_transcripts") / f"{name}.json"
+        transcript = json.loads(path.read_text(encoding="utf-8"))
+        report = propose_and_verify("research", replay=path)
+        assert report["status"] == transcript["expected_status"]
+        assert report["verification"]["veto_reasons"] == transcript["expected_veto_reasons"]
+
+
+@pytest.mark.parametrize(
+    ("payload", "reason"),
+    [
+        ("not-json", "invalid agent transcript"),
+        (json.dumps({"schema_version": 2}), "unsupported agent transcript schema"),
+        (json.dumps({"schema_version": 1, "response": {}}), "recorded provider envelope"),
+        (
+            json.dumps(
+                {
+                    "schema_version": 1,
+                    "response": {"response": "{}"},
+                    "response_sha256": "0" * 64,
+                }
+            ),
+            "digest does not match",
+        ),
+    ],
+)
+def test_replay_transport_fails_closed_on_tampered_transcripts(
+    tmp_path: Path, payload, reason
+) -> None:
+    transcript = tmp_path / "transcript.json"
+    transcript.write_text(payload, encoding="utf-8")
+    with pytest.raises(ValueError, match=reason):
+        proposer.replay_transport(transcript)
+
+
+def test_replay_transport_reports_a_missing_transcript() -> None:
+    with pytest.raises(ValueError, match="invalid agent transcript"):
+        proposer.replay_transport(Path("fixtures/agent_transcripts/absent.json"))
+
+
+def test_agent_cli_replays_recorded_proposal_without_network(capsys) -> None:
+    assert main(["assess", "--agent", "--replay", "--scenario", "research"]) == 3
+    report = json.loads(capsys.readouterr().out)
+    assert report["status"] == "accepted_for_human_review"
+    assert report["model"]["execution"] == "replayed_recorded_response"
+
+
 def test_agent_cli_returns_deterministic_assessment_exit_code(monkeypatch, capsys) -> None:
     monkeypatch.setattr(
         proposer,
