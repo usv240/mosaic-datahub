@@ -6,6 +6,7 @@ import os
 import shutil
 import subprocess
 import sys
+import wave
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -15,21 +16,56 @@ DEMO = ROOT / "docs" / "demo"
 OUTPUT = DEMO / "mosaic-submission-demo.mp4"
 NARRATION = DEMO / "narration.wav"
 RECEIPT = DEMO / "submission-video-receipt.json"
+NARRATION_TEXT = DEMO / "narration.txt"
 SCENES = [
-    ("video-01-hero.png", 29),
-    ("video-02-lineage.png", 40),
-    ("video-03-four-decisions.png", 41),
+    ("video-01-hero.png", 33),
+    ("video-02-lineage.png", 51),
+    ("video-03-four-decisions.png", 44),
     ("video-04-cross-asset.png", 45),
-    ("video-05-measured-result.png", 37),
-    ("video-06-agent-boundary.png", 58),
-    ("video-07-attack-refusal.png", 43),
-    ("video-08-generated-pr.png", 49),
-    ("video-09-datahub-stack.png", 47),
-    ("video-10-external-evidence.png", 59),
-    ("video-11-production-readiness.png", 65),
+    ("video-05-measured-result.png", 40),
+    ("video-06-agent-boundary.png", 62),
+    ("video-07-attack-refusal.png", 46),
+    ("video-08-generated-pr.png", 52),
+    ("video-09-datahub-stack.png", 51),
+    ("video-10-external-evidence.png", 49),
+    ("video-11-production-readiness.png", 50),
 ]
-DURATION_SECONDS = 169.88
+DURATION_LIMIT_SECONDS = 180
 TRANSITION_SECONDS = 0.6
+
+
+def narration_duration() -> float:
+    """Length of the rendered narration, which is what the scene timings must match.
+
+    Hardcoding this drifts the moment the script is reworded: a longer take gets
+    trimmed mid-sentence, a shorter one ends on silence. Reading the audio keeps
+    the two in step and enforces the submission's three-minute ceiling.
+    """
+    with wave.open(str(NARRATION), "rb") as handle:
+        seconds = handle.getnframes() / float(handle.getframerate())
+    if seconds > DURATION_LIMIT_SECONDS:
+        raise RuntimeError(
+            f"narration is {seconds:.2f}s; the submission limit is {DURATION_LIMIT_SECONDS}s"
+        )
+    return seconds
+
+
+def check_scene_word_counts() -> None:
+    """Scene durations are proportional to per-scene word counts, so they must agree."""
+    if not NARRATION_TEXT.is_file():
+        return
+    paragraphs = [
+        block.strip()
+        for block in NARRATION_TEXT.read_text(encoding="utf-8").split("\n\n")
+        if block.strip()
+    ]
+    actual = [len(block.split()) for block in paragraphs]
+    declared = [words for _name, words in SCENES]
+    if actual != declared:
+        raise RuntimeError(
+            f"narration.txt has word counts {actual}, but SCENES declares {declared}; "
+            "update SCENES so scene timings track the narration"
+        )
 
 
 def ffmpeg_executable() -> str:
@@ -56,9 +92,11 @@ def build() -> Path:
         raise RuntimeError("capture submission media first; missing: " + ", ".join(missing))
     if not NARRATION.is_file():
         raise RuntimeError(f"missing narration: {NARRATION}")
+    check_scene_word_counts()
+    duration_seconds = narration_duration()
 
     total_words = sum(words for _name, words in SCENES)
-    segments = [DURATION_SECONDS * words / total_words for _name, words in SCENES]
+    segments = [duration_seconds * words / total_words for _name, words in SCENES]
     command = [ffmpeg_executable(), "-y", "-hide_banner", "-loglevel", "error"]
     for index, ((name, _words), duration) in enumerate(zip(SCENES, segments, strict=True)):
         input_duration = duration + (TRANSITION_SECONDS if index < len(SCENES) - 1 else 0)
@@ -106,7 +144,7 @@ def build() -> Path:
             "-r",
             "24",
             "-t",
-            str(DURATION_SECONDS),
+            f"{duration_seconds:.5f}",
             "-movflags",
             "+faststart",
             str(OUTPUT),
@@ -121,8 +159,8 @@ def build() -> Path:
         "status": "upload_ready",
         "built_at": datetime.now(UTC).isoformat(),
         "path": "docs/demo/mosaic-submission-demo.mp4",
-        "duration_seconds": DURATION_SECONDS,
-        "duration_limit_seconds": 180,
+        "duration_seconds": round(duration_seconds, 2),
+        "duration_limit_seconds": DURATION_LIMIT_SECONDS,
         "video": {"codec": "h264", "width": 1280, "height": 720, "frames_per_second": 24},
         "audio": {"codec": "aac", "channels": 1, "sample_rate_hz": 22050},
         "scene_count": len(SCENES),
