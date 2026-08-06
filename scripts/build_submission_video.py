@@ -19,16 +19,16 @@ RECEIPT = DEMO / "submission-video-receipt.json"
 NARRATION_TEXT = DEMO / "narration.txt"
 SCENES = [
     ("video-01-hero.png", 33),
-    ("video-02-lineage.png", 51),
-    ("video-03-four-decisions.png", 44),
-    ("video-04-cross-asset.png", 45),
-    ("video-05-measured-result.png", 40),
-    ("video-06-agent-boundary.png", 62),
-    ("video-07-attack-refusal.png", 46),
-    ("video-08-generated-pr.png", 52),
+    ("video-02-lineage.png", 53),
+    ("video-03-four-decisions.png", 42),
+    ("video-04-cross-asset.png", 30),
+    ("video-05-measured-result.png", 47),
+    ("video-06-agent-boundary.png", 48),
+    ("video-07-attack-refusal.png", 38),
+    ("video-08-generated-pr.png", 60),
     ("video-09-datahub-stack.png", 51),
-    ("video-10-external-evidence.png", 49),
-    ("video-11-production-readiness.png", 50),
+    ("video-10-external-evidence.png", 41),
+    ("video-11-production-readiness.png", 52),
 ]
 DURATION_LIMIT_SECONDS = 180
 TRANSITION_SECONDS = 0.6
