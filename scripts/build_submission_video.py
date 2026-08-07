@@ -22,7 +22,7 @@ SCENES = [
     ("video-02-lineage.png", 53),
     ("video-03-four-decisions.png", 42),
     ("video-04-cross-asset.png", 30),
-    ("video-05-measured-result.png", 47),
+    ("video-05-measured-result.png", 60),
     ("video-06-agent-boundary.png", 48),
     ("video-07-attack-refusal.png", 38),
     ("video-08-generated-pr.png", 60),

@@ -6,7 +6,7 @@ But does Mosaic just flag everything? No. Here are four cases. Two contain real 
 
 The same risk can hide across tables. Each export may look safe alone, but a shared customer key can reconnect them. Mosaic catches that relationship too, before reading any data.
 
-Now Mosaic measures the actual risk. This export contains one hundred twenty people, and every single one is unique on those three columns. Mosaic proves it by counting groups, without reading a single person-level row. And even the A I in the loop can't bypass that boundary.
+Now Mosaic measures the actual risk. This export contains one hundred twenty people, and every single one is unique on those three columns. Mosaic proves it by counting groups, without reading a single person-level row. Try your own file: it measures in your browser, and nothing is uploaded. And even the A I in the loop can't bypass that boundary.
 
 There's an A I model here, but Mosaic doesn't trust it blindly. The model can suggest where to investigate, and explain why. It cannot write the query, decide the verdict, or change DataHub. Deterministic policy owns those, and can overrule the model. So we tried to break it.
 
