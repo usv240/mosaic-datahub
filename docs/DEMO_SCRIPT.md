@@ -25,12 +25,19 @@ Judges should feel one story, not eleven features. The scenes group into five be
 
 ## Before you record
 
-```powershell
-uv sync --locked --extra dev
-uv run mosaic serve
+Record against the hosted demo — the same URL judges will open:
+
+```
+https://mosaic-datahub-production.up.railway.app
 ```
 
-**Record against `http://127.0.0.1:8123`, not the hosted demo.** The Railway deployment lags the repository and has no DataHub attached (`/api/health/datahub` reports `not_probed`, `public_demo: true`), so the case-explorer controls this script uses may not exist there. Local is the product these directions were verified against.
+Every direction below was verified by driving that deployment. Confirm it is current before you start; the check should print the commit you expect:
+
+```powershell
+curl -s https://mosaic-datahub-production.up.railway.app/api/deployment
+```
+
+The hosted build runs read-only with no DataHub attached (`/api/health/datahub` reports `not_probed`, `public_demo: true`). Every scene in this script works there, because the evidence is served from committed receipts. Nothing in the narration claims a live catalog connection — keep it that way. For a local run instead, `uv run mosaic serve` on `http://127.0.0.1:8123` behaves identically.
 
 - Window at **1280×720**. Larger windows push panels off-frame.
 - Dark theme (`#theme-toggle`), reduced motion on, browser zoom 100%.
@@ -39,7 +46,7 @@ uv run mosaic serve
 - **A toast — "Investigation complete. Choose what to inspect next." — appears bottom-right after a case finishes and lingers.** Wait for it to clear before capturing scenes 5–8, or frame so it sits outside the crop.
 - Add clean captions in post — no word-by-word karaoke, just plain subtitles. Keep any background music near-silent; the product is the drama.
 
-Every selector and button label below was verified by driving the running app. Where a label is quoted, that is the exact on-screen text.
+Every selector and button label below was verified by driving the deployed app. Where a label is quoted, that is the exact on-screen text.
 
 ---
 
