@@ -56,6 +56,14 @@ def create_app(project_root: Path | None = None) -> FastAPI:
             "frame-ancestors 'none'; form-action 'self'; img-src 'self' data:; "
             "script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'"
         )
+        # Scripts and markup ship together and are versioned only by deploy. Without an
+        # explicit directive a browser caches them heuristically, so a visitor who saw an
+        # earlier deploy can run stale JavaScript against current markup — the controls
+        # then silently no-op. Revalidate every time; ETags keep the cost to a 304.
+        if request.url.path.startswith("/static/") or response.headers.get(
+            "content-type", ""
+        ).startswith("text/html"):
+            response.headers["Cache-Control"] = "no-cache, must-revalidate"
         return response
 
     @app.get("/health")
