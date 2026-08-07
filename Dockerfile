@@ -13,6 +13,7 @@ COPY .mosaic ./.mosaic
 COPY evaluations ./evaluations
 COPY evidence ./evidence
 COPY fixtures ./fixtures
+COPY examples ./examples
 RUN uv sync --frozen --no-dev --no-extra datahub
 
 ENV PATH="/app/.venv/bin:${PATH}"

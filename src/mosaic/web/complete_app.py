@@ -128,6 +128,21 @@ def create_app(project_root: Path | None = None) -> FastAPI:
     def adoption() -> dict[str, object]:
         return adoption_catalog()
 
+    @app.get("/api/sample-data/{name}")
+    def sample_data(name: str) -> Response:
+        """Serve a committed sample so trying the measurement costs one click."""
+        allowed = {
+            "risky_member_export.csv",
+            "safe_member_export.csv",
+            "borderline_partner_audience.csv",
+        }
+        if name not in allowed:
+            raise HTTPException(status_code=404, detail="unknown sample")
+        path = root / "examples" / "bring-your-own-data" / name
+        if not path.is_file():
+            raise HTTPException(status_code=404, detail="sample not available in this build")
+        return Response(content=path.read_bytes(), media_type="text/csv")
+
     @app.get("/api/policy")
     def policy() -> dict[str, object]:
         """Thresholds for the in-browser measurement, so it cannot hardcode its own."""

@@ -920,6 +920,7 @@
   var rows = [];
   var header = [];
   var policy = null;
+  var SEPARATOR = String.fromCharCode(31);  // unit separator; cannot occur in a cell
 
   function splitLine(line, delimiter) {
     var out = [], value = "", quoted = false;
@@ -939,7 +940,7 @@
 
   function parse(text) {
     var delimiter = text.indexOf("\t") !== -1 && text.indexOf(",") === -1 ? "\t" : ",";
-    var lines = text.replace(/^\uFEFF/, "").split(/\r\n|\n|\r/).filter(function (l) { return l.trim() !== ""; });
+    var lines = text.replace(/^﻿/, "").split(/\r\n|\n|\r/).filter(function (l) { return l.trim() !== ""; });
     if (!lines.length) throw new Error("That file has no rows.");
     var names = splitLine(lines[0], delimiter).map(function (n) { return n.trim(); }).filter(Boolean);
     if (!names.length) throw new Error("That file has no usable column names.");
@@ -958,7 +959,9 @@
     var counts = Object.create(null);
     for (var i = 0; i < rows.length; i += 1) {
       var key = "";
-      for (var c = 0; c < selected.length; c += 1) key += "\u001f" + rows[i][selected[c]];
+      // Unit separator: a delimiter that cannot occur in a spreadsheet cell, so
+      // ("a","bc") and ("ab","c") never collapse into the same equivalence class.
+      for (var c = 0; c < selected.length; c += 1) key += SEPARATOR + rows[i][selected[c]];
       counts[key] = (counts[key] || 0) + 1;
     }
     var sizes = Object.keys(counts).map(function (k) { return counts[k]; });
@@ -992,7 +995,15 @@
       .map(function (input) { return input.value; });
   }
 
-  function renderColumns() {
+  function syncRunState() {
+    var picked = selectedColumns().length;
+    byId("byod-run").disabled = picked < 2;
+    var counter = byId("byod-count");
+    if (!counter) return;
+    counter.textContent = picked === 0 ? "" : picked === 1 ? "1 selected — pick one more" : picked + " selected";
+  }
+
+  function renderColumns(preselect) {
     var host = byId("byod-columns");
     host.innerHTML = "";
     header.forEach(function (name) {
@@ -1002,20 +1013,43 @@
       wrap.setAttribute("for", id);
       var input = document.createElement("input");
       input.type = "checkbox"; input.value = name; input.id = id;
-      input.addEventListener("change", function () {
-        byId("byod-run").disabled = selectedColumns().length < 2;
-      });
+      if (preselect && preselect.indexOf(name) !== -1) input.checked = true;
+      input.addEventListener("change", syncRunState);
       var span = document.createElement("span");
       span.textContent = name;               // textContent, never innerHTML
       wrap.appendChild(input); wrap.appendChild(span);
       host.appendChild(wrap);
     });
+    syncRunState();
   }
 
   function showError(message) {
-    byId("byod-placeholder").hidden = false;
-    byId("byod-placeholder").textContent = message;
+    var placeholder = byId("byod-placeholder");
+    placeholder.hidden = false;
+    placeholder.textContent = message;
     byId("byod-result").hidden = true;
+  }
+
+  function load(text, label, preselect) {
+    try {
+      var parsed = parse(text);
+      rows = parsed.rows;
+      header = parsed.header;
+      byId("byod-file-label").textContent = label;
+      renderColumns(preselect);
+      byId("byod-result").hidden = true;
+      byId("byod-placeholder").hidden = false;
+      if (preselect && preselect.length >= 2) byId("byod-run").click();
+    } catch (error) {
+      showError(error.message);
+    }
+  }
+
+  function readFile(file) {
+    var reader = new FileReader();
+    reader.onload = function () { load(String(reader.result), file.name, null); };
+    reader.onerror = function () { showError("That file could not be read."); };
+    reader.readAsText(file);
   }
 
   function boot() {
@@ -1027,23 +1061,38 @@
 
     input.addEventListener("change", function () {
       var file = input.files && input.files[0];
-      if (!file) return;
-      byId("byod-file-label").textContent = file.name;
-      var reader = new FileReader();
-      reader.onload = function () {
-        try {
-          var parsed = parse(String(reader.result));
-          rows = parsed.rows; header = parsed.header;
-          renderColumns();
-          byId("byod-run").disabled = true;
-          byId("byod-placeholder").hidden = false;
-          byId("byod-placeholder").textContent =
-            file.name + ": " + rows.length + " rows, " + header.length + " columns. Pick two or more.";
-          byId("byod-result").hidden = true;
-        } catch (error) { showError(error.message); }
-      };
-      reader.onerror = function () { showError("That file could not be read."); };
-      reader.readAsText(file);
+      if (file) readFile(file);
+    });
+
+    var drop = byId("byod-drop");
+    ["dragenter", "dragover"].forEach(function (name) {
+      drop.addEventListener(name, function (event) {
+        event.preventDefault();
+        drop.classList.add("is-over");
+      });
+    });
+    ["dragleave", "drop"].forEach(function (name) {
+      drop.addEventListener(name, function (event) {
+        event.preventDefault();
+        drop.classList.remove("is-over");
+      });
+    });
+    drop.addEventListener("drop", function (event) {
+      var file = event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files[0];
+      if (file) readFile(file);
+    });
+
+    Array.prototype.slice.call(document.querySelectorAll(".byod-sample")).forEach(function (button) {
+      button.addEventListener("click", function () {
+        var name = button.getAttribute("data-sample");
+        var pick = (button.getAttribute("data-pick") || "").split(",").filter(Boolean);
+        button.disabled = true;
+        fetch("/api/sample-data/" + encodeURIComponent(name))
+          .then(function (r) { if (!r.ok) throw new Error("unavailable"); return r.text(); })
+          .then(function (text) { load(text, name, pick); })
+          .catch(function () { showError("That sample is not available in this build."); })
+          .then(function () { button.disabled = false; });
+      });
     });
 
     byId("byod-run").addEventListener("click", function () {

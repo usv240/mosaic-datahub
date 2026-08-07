@@ -43,7 +43,7 @@
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-copy">
         <div class="status-row">
-          <span class="status-pill"><span class="status-dot"></span> Live read-only product demo</span>
+          <span class="status-pill"><span class="status-dot"></span> Live demo &middot; no credentials</span>
           <span class="version-pill">DataHub-native</span>
         </div>
         <p class="eyebrow">Metadata-aware code generation for privacy remediation</p>
@@ -358,34 +358,49 @@ GROUP BY zip5, birth_date, gender_category</code></pre>
       </div>
       <div class="byod-grid">
         <div class="byod-input panel">
-          <p class="panel-kicker">1 &middot; Choose a delimited file</p>
-          <label class="byod-file" for="byod-file">
-            <input type="file" id="byod-file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values,text/plain">
-            <span id="byod-file-label">Select a CSV&hellip;</span>
-          </label>
-          <p class="byod-hint" id="byod-hint">Need one? Download a sample from <a href="https://github.com/usv240/mosaic-datahub/tree/master/examples/bring-your-own-data">examples/bring-your-own-data</a> &mdash; one risky, one safe, one borderline.</p>
-          <p class="panel-kicker">2 &middot; Pick two or more columns</p>
-          <div class="byod-columns" id="byod-columns" role="group" aria-label="Columns to measure together"><p class="byod-empty">Choose a file to list its columns.</p></div>
+          <p class="byod-step"><b>1</b> Load a file</p>
+          <div class="byod-drop" id="byod-drop">
+            <input type="file" id="byod-file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values,text/plain" aria-label="Choose a delimited file to measure in your browser" aria-describedby="byod-drop-hint">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="byod-drop-icon"><path d="M12 16V4m0 0 4 4m-4-4L8 8M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+            <strong id="byod-file-label">Drop a CSV here, or click to browse</strong>
+            <small id="byod-drop-hint">Stays on your machine &middot; CSV or TSV with a header row</small>
+          </div>
+          <div class="byod-samples">
+            <span>No file handy?</span>
+            <button type="button" class="byod-sample" data-sample="risky_member_export.csv" data-pick="zip5,birth_date,gender">Risky sample</button>
+            <button type="button" class="byod-sample" data-sample="safe_member_export.csv" data-pick="region,age_band,gender">Safe sample</button>
+            <button type="button" class="byod-sample" data-sample="borderline_partner_audience.csv" data-pick="region,age_band,device_type">Borderline</button>
+          </div>
+          <p class="byod-step"><b>2</b> Pick two or more columns <em id="byod-count"></em></p>
+          <div class="byod-columns" id="byod-columns" role="group" aria-label="Columns to measure together"><p class="byod-empty">Load a file to list its columns.</p></div>
           <button class="primary-button compact" id="byod-run" disabled>Measure this combination</button>
         </div>
         <div class="byod-output panel" id="byod-output" aria-live="polite">
           <p class="panel-kicker">Result</p>
-          <p class="byod-empty" id="byod-placeholder">No file measured yet. Nothing has left your browser.</p>
+          <div id="byod-placeholder" class="byod-idle">
+            <p class="byod-idle-lead">Nothing measured yet.</p>
+            <ul class="byod-idle-list">
+              <li><span>How many people share each combination</span></li>
+              <li><span>The smallest group, and how many records sit under k=5</span></li>
+              <li><span>A verdict against the same policy the CLI uses</span></li>
+            </ul>
+            <p class="byod-idle-foot">Your file is read in this browser tab. It is not uploaded.</p>
+          </div>
           <div id="byod-result" hidden>
             <p class="byod-verdict" id="byod-verdict">&mdash;</p>
+            <p class="byod-reason" id="byod-reason"></p>
             <dl class="byod-metrics">
               <div><dt>Records</dt><dd id="byod-records">&mdash;</dd></div>
               <div><dt>Distinct combinations</dt><dd id="byod-combos">&mdash;</dd></div>
-              <div><dt>Smallest group</dt><dd id="byod-k">&mdash;</dd></div>
+              <div class="is-headline"><dt>Smallest group</dt><dd id="byod-k">&mdash;</dd></div>
               <div><dt>Records below k=5</dt><dd id="byod-below">&mdash;</dd></div>
-              <div><dt>Values sent to this server</dt><dd id="byod-sent">0</dd></div>
             </dl>
-            <p class="byod-reason" id="byod-reason"></p>
-            <p class="byod-note">Counts only. No cell value from your file is displayed or transmitted &mdash; the combination itself is the identifier. Thresholds come from the same organization policy the CLI uses.</p>
+            <p class="byod-sent-row"><span class="byod-sent-badge">Values sent to this server: <b id="byod-sent">0</b></span></p>
+            <p class="byod-note">Counts only. No cell value from your file is shown or transmitted &mdash; the combination itself is the identifier.</p>
           </div>
         </div>
       </div>
-      <p class="byod-cli">Prefer the terminal, or want the JSON receipt? <code>uv run mosaic measure --csv &lt;your-file&gt;.csv --columns col_a,col_b,col_c</code> runs the identical rule and returns a digest-backed report.</p>
+      <p class="byod-cli">Want the JSON receipt? <code>uv run mosaic measure --csv &lt;your-file&gt;.csv --columns col_a,col_b,col_c</code> applies the identical rule in the terminal. Samples live in <a href="https://github.com/usv240/mosaic-datahub/tree/master/examples/bring-your-own-data">examples/bring-your-own-data</a>.</p>
     </section>
     <details class="evidence-disclosure"><summary><span><small>Adoption</small><strong>Move from no-setup demo to your governed environment</strong></span><b>Open</b></summary>
     <section class="section adoption-section" id="adopt" aria-labelledby="adopt-title">

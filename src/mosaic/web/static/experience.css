@@ -240,24 +240,50 @@ a { color: inherit; }
 @media(max-width:1000px){.tour-controller{grid-template-columns:1fr}.tour-progress{grid-template-columns:1fr 1fr}.tour-actions{justify-self:start}.tour-result-grid{grid-template-columns:1fr 1fr}.tour-adopt{grid-template-columns:1fr 1fr}.tour-adopt>div{grid-column:1/-1}}
 @media(max-width:600px){.case-tour-launch{align-items:stretch;flex-direction:column}.case-tour-launch .primary-button{width:100%}.tour-progress,.tour-result-grid,.tour-adopt,.tour-summary-head{grid-template-columns:1fr}.tour-result-grid article{min-height:190px}.tour-adopt>div{grid-column:auto}.tour-adopt a{width:100%}}
 /* Bring-your-own-data: measurement that runs in the visitor's browser. */
-.byod-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; }
-.byod-file { display: block; margin: 6px 0 10px; padding: 14px; border: 1px dashed var(--line); border-radius: 12px; cursor: pointer; }
-.byod-file input { display: block; width: 100%; color: inherit; }
-.byod-file span { display: block; margin-top: 8px; font-weight: 600; }
-.byod-hint { font-size: 0.86rem; opacity: 0.82; margin: 0 0 14px; }
-.byod-columns { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 14px; }
-.byod-column { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 999px; font-size: 0.86rem; cursor: pointer; }
-.byod-column input { margin: 0; }
-.byod-empty { opacity: 0.75; font-size: 0.9rem; margin: 0; }
-.byod-verdict { font-size: 1.6rem; font-weight: 700; letter-spacing: 0.04em; margin: 4px 0 12px; }
-.byod-verdict.is-critical { color: var(--danger, #ff6b8a); }
-.byod-verdict.is-elevated { color: var(--warn, #f0b429); }
-.byod-verdict.is-safe { color: var(--ok, #46d39a); }
-.byod-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin: 0 0 12px; }
-.byod-metrics dt { font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.72; }
-.byod-metrics dd { margin: 2px 0 0; font-size: 1.25rem; font-weight: 700; }
-.byod-reason { font-size: 0.9rem; margin: 0 0 10px; }
-.byod-note, .byod-cli { font-size: 0.84rem; opacity: 0.8; }
-.byod-cli { margin-top: 14px; }
-.byod-cli code { padding: 2px 6px; border-radius: 6px; background: rgba(255, 255, 255, 0.06); }
-@media (max-width: 900px) { .byod-grid { grid-template-columns: 1fr; } }
+.byod-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+.byod-input, .byod-output { padding: 1.15rem 1.25rem 1.3rem; }
+.byod-output .panel-kicker { margin: 0 0 .35rem; }
+.byod-step { display: flex; align-items: center; gap: 8px; margin: 0 0 10px; font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.byod-step b { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--violet-soft); color: var(--violet); font-size: .74rem; }
+.byod-step em { margin-left: auto; font-style: normal; text-transform: none; letter-spacing: 0; color: var(--violet); }
+
+.byod-drop { position: relative; display: grid; justify-items: center; gap: 6px; padding: 26px 18px; border: 1.5px dashed var(--line); border-radius: 14px; background: var(--bg-raised); text-align: center; transition: border-color .15s, background .15s; }
+.byod-drop.is-over { border-color: var(--violet); background: var(--violet-soft); }
+.byod-drop input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+.byod-drop-icon { width: 26px; height: 26px; fill: none; stroke: var(--violet); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.byod-drop strong { font-size: .95rem; }
+.byod-drop small { color: var(--muted); font-size: .8rem; }
+
+.byod-samples { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 12px 0 18px; font-size: .84rem; }
+.byod-samples span { color: var(--muted); }
+.byod-sample { padding: 5px 11px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: inherit; font: inherit; font-size: .82rem; cursor: pointer; transition: border-color .15s, background .15s; }
+.byod-sample:hover, .byod-sample:focus-visible { border-color: var(--violet); background: var(--violet-soft); }
+
+.byod-columns { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+.byod-column { display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; font-size: .84rem; cursor: pointer; transition: border-color .15s, background .15s; }
+.byod-column:hover { border-color: var(--violet); }
+.byod-column:has(input:checked) { border-color: var(--violet); background: var(--violet-soft); }
+.byod-column input { margin: 0; accent-color: var(--violet); }
+.byod-empty { color: var(--muted); font-size: .88rem; margin: 0; }
+
+.byod-idle-lead { font-size: 1.02rem; font-weight: 650; margin: 6px 0 12px; }
+.byod-idle-list { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 9px; }
+.byod-idle-list li { position: relative; padding-left: 22px; color: var(--muted); font-size: .89rem; line-height: 1.45; }
+.byod-idle-list li::before { content: ""; position: absolute; left: 4px; top: .52em; width: 6px; height: 6px; border-radius: 50%; background: var(--violet); }
+.byod-idle-foot { margin: 0; font-size: .84rem; color: var(--muted); }
+
+.byod-verdict { font-size: 1.7rem; font-weight: 750; letter-spacing: .03em; margin: 6px 0 6px; }
+.byod-verdict.is-critical { color: var(--red); }
+.byod-verdict.is-elevated { color: var(--amber); }
+.byod-verdict.is-safe { color: var(--green); }
+.byod-reason { font-size: .89rem; color: var(--muted); margin: 0 0 16px; }
+.byod-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 18px; margin: 0 0 16px; }
+.byod-metrics dt { font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+.byod-metrics dd { margin: 3px 0 0; font-size: 1.35rem; font-weight: 700; }
+.byod-metrics .is-headline dd { font-size: 1.85rem; }
+.byod-sent-row { margin: 0 0 12px; }
+.byod-sent-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; background: var(--green-soft); color: var(--green); font-size: .82rem; font-weight: 600; }
+.byod-note, .byod-cli { font-size: .84rem; color: var(--muted); }
+.byod-cli { margin-top: 16px; }
+.byod-cli code { padding: 2px 7px; border-radius: 6px; background: var(--bg-raised); border: 1px solid var(--line-soft); font-size: .82rem; }
+@media (max-width: 900px) { .byod-grid { grid-template-columns: 1fr; } .byod-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from fastapi.testclient import TestClient
 
 from mosaic.web.complete_app import create_app
@@ -43,3 +45,13 @@ def test_policy_endpoint_feeds_the_browser_measurement_its_thresholds(tmp_path) 
     assert payload["raw_person_rows_allowed"] == 0
     for field in ("critical_minimum_k", "critical_percent_below_5", "maximum_percent_below_k5"):
         assert field in payload, f"{field} is needed to reproduce the CLI verdict in the browser"
+
+
+def test_sample_data_endpoint_serves_only_the_committed_samples(tmp_path) -> None:
+    """One-click samples must not become an arbitrary file reader."""
+    client = TestClient(create_app(Path.cwd()))
+    ok = client.get("/api/sample-data/risky_member_export.csv")
+    assert ok.status_code == 200
+    assert ok.text.splitlines()[0].startswith("member_ref,")
+    for bad in ("../../README.md", "..%2f..%2fREADME.md", "privacy-policy.yml", "secrets.csv"):
+        assert client.get(f"/api/sample-data/{bad}").status_code == 404
