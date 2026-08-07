@@ -32,6 +32,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     assess.add_argument("--output", type=Path)
     scan = commands.add_parser("scan", help="Screen and rank every configured estate asset")
     scan.add_argument("--output", type=Path)
+    measure = commands.add_parser(
+        "measure", help="Measure anonymity in your own delimited file, aggregate-only"
+    )
+    measure.add_argument("--csv", dest="csv_path", type=Path, required=True)
+    measure.add_argument(
+        "--columns", required=True, help="Comma-separated column names to measure together"
+    )
+    measure.add_argument("--delimiter", default=",")
+    measure.add_argument("--output", type=Path)
     check = commands.add_parser("check", help="Run Mosaic as a pre-merge privacy gate")
     check.add_argument("--fail-on", choices=("critical", "elevated"), default="critical")
     check.add_argument("--output", type=Path)
@@ -153,6 +162,27 @@ def main(argv: Sequence[str] | None = None) -> int:
             args.output.write_text(rendered, encoding="utf-8")
         print(rendered, end="")
         return 3 if failures else 0
+    if args.command == "measure":
+        from mosaic.measure import measure_file
+
+        columns = tuple(part.strip() for part in args.columns.split(",") if part.strip())
+        try:
+            report = measure_file(args.csv_path, columns, delimiter=args.delimiter)
+            exit_code = 3 if report["status"] == "validated_critical" else 0
+        except (ValueError, FileNotFoundError) as error:
+            report = {
+                "schema_version": 1,
+                "status": "blocked_invalid_input",
+                "error": str(error),
+                "raw_person_rows_returned": 0,
+            }
+            exit_code = 2
+        rendered = json.dumps(report, indent=2) + "\n"
+        if args.output:
+            args.output.parent.mkdir(parents=True, exist_ok=True)
+            args.output.write_text(rendered, encoding="utf-8")
+        print(rendered, end="")
+        return exit_code
     if args.command == "redteam":
         from mosaic.redteam import run_redteam
 

@@ -73,6 +73,7 @@ uv run mosaic check --fail-on critical
 uv run mosaic redteam
 uv run mosaic benchmark
 uv run mosaic replay-fixture
+uv run mosaic measure --csv examples/bring-your-own-data/risky_member_export.csv --columns zip5,birth_date,gender
 uv run mosaic generate-remediation --scenario research --output generated/research
 ```
 
@@ -81,6 +82,26 @@ The two `--replay` commands need no model runtime. They return a digest-verified
 ```powershell
 uv run mosaic assess --agent --scenario research --agent-model mistral:latest
 ```
+
+## Test it on your own data
+
+Every other command runs on committed fixtures. `measure` does not — point it at a delimited file you supply and it applies the same aggregate-only rule, in memory, with nothing uploaded:
+
+```powershell
+uv run mosaic measure --csv <your-file>.csv --columns col_a,col_b,col_c
+```
+
+Three committed samples reach three different verdicts, so you can see the tool disagree with itself on data you can open in a spreadsheet:
+
+| Sample | Columns | Result |
+|---|---|---|
+| `risky_member_export.csv` | `zip5,birth_date,gender` | critical — all 240 people unique |
+| `safe_member_export.csv` | `region,age_band,gender` | clear — smallest group 5 |
+| `borderline_partner_audience.csv` | `region,age_band,device_type` | elevated — a thin rare tail |
+
+The first two files hold the same 240 people; only the generalization differs, and the smallest group moves from 1 to 5. **No cell value from your file appears in the output** — equivalence-class values are themselves the identifier, and a regression test asserts it. See [examples/bring-your-own-data](examples/bring-your-own-data) for public datasets to try and the exact privacy boundary.
+
+`measure` scores a combination you name; `discover` finds the combination from your DataHub lineage. Together they let a reviewer test both halves on their own inputs.
 
 With local DataHub Core running, execute the strongest end-to-end proof:
 
@@ -256,7 +277,7 @@ Thresholds are demo policy, not a legal conclusion. Read [ETHICS.md](ETHICS.md) 
 ## Reusable interfaces
 
 - REST: `/api/scenarios`, `/api/remediation-bundles/{slug}`, `/api/remediation-bundles/{slug}/download`, `/api/scan`, `/api/agent-receipts`, `/api/redteam`, `/api/runs/{id}`, `/api/proofs`, `/api/adoption`, `/api/technology`
-- CLI: deterministic `assess`; zero-setup `assess --agent --replay`; live `assess --agent`; `discover`, `generate-remediation`, `scan`, `check`, `redteam`, `benchmark`, `replay-fixture`, `serve`, `live-demo`, `verify-mcp`, `verify-snowflake`
+- CLI: deterministic `assess`; zero-setup `assess --agent --replay`; live `assess --agent`; `measure` for your own file; `discover`, `generate-remediation`, `scan`, `check`, `redteam`, `benchmark`, `replay-fixture`, `serve`, `live-demo`, `verify-mcp`, `verify-snowflake`
 - Agent skill: [`$datahub-privacy-threat-model`](skills/datahub-privacy-threat-model/SKILL.md)
 - Operator console: `/settings` with non-mutating health probe and guarded local approval
 

@@ -29,6 +29,21 @@ def main() -> int:
     benchmark = run("benchmark")
     replay = run("replay-fixture")
     redteam = run("redteam")
+    byod_critical = run(
+        "measure",
+        "--csv",
+        "examples/bring-your-own-data/risky_member_export.csv",
+        "--columns",
+        "zip5,birth_date,gender",
+        expected=3,
+    )
+    byod_clear = run(
+        "measure",
+        "--csv",
+        "examples/bring-your-own-data/safe_member_export.csv",
+        "--columns",
+        "region,age_band,gender",
+    )
     agent_accepted = run("assess", "--agent", "--replay", "--scenario", "research", expected=3)
     agent_vetoed = run(
         "assess",
@@ -55,6 +70,11 @@ def main() -> int:
     assert replay["status"] == "passed"
     assert generated["artifact_count"] == 6
     assert generated["track"] == "Metadata-Aware Code Generation & Development"
+    assert byod_critical["status"] == "validated_critical"
+    assert byod_critical["metrics"]["minimum_k"] == 1
+    assert byod_critical["privacy"]["raw_person_rows_returned"] == 0
+    assert byod_clear["status"] == "validated_low"
+    assert byod_clear["metrics"]["minimum_k"] >= 5
     assert redteam["status"] == "passed"
     assert redteam["controls"]["policy_refused_requested_sql"] is True
     assert redteam["controls"]["raw_person_rows_returned"] == 0
@@ -66,7 +86,7 @@ def main() -> int:
     assert agent_vetoed["verification"]["compiled_aggregate_query"] is None
     print(
         "CLI contracts passed: verdicts, estate scan, pre-merge gate, benchmark, fixture replay, "
-        "red-team veto, zero-setup agent replay, and remediation codegen."
+        "red-team veto, zero-setup agent replay, bring-your-own-data measurement, and remediation codegen."
     )
     return 0
 
