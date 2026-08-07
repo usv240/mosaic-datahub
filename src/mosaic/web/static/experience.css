@@ -239,3 +239,25 @@ a { color: inherit; }
 .tour-scorecard{max-width:1360px;margin:1rem auto 0;padding:clamp(1.2rem,3vw,2rem);border:1px solid color-mix(in srgb,var(--green),var(--line) 55%);border-radius:20px;background:linear-gradient(135deg,var(--green-soft),var(--surface));box-shadow:var(--shadow)}.tour-summary-head{display:grid;grid-template-columns:1.1fr .9fr;gap:3rem;align-items:end}.tour-summary-head h2{max-width:760px;margin:0;font-size:clamp(1.9rem,3.5vw,3rem);line-height:1.06;letter-spacing:-.05em}.tour-summary-head>p{margin:0;color:var(--muted);font-size:.84rem}.tour-result-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-top:1.5rem}.tour-result-grid article{display:flex;flex-direction:column;min-height:230px;padding:1.1rem;border:1px solid var(--line);border-radius:14px;background:var(--surface);opacity:.6}.tour-result-grid article.is-verified{opacity:1;border-color:color-mix(in srgb,var(--green),var(--line) 52%)}.tour-result-grid span{width:fit-content;padding:.25rem .48rem;border-radius:999px;background:var(--violet-soft);color:var(--violet);font-size:.55rem;font-weight:900;text-transform:uppercase;letter-spacing:.07em}.tour-result-grid h3{margin:1.3rem 0 .3rem;font-size:1rem}.tour-result-grid strong{font-size:.72rem;color:var(--teal)}.tour-result-grid p{color:var(--muted);font-size:.7rem;line-height:1.55}.tour-result-grid small{margin-top:auto;color:var(--green);font-size:.58rem;font-weight:850}.tour-adopt{display:grid;grid-template-columns:1fr auto auto auto;gap:.7rem;align-items:center;margin-top:.8rem;padding:1rem;border:1px solid var(--line);border-radius:13px;background:var(--bg-raised)}.tour-adopt small,.tour-adopt strong{display:block}.tour-adopt small{color:var(--teal);font-size:.56rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em}.tour-adopt strong{margin-top:.2rem;font-size:.72rem}.tour-adopt a{white-space:nowrap}
 @media(max-width:1000px){.tour-controller{grid-template-columns:1fr}.tour-progress{grid-template-columns:1fr 1fr}.tour-actions{justify-self:start}.tour-result-grid{grid-template-columns:1fr 1fr}.tour-adopt{grid-template-columns:1fr 1fr}.tour-adopt>div{grid-column:1/-1}}
 @media(max-width:600px){.case-tour-launch{align-items:stretch;flex-direction:column}.case-tour-launch .primary-button{width:100%}.tour-progress,.tour-result-grid,.tour-adopt,.tour-summary-head{grid-template-columns:1fr}.tour-result-grid article{min-height:190px}.tour-adopt>div{grid-column:auto}.tour-adopt a{width:100%}}
+/* Bring-your-own-data: measurement that runs in the visitor's browser. */
+.byod-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; }
+.byod-file { display: block; margin: 6px 0 10px; padding: 14px; border: 1px dashed var(--line); border-radius: 12px; cursor: pointer; }
+.byod-file input { display: block; width: 100%; color: inherit; }
+.byod-file span { display: block; margin-top: 8px; font-weight: 600; }
+.byod-hint { font-size: 0.86rem; opacity: 0.82; margin: 0 0 14px; }
+.byod-columns { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 14px; }
+.byod-column { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 999px; font-size: 0.86rem; cursor: pointer; }
+.byod-column input { margin: 0; }
+.byod-empty { opacity: 0.75; font-size: 0.9rem; margin: 0; }
+.byod-verdict { font-size: 1.6rem; font-weight: 700; letter-spacing: 0.04em; margin: 4px 0 12px; }
+.byod-verdict.is-critical { color: var(--danger, #ff6b8a); }
+.byod-verdict.is-elevated { color: var(--warn, #f0b429); }
+.byod-verdict.is-safe { color: var(--ok, #46d39a); }
+.byod-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin: 0 0 12px; }
+.byod-metrics dt { font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.72; }
+.byod-metrics dd { margin: 2px 0 0; font-size: 1.25rem; font-weight: 700; }
+.byod-reason { font-size: 0.9rem; margin: 0 0 10px; }
+.byod-note, .byod-cli { font-size: 0.84rem; opacity: 0.8; }
+.byod-cli { margin-top: 14px; }
+.byod-cli code { padding: 2px 6px; border-radius: 6px; background: rgba(255, 255, 255, 0.06); }
+@media (max-width: 900px) { .byod-grid { grid-template-columns: 1fr; } }

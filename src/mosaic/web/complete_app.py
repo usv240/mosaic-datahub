@@ -128,6 +128,23 @@ def create_app(project_root: Path | None = None) -> FastAPI:
     def adoption() -> dict[str, object]:
         return adoption_catalog()
 
+    @app.get("/api/policy")
+    def policy() -> dict[str, object]:
+        """Thresholds for the in-browser measurement, so it cannot hardcode its own."""
+        from mosaic.policy import load_policy
+
+        active = load_policy()
+        return {
+            "policy_id": active.policy_id,
+            "sha256": active.sha256,
+            "source": active.source,
+            "minimum_k": active.minimum_k,
+            "critical_minimum_k": active.critical_minimum_k,
+            "critical_percent_below_5": active.critical_percent_below_5,
+            "maximum_percent_below_k5": active.maximum_percent_below_k5,
+            "raw_person_rows_allowed": active.raw_person_rows_allowed,
+        }
+
     @app.get("/api/assessment")
     def assessment() -> dict[str, object]:
         return run_judge_demo()

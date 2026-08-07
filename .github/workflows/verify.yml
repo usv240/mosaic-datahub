@@ -77,6 +77,7 @@ jobs:
             sleep 1
           done
           uv run --with playwright python scripts/check_accessibility.py
+          uv run --with playwright python scripts/check_browser_measurement.py
           uv run --with playwright python scripts/capture_submission_media.py
       - name: Upload judge media
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'

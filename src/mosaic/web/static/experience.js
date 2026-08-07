@@ -909,3 +909,160 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();
 })();
+
+(function () {
+  "use strict";
+  // In-browser measurement. The selected file is read with FileReader and never
+  // sent anywhere: Mosaic's whole claim is that person-level data should not
+  // travel, so the demo of that claim must not move it either. Policy
+  // thresholds are fetched from the server so this cannot drift from the CLI.
+  var byId = function (id) { return document.getElementById(id); };
+  var rows = [];
+  var header = [];
+  var policy = null;
+
+  function splitLine(line, delimiter) {
+    var out = [], value = "", quoted = false;
+    for (var i = 0; i < line.length; i += 1) {
+      var ch = line[i];
+      if (quoted) {
+        if (ch === '"' && line[i + 1] === '"') { value += '"'; i += 1; }
+        else if (ch === '"') { quoted = false; }
+        else { value += ch; }
+      } else if (ch === '"') { quoted = true; }
+      else if (ch === delimiter) { out.push(value); value = ""; }
+      else { value += ch; }
+    }
+    out.push(value);
+    return out;
+  }
+
+  function parse(text) {
+    var delimiter = text.indexOf("\t") !== -1 && text.indexOf(",") === -1 ? "\t" : ",";
+    var lines = text.replace(/^\uFEFF/, "").split(/\r\n|\n|\r/).filter(function (l) { return l.trim() !== ""; });
+    if (!lines.length) throw new Error("That file has no rows.");
+    var names = splitLine(lines[0], delimiter).map(function (n) { return n.trim(); }).filter(Boolean);
+    if (!names.length) throw new Error("That file has no usable column names.");
+    var parsed = [];
+    for (var i = 1; i < lines.length; i += 1) {
+      var cells = splitLine(lines[i], delimiter);
+      var row = {};
+      for (var c = 0; c < names.length; c += 1) row[names[c]] = (cells[c] || "").trim();
+      parsed.push(row);
+    }
+    if (!parsed.length) throw new Error("That file has a header but no data rows.");
+    return { header: names, rows: parsed };
+  }
+
+  function measure(selected) {
+    var counts = Object.create(null);
+    for (var i = 0; i < rows.length; i += 1) {
+      var key = "";
+      for (var c = 0; c < selected.length; c += 1) key += "\u001f" + rows[i][selected[c]];
+      counts[key] = (counts[key] || 0) + 1;
+    }
+    var sizes = Object.keys(counts).map(function (k) { return counts[k]; });
+    var total = sizes.reduce(function (a, b) { return a + b; }, 0);
+    var below5 = sizes.filter(function (s) { return s < 5; }).reduce(function (a, b) { return a + b; }, 0);
+    return {
+      total_records: total,
+      distinct_combinations: sizes.length,
+      minimum_k: Math.min.apply(null, sizes),
+      percent_below_5: Math.round((100 * below5 / total) * 1000) / 1000
+    };
+  }
+
+  function verdictFor(m) {
+    if (!policy) return { label: "MEASURED", tone: "neutral", reason: "" };
+    if (m.minimum_k < policy.critical_minimum_k && m.percent_below_5 >= policy.critical_percent_below_5) {
+      return { label: "CRITICAL", tone: "critical",
+        reason: "Smallest group is " + m.minimum_k + " and " + m.percent_below_5 + "% of records fall below k=5." };
+    }
+    if (m.minimum_k >= policy.minimum_k && m.percent_below_5 <= policy.maximum_percent_below_k5) {
+      return { label: "CLEAR", tone: "safe",
+        reason: "Smallest group is " + m.minimum_k + ", at or above the configured minimum of " + policy.minimum_k + "." };
+    }
+    return { label: "ELEVATED", tone: "elevated",
+      reason: "Smallest group is " + m.minimum_k + ", below the configured minimum of " + policy.minimum_k + "." };
+  }
+
+  function selectedColumns() {
+    return Array.prototype.slice
+      .call(document.querySelectorAll("#byod-columns input:checked"))
+      .map(function (input) { return input.value; });
+  }
+
+  function renderColumns() {
+    var host = byId("byod-columns");
+    host.innerHTML = "";
+    header.forEach(function (name) {
+      var id = "byod-col-" + name.replace(/[^a-zA-Z0-9_-]/g, "_");
+      var wrap = document.createElement("label");
+      wrap.className = "byod-column";
+      wrap.setAttribute("for", id);
+      var input = document.createElement("input");
+      input.type = "checkbox"; input.value = name; input.id = id;
+      input.addEventListener("change", function () {
+        byId("byod-run").disabled = selectedColumns().length < 2;
+      });
+      var span = document.createElement("span");
+      span.textContent = name;               // textContent, never innerHTML
+      wrap.appendChild(input); wrap.appendChild(span);
+      host.appendChild(wrap);
+    });
+  }
+
+  function showError(message) {
+    byId("byod-placeholder").hidden = false;
+    byId("byod-placeholder").textContent = message;
+    byId("byod-result").hidden = true;
+  }
+
+  function boot() {
+    var input = byId("byod-file");
+    if (!input) return;
+    fetch("/api/policy").then(function (r) { return r.json(); })
+      .then(function (data) { policy = data; })
+      .catch(function () { policy = null; });
+
+    input.addEventListener("change", function () {
+      var file = input.files && input.files[0];
+      if (!file) return;
+      byId("byod-file-label").textContent = file.name;
+      var reader = new FileReader();
+      reader.onload = function () {
+        try {
+          var parsed = parse(String(reader.result));
+          rows = parsed.rows; header = parsed.header;
+          renderColumns();
+          byId("byod-run").disabled = true;
+          byId("byod-placeholder").hidden = false;
+          byId("byod-placeholder").textContent =
+            file.name + ": " + rows.length + " rows, " + header.length + " columns. Pick two or more.";
+          byId("byod-result").hidden = true;
+        } catch (error) { showError(error.message); }
+      };
+      reader.onerror = function () { showError("That file could not be read."); };
+      reader.readAsText(file);
+    });
+
+    byId("byod-run").addEventListener("click", function () {
+      var selected = selectedColumns();
+      if (selected.length < 2) return;
+      var m = measure(selected);
+      var v = verdictFor(m);
+      byId("byod-records").textContent = String(m.total_records);
+      byId("byod-combos").textContent = String(m.distinct_combinations);
+      byId("byod-k").textContent = String(m.minimum_k);
+      byId("byod-below").textContent = m.percent_below_5 + "%";
+      byId("byod-verdict").textContent = v.label;
+      byId("byod-verdict").className = "byod-verdict is-" + v.tone;
+      byId("byod-reason").textContent = v.reason;
+      byId("byod-placeholder").hidden = true;
+      byId("byod-result").hidden = false;
+    });
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+  else boot();
+})();

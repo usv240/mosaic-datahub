@@ -351,6 +351,42 @@ GROUP BY zip5, birth_date, gender_category</code></pre>
         <article><small>Reusable agent</small><strong>1 skill</strong><h3>Workflow, packaged</h3><p>The DataHub privacy skill carries discovery, query safety, verdict, evidence, approval, and failure-handling rules into another agent.</p><a href="https://github.com/usv240/mosaic-datahub/tree/master/skills/datahub-privacy-threat-model">Inspect the skill</a></article>
       </div>
     </section></details>
+    <section class="section byod-section" id="byod" aria-labelledby="byod-title">
+      <div class="section-heading">
+        <div><p class="eyebrow">Your data, your machine</p><h2 id="byod-title">Stop taking our fixtures on faith.</h2></div>
+        <p>Every other panel runs on committed samples. This one runs on a file you choose. Mosaic&rsquo;s whole argument is that person-level data should not travel, so this measurement happens <strong>entirely in your browser</strong> &mdash; the file is never uploaded, and nothing about it reaches this server.</p>
+      </div>
+      <div class="byod-grid">
+        <div class="byod-input panel">
+          <p class="panel-kicker">1 &middot; Choose a delimited file</p>
+          <label class="byod-file" for="byod-file">
+            <input type="file" id="byod-file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values,text/plain">
+            <span id="byod-file-label">Select a CSV&hellip;</span>
+          </label>
+          <p class="byod-hint" id="byod-hint">Need one? Download a sample from <a href="https://github.com/usv240/mosaic-datahub/tree/master/examples/bring-your-own-data">examples/bring-your-own-data</a> &mdash; one risky, one safe, one borderline.</p>
+          <p class="panel-kicker">2 &middot; Pick two or more columns</p>
+          <div class="byod-columns" id="byod-columns" role="group" aria-label="Columns to measure together"><p class="byod-empty">Choose a file to list its columns.</p></div>
+          <button class="primary-button compact" id="byod-run" disabled>Measure this combination</button>
+        </div>
+        <div class="byod-output panel" id="byod-output" aria-live="polite">
+          <p class="panel-kicker">Result</p>
+          <p class="byod-empty" id="byod-placeholder">No file measured yet. Nothing has left your browser.</p>
+          <div id="byod-result" hidden>
+            <p class="byod-verdict" id="byod-verdict">&mdash;</p>
+            <dl class="byod-metrics">
+              <div><dt>Records</dt><dd id="byod-records">&mdash;</dd></div>
+              <div><dt>Distinct combinations</dt><dd id="byod-combos">&mdash;</dd></div>
+              <div><dt>Smallest group</dt><dd id="byod-k">&mdash;</dd></div>
+              <div><dt>Records below k=5</dt><dd id="byod-below">&mdash;</dd></div>
+              <div><dt>Values sent to this server</dt><dd id="byod-sent">0</dd></div>
+            </dl>
+            <p class="byod-reason" id="byod-reason"></p>
+            <p class="byod-note">Counts only. No cell value from your file is displayed or transmitted &mdash; the combination itself is the identifier. Thresholds come from the same organization policy the CLI uses.</p>
+          </div>
+        </div>
+      </div>
+      <p class="byod-cli">Prefer the terminal, or want the JSON receipt? <code>uv run mosaic measure --csv &lt;your-file&gt;.csv --columns col_a,col_b,col_c</code> runs the identical rule and returns a digest-backed report.</p>
+    </section>
     <details class="evidence-disclosure"><summary><span><small>Adoption</small><strong>Move from no-setup demo to your governed environment</strong></span><b>Open</b></summary>
     <section class="section adoption-section" id="adopt" aria-labelledby="adopt-title">
       <div class="section-heading"><div><p class="eyebrow">Adoption path</p><h2 id="adopt-title">Start without credentials. Grow without replacing the workflow.</h2></div><p>Every stage has an honest boundary. Explore immediately, reproduce locally, connect a disposable DataHub environment, then add your organization&rsquo;s controls for production.</p></div>

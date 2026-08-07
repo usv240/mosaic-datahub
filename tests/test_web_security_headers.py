@@ -34,3 +34,12 @@ def test_json_endpoints_are_not_forced_to_revalidate(tmp_path) -> None:
 
 def client_headers(tmp_path, path: str):
     return TestClient(create_app(tmp_path)).get(path).headers
+
+
+def test_policy_endpoint_feeds_the_browser_measurement_its_thresholds(tmp_path) -> None:
+    """The in-browser widget must read policy from the server, never hardcode it."""
+    payload = TestClient(create_app(tmp_path)).get("/api/policy").json()
+    assert payload["minimum_k"] >= 2
+    assert payload["raw_person_rows_allowed"] == 0
+    for field in ("critical_minimum_k", "critical_percent_below_5", "maximum_percent_below_k5"):
+        assert field in payload, f"{field} is needed to reproduce the CLI verdict in the browser"
