@@ -9,3 +9,4 @@ evidence/*.local.json
 runs/
 artifacts/
 docs/demo/narration.wav
+docs/DEMO_SCRIPT.md
