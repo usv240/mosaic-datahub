@@ -1,66 +1,52 @@
 # Mosaic product gallery
 
-These browser captures are generated from the running application by `scripts/capture_submission_media.py`. CI repeats the capture after the full test and accessibility gates and publishes the complete `mosaic-submission-media` artifact.
+Light-mode captures taken from the deployed console at
+<https://mosaic-datahub-production.up.railway.app>. The console also ships a dark theme;
+CI verifies accessibility in both.
 
-## Impact-led first-visit story
+## Four decisions, one engine
 
-The full-page capture leads from the core risk and potential impact through stakeholder outcomes, education, presets, the guided product, evidence, and adoption.
+Two detected risks, one verified mitigation, and one refused false positive. The negative
+control is the important one: Mosaic produces no query and no code when the evidence is not
+there.
 
-[![Dark-mode landing page](01-landing-dark.png)](01-landing-dark.png)
+[![Four cases, four evidence-based decisions](light-06-four-case-scorecard.png)](light-06-four-case-scorecard.png)
 
-## DataHub architecture
+## Guided investigation
 
-The DataHub technology view maps seven platform capabilities to their exact role, code receipt, reproducible proof, and the four innovations Mosaic adds.
+DataHub column lineage on the left showing where three families converge, aggregate-only
+metrics on the right. Raw person-level rows returned is fixed at zero.
 
-[![DataHub-backed agent architecture](08-datahub-architecture.png)](08-datahub-architecture.png)
+[![Live investigation with lineage convergence and aggregate metrics](light-02-investigation.png)](light-02-investigation.png)
 
-## Model proposes, policy disposes
+## Merge-ready remediation PR
 
-The recorded local-model view shows a real accepted proposal, a preserved veto, Mosaic-compiled SQL, deterministic verdict ownership, and zero execution or mutation.
+All six generated artifacts, the measured `k=1 -> k=20` result, the DataHub URN embedded in
+the SQL, and the retained human review gate.
 
-[![Recorded model proposal and deterministic policy boundary](11-agent-policy-boundary.png)](11-agent-policy-boundary.png)
-
-## Research and standards receipts
-
-The standards view maps official DataHub, dbt, NIST, and OWASP guidance to controls visible in the generated artifacts and links to the full claim-to-control record.
-
-[![Research-backed code-generation controls](10-research-standards.png)](10-research-standards.png)
-## Merge-ready Remediation PR
-
-The generated-code workbench exposes all six artifacts, validation receipts, DataHub provenance, safe refusal behavior, and a reproducible ZIP download.
-
-[![Metadata-aware remediation PR studio](09-remediation-pr.png)](09-remediation-pr.png)
-
-## Four preset investigations
-
-The manual case explorer starts only after an explicit click, reveals each of six evidence steps only when Continue is pressed, and opens the decision scorecard on demand: two detected risks, one verified mitigation, and one refused false positive.
-
-[![Manually verified four-case scorecard](12-four-case-scorecard.png)](12-four-case-scorecard.png)
-
-The audience preset also proves that the fourth scenario is a complete interactive client experience, not an API-only fixture.
-
-[![Audience preset](02-audience-preset.png)](02-audience-preset.png)
-
-## Completed guided investigation
-
-[![Completed investigation with mitigation evidence](03-completed-investigation.png)](03-completed-investigation.png)
+[![Metadata-aware remediation PR studio](light-03-remediation.png)](light-03-remediation.png)
 
 ## Prompt-injection refusal
 
-[![Metadata prompt injection refused with zero raw rows](13-attack-refusal.png)](13-attack-refusal.png)
+A hostile instruction hidden in a DataHub dataset description asks for person-level
+identifiers. The deterministic query policy refuses it and the safe run continues.
 
-## Reproducible evidence catalog
+[![Metadata prompt injection refused with zero raw rows](light-04-attack-refusal.png)](light-04-attack-refusal.png)
 
-[![Evidence catalog with benchmark, replay, external data, and contribution proof](04-evidence-catalog.png)](04-evidence-catalog.png)
+## Measure your own file
 
-## Adoption and operator readiness
+The bring-your-own-data panel runs entirely in the browser. The file is never uploaded and
+the output is counts only, because the equivalence-class values are themselves the
+identifier.
 
-[![Adoption planner, integration truth table, production gates, and operator safety](05-operator-safety.png)](05-operator-safety.png)
+[![Browser-side measurement with zero values sent to the server](light-05-your-own-data.png)](light-05-your-own-data.png)
 
-## Light and mobile modes
+## Landing page
 
-[![Light-mode landing page](06-landing-light.png)](06-landing-light.png)
+[![Mosaic landing page](light-01-hero.png)](light-01-hero.png)
 
-[![Mobile landing page](07-mobile-landing.png)](07-mobile-landing.png)
+---
 
-The original captures and edit-ready walkthrough are accompanied by `docs/demo/media-manifest.json`, which records byte lengths and SHA-256 digests.
+Regenerate these with `scripts/capture_submission_media.py`. Narrated-video stills live in
+`artifacts/submission-media/`, and `docs/demo/media-manifest.json` records byte lengths and
+SHA-256 digests.
