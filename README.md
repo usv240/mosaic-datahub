@@ -39,34 +39,35 @@ In the primary case: **120 people, 120 distinct combinations, smallest group of 
 
 ```mermaid
 flowchart TB
-    subgraph DataHub["DataHub - the reasoning substrate"]
-        DH1["Schema + fine-grained<br/>column lineage"]
-        DH2["Downstream<br/>impact graph"]
-        DH3["Tags · Structured properties<br/>Documents · Incidents"]
+    subgraph DataHub
+        DH1[Column-level lineage]
+        DH2[Downstream impact graph]
+        DH3[Tags, properties, Documents, incidents]
     end
 
-    subgraph Mosaic["Mosaic"]
-        M1["<b>Discover</b><br/>Rank QI evidence:<br/>glossary &gt; tag &gt; type+name &gt; name<br/>Require multi-source convergence"]
-        M2["<b>Query policy</b> (fail-closed)<br/>Compile one allow-listed<br/>GROUP BY … COUNT(*)"]
-        M3["<b>Validate</b> in DuckDB<br/>minimum k, percent below k=5<br/>raw_rows_returned == 0"]
-        M4["<b>Mitigation lab</b><br/>Shadow-test suppression<br/>vs generalization"]
-        M5["<b>Codegen</b><br/>6 artifacts, SHA-256 each"]
+    subgraph Mosaic
+        M1[1 . Discover the convergence]
+        M2[2 . Compile one allow-listed aggregate query]
+        M3[3 . Validate in DuckDB with zero raw rows]
+        M4[4 . Shadow-test the mitigations]
+        M5[5 . Generate six review-ready files]
     end
 
-    HUMAN{{"Human review<br/>required"}}
-    OUT["dbt model · schema contract<br/>aggregate privacy test · policy<br/>manifest · PR summary"]
+    HUMAN{Human review}
 
     DH1 --> M1
     DH2 --> M1
-    M1 --> M2 --> M3 --> M4 --> M5
-    M5 --> OUT
-    OUT --> HUMAN
+    M1 --> M2 --> M3 --> M4 --> M5 --> HUMAN
     HUMAN -->|approved| DH3
-
-    style DataHub fill:#e8f4ea,stroke:#2d6a4f
-    style Mosaic fill:#eef0fb,stroke:#4338ca
-    style HUMAN fill:#fff4e0,stroke:#b45309
 ```
+
+| Step | What it does | Guardrail |
+|---|---|---|
+| 1 . Discover | Ranks QI evidence as glossary term > tag > type and name > name alone | Needs two or more families from two or more upstream datasets |
+| 2 . Compile | Builds one `GROUP BY … COUNT(*)` | Projections, row IDs, `JOIN`, and `WHERE` are refused before execution |
+| 3 . Validate | Measures minimum k and percent below k=5 | `raw_rows_returned` must equal 0 |
+| 4 . Shadow-test | Compares suppression against generalization for privacy and retained utility | Source data is never modified |
+| 5 . Generate | Emits six artifacts with a SHA-256 each | Compiled, never auto-merged or executed |
 
 Remove DataHub and the primary finding disappears. Mosaic would be left with isolated column names and no way to know they originated in different systems.
 
@@ -76,25 +77,18 @@ An optional local model can help. It is boxed in by structure, not by instructio
 
 ```mermaid
 flowchart LR
-    LLM["Local model<br/>(Mistral via Ollama)"]
-    POLICY["Deterministic policy"]
-    DB[("Warehouse")]
-    CAT["DataHub"]
+    LLM[Local model, Mistral via Ollama]
+    POLICY[Deterministic policy]
+    DB[(Warehouse)]
+    CAT[DataHub]
 
-    LLM -->|"asset choice,<br/>column nominations,<br/>plain-English rationale"| POLICY
-    POLICY -->|"can veto"| LLM
-    POLICY -->|"compiles the only<br/>permitted query"| DB
-    POLICY -->|"after approval"| CAT
-
-    LLM -.->|"cannot write SQL"| DB
-    LLM -.->|"cannot decide verdict"| POLICY
-    LLM -.->|"cannot mutate"| CAT
-
-    style LLM fill:#fff4e0,stroke:#b45309
-    style POLICY fill:#e8f4ea,stroke:#2d6a4f
+    LLM -->|proposes an asset, columns, and a rationale| POLICY
+    POLICY -->|may veto the proposal| LLM
+    POLICY -->|compiles the only permitted query| DB
+    POLICY -->|writes back after human approval| CAT
 ```
 
-The model's output schema has **no SQL field at all**, so it is structurally incapable of expressing a query. Both an accepted proposal and a vetoed one ship as receipts in the repo.
+The model has exactly one arrow out, and it points at policy. It **cannot write SQL, cannot decide the verdict, and cannot touch DataHub**, because its output schema has **no SQL field at all**. It is structurally incapable of expressing a query, rather than merely instructed not to. Both an accepted proposal and a vetoed one ship as receipts in the repo.
 
 ---
 
