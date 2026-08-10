@@ -39,35 +39,35 @@ In the primary case: **120 people, 120 distinct combinations, smallest group of 
 
 ```mermaid
 flowchart TB
-    subgraph DataHub
+    subgraph READ[Reads from DataHub]
         DH1[Column-level lineage]
         DH2[Downstream impact graph]
-        DH3[Tags, properties, Documents, incidents]
     end
 
     subgraph Mosaic
-        M1[1 . Discover the convergence]
-        M2[2 . Compile one allow-listed aggregate query]
-        M3[3 . Validate in DuckDB with zero raw rows]
-        M4[4 . Shadow-test the mitigations]
-        M5[5 . Generate six review-ready files]
+        M1[Step 1. Discover the convergence]
+        M2[Step 2. Compile one allow-listed aggregate query]
+        M3[Step 3. Validate in DuckDB with zero raw rows]
+        M4[Step 4. Shadow-test the mitigations]
+        M5[Step 5. Generate six review-ready files]
     end
 
     HUMAN{Human review}
+    BACK[Back into DataHub: tags, properties, Documents, incidents]
 
     DH1 --> M1
     DH2 --> M1
     M1 --> M2 --> M3 --> M4 --> M5 --> HUMAN
-    HUMAN -->|approved| DH3
+    HUMAN -->|approved| BACK
 ```
 
 | Step | What it does | Guardrail |
 |---|---|---|
-| 1 . Discover | Ranks QI evidence as glossary term > tag > type and name > name alone | Needs two or more families from two or more upstream datasets |
-| 2 . Compile | Builds one `GROUP BY … COUNT(*)` | Projections, row IDs, `JOIN`, and `WHERE` are refused before execution |
-| 3 . Validate | Measures minimum k and percent below k=5 | `raw_rows_returned` must equal 0 |
-| 4 . Shadow-test | Compares suppression against generalization for privacy and retained utility | Source data is never modified |
-| 5 . Generate | Emits six artifacts with a SHA-256 each | Compiled, never auto-merged or executed |
+| Step 1. Discover | Ranks QI evidence as glossary term > tag > type and name > name alone | Needs two or more families from two or more upstream datasets |
+| Step 2. Compile | Builds one `GROUP BY … COUNT(*)` | Projections, row IDs, `JOIN`, and `WHERE` are refused before execution |
+| Step 3. Validate | Measures minimum k and percent below k=5 | `raw_rows_returned` must equal 0 |
+| Step 4. Shadow-test | Compares suppression against generalization for privacy and retained utility | Source data is never modified |
+| Step 5. Generate | Emits six artifacts with a SHA-256 each | Compiled, never auto-merged or executed |
 
 Remove DataHub and the primary finding disappears. Mosaic would be left with isolated column names and no way to know they originated in different systems.
 
